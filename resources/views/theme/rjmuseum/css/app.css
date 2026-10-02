@@ -255,3 +255,13 @@ html {
 #lang-toggle.is-open #lang-chevron {
     transform: rotate(180deg);
 }
+#site-header {
+    z-index: 100 !important;
+    isolation: isolate;
+}
+
+#scroll-showcase {
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+}
