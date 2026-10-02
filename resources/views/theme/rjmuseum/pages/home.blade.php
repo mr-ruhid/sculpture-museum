@@ -4,7 +4,7 @@
 
 @section('content')
 
-@include('theme.rjmuseum.widgets.hero')
+@include('theme.rjmuseum.widgets.scroll-showcase')
 
 @php
     $stats = [
@@ -28,52 +28,7 @@
     </div>
 </section>
 
-@php
-    $featured = \App\Models\Sculpture::with('translations')
-        ->where('is_published', true)
-        ->latest()
-        ->take(6)
-        ->get();
-@endphp
-
-@if ($featured->count())
-<section class="py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-6">
-
-        <div class="flex items-end justify-between mb-12">
-            <div>
-                <div class="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-3">
-                    {{ __('frontend.latest') }}
-                </div>
-                <h2 class="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
-                    {{ __('frontend.latest_sculptures') }}
-                </h2>
-            </div>
-            <a href="{{ url('/sculptures') }}"
-               class="hidden md:inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-indigo-600 transition">
-                {{ __('frontend.view_all') }}
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
-            </a>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach ($featured as $sculpture)
-                @include('theme.rjmuseum.widgets.sculpture-card', ['sculpture' => $sculpture])
-            @endforeach
-        </div>
-
-        <div class="mt-10 text-center md:hidden">
-            <a href="{{ url('/sculptures') }}"
-               class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900 text-white font-semibold text-sm">
-                {{ __('frontend.view_all') }}
-            </a>
-        </div>
-
-    </div>
-</section>
-@endif
+@include('theme.rjmuseum.widgets.map', ['sculptures' => $sculptures])
 
 @php
     $aboutTitle = \App\Models\Setting::get('about_title_' . app()->getLocale());
@@ -98,7 +53,7 @@
                         {{ $aboutShort }}
                     </p>
                 @endif
-                <a href="{{ url('/about') }}"
+                <a href="{{ url('/' . app()->getLocale() . '/about') }}"
                    class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-slate-900 font-semibold hover:bg-slate-100 transition">
                     {{ __('frontend.learn_more') }}
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -137,7 +92,7 @@
         <p class="text-lg text-indigo-100 mb-10 max-w-2xl mx-auto">
             {{ __('frontend.cta_subtitle') }}
         </p>
-        <a href="{{ url('/sculptures') }}"
+        <a href="{{ url('/' . app()->getLocale() . '/sculptures') }}"
            class="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-white text-slate-900 font-bold hover:bg-slate-100 transition shadow-2xl">
             {{ __('frontend.cta_button') }}
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
