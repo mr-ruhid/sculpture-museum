@@ -20,7 +20,7 @@ class SculptureController extends Controller
 
     public function create()
     {
-        $languages = Language::active()->get();
+        $languages = Language::active();
         return view('admin.sculptures.create', compact('languages'));
     }
 
@@ -50,7 +50,7 @@ class SculptureController extends Controller
     public function edit(Sculpture $sculpture)
     {
         $sculpture->load('translations', 'images');
-        $languages = Language::active()->get();
+        $languages = Language::active();
         return view('admin.sculptures.edit', compact('sculpture', 'languages'));
     }
 
