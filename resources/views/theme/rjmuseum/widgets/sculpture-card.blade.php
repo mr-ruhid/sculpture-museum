@@ -19,7 +19,7 @@
             </div>
         @endif
 
-        <div class="ghost-number absolute -top-4 right-2 font-black leading-none select-none pointer-events-none z-10"
+        <div class="ghost-number absolute top-4 right-5 font-black leading-none select-none pointer-events-none z-10"
              aria-hidden="true">
             {{ $num }}
         </div>
