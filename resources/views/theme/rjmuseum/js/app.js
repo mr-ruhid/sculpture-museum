@@ -1,3 +1,34 @@
+function bootTheme() {
+    const header = document.getElementById('site-header');
+
+    if (header) {
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 50) {
+                header.classList.add('glass', 'shadow-lg');
+            } else {
+                header.classList.remove('glass', 'shadow-lg');
+            }
+        });
+    }
+
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener('click', function () {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    initScrollShowcase();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootTheme);
+} else {
+    bootTheme();
+}
+
 function initScrollShowcase() {
     const root = document.getElementById('scroll-showcase');
     if (!root) return;
@@ -98,7 +129,6 @@ function initScrollShowcase() {
             const enter = it.i === 0 ? intro : clamp(1 + d);
             const exit = clamp(d);
 
-            // --- Clip-path reveal (giriş) ---
             let clip = 'none';
             if (it.i > 0 && enter < 1) {
                 if (it.mode === 'circle') {
@@ -113,7 +143,6 @@ function initScrollShowcase() {
             it.el.style.clipPath = clip;
             it.el.style.webkitClipPath = clip;
 
-            // --- Şəkil: zoom + parallax + blur ---
             if (it.image) {
                 const scale = (1.25 - 0.25 * enter) * (1 + exit * 0.15);
                 let tx = 0;
@@ -127,7 +156,6 @@ function initScrollShowcase() {
                     }
                 }
 
-                // Çıxışda blur + tündləşmə
                 const blurAmt = exit * 14 + (it.i > 0 ? (1 - enter) * 6 : 0);
                 const bright = 1 - exit * 0.45 - (it.i > 0 ? (1 - enter) * 0.25 : 0);
                 const sat = 1 - exit * 0.3;
@@ -138,18 +166,15 @@ function initScrollShowcase() {
                     'blur(' + blurAmt.toFixed(2) + 'px) brightness(' + bright.toFixed(3) + ') saturate(' + sat.toFixed(3) + ')';
             }
 
-            // --- Dim qatı ---
             if (it.dim) {
                 it.dim.style.opacity = (exit * 0.7).toFixed(3);
             }
 
-            // --- Ghost nömrə ---
             if (it.ghost) {
                 it.ghost.style.transform = 'translate3d(' + (-d * 30).toFixed(2) + 'vw,0,0)';
                 it.ghost.style.opacity = ((1 - Math.abs(d)) * (it.i === 0 ? intro : 1) * 0.9).toFixed(3);
             }
 
-            // --- Məzmun çıxış ---
             if (it.content) {
                 const co = 1 - clamp(exit * 1.8);
                 it.content.style.opacity = co.toFixed(3);
@@ -157,7 +182,6 @@ function initScrollShowcase() {
                 it.content.style.filter = 'blur(' + (exit * 6).toFixed(2) + 'px)';
             }
 
-            // --- Başlıq: söz-söz ---
             const wl = it.words.length;
             const step = 0.25 / Math.max(wl, 1);
             it.words.forEach(function (w, k) {
@@ -167,7 +191,6 @@ function initScrollShowcase() {
                 w.style.opacity = e.toFixed(3);
             });
 
-            // --- Detallar: stagger fade-up ---
             it.reveals.forEach(function (r) {
                 const idx = parseInt(r.getAttribute('data-reveal'), 10) || 0;
                 const local = clamp((enter - 0.55 - idx * 0.05) / 0.3);
