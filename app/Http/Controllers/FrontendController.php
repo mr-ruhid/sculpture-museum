@@ -5,16 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Language;
 use App\Models\Sculpture;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class FrontendController extends Controller
 {
-    public function home()
+    public function home($locale)
     {
+        App::setLocale($locale);
         return view('theme.rjmuseum.pages.home');
     }
 
-    public function sculptures(Request $request)
+    public function sculptures(Request $request, $locale)
     {
+        App::setLocale($locale);
+
         $query = Sculpture::with('translations')->where('is_published', true);
 
         if ($request->filled('q')) {
@@ -48,11 +52,11 @@ class FrontendController extends Controller
 
         $cities = Sculpture::where('is_published', true)
             ->whereHas('translations', function ($q) {
-                $q->where('locale', 'en')->whereNotNull('city')->where('city', '!=', '');
+                $q->whereNotNull('city')->where('city', '!=', '');
             })
-            ->with(['translations' => fn ($q) => $q->where('locale', 'en')])
+            ->with('translations')
             ->get()
-            ->pluck('translations.0.city')
+            ->map(fn ($s) => $s->translation('en')?->city)
             ->filter()
             ->unique()
             ->sort()
@@ -60,11 +64,11 @@ class FrontendController extends Controller
 
         $styles = Sculpture::where('is_published', true)
             ->whereHas('translations', function ($q) {
-                $q->where('locale', 'en')->whereNotNull('style')->where('style', '!=', '');
+                $q->whereNotNull('style')->where('style', '!=', '');
             })
-            ->with(['translations' => fn ($q) => $q->where('locale', 'en')])
+            ->with('translations')
             ->get()
-            ->pluck('translations.0.style')
+            ->map(fn ($s) => $s->translation('en')?->style)
             ->filter()
             ->unique()
             ->sort()
@@ -79,8 +83,10 @@ class FrontendController extends Controller
         return view('theme.rjmuseum.pages.sculptures', compact('sculptures', 'cities', 'styles', 'years'));
     }
 
-    public function sculptureShow($slug)
+    public function sculptureShow($locale, $slug)
     {
+        App::setLocale($locale);
+
         $sculpture = Sculpture::with(['translations', 'images'])
             ->where('slug', $slug)
             ->where('is_published', true)
@@ -89,25 +95,21 @@ class FrontendController extends Controller
         $related = Sculpture::with('translations')
             ->where('is_published', true)
             ->where('id', '!=', $sculpture->id)
-            ->whereHas('translations', function ($q) use ($sculpture) {
-                $city = $sculpture->translation('en')?->city;
-                if ($city) {
-                    $q->where('city', $city);
-                }
-            })
             ->take(3)
             ->get();
 
         return view('theme.rjmuseum.pages.sculpture', compact('sculpture', 'related'));
     }
 
-    public function about()
+    public function about($locale)
     {
+        App::setLocale($locale);
         return view('theme.rjmuseum.pages.about');
     }
 
-    public function contact()
+    public function contact($locale)
     {
+        App::setLocale($locale);
         return view('theme.rjmuseum.pages.contact');
     }
 
@@ -115,6 +117,7 @@ class FrontendController extends Controller
     {
         if (Language::where('code', $code)->where('is_active', true)->exists()) {
             session(['locale' => $code]);
+            return redirect()->to('/' . $code);
         }
 
         return redirect()->back();
