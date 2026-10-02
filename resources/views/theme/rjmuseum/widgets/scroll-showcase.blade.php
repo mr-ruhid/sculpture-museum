@@ -11,7 +11,7 @@
 
 @if ($count)
 <section id="scroll-showcase" class="relative bg-slate-950" style="height: {{ ($count + 1) * 140 }}vh;">
-    <div class="sc-stage sticky top-0 w-full overflow-hidden">
+    <div class="sc-stage sticky w-full overflow-hidden">
 
         {{-- Sculpture slides --}}
         @foreach ($featured as $i => $sculpture)
