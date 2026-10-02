@@ -6,6 +6,10 @@ html {
     scroll-behavior: smooth;
 }
 
+body {
+    padding-top: 5rem;
+}
+
 .glass {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -81,8 +85,9 @@ html {
 }
 
 .sc-stage {
-    height: 100vh;
-    height: 100svh;
+    height: calc(100vh - 5rem);
+    height: calc(100svh - 5rem);
+    top: 5rem;
 }
 
 .sc-slide {
@@ -235,18 +240,16 @@ html {
 }
 
 #site-header {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
     background: rgba(15, 23, 42, 0.55);
     backdrop-filter: blur(16px) saturate(150%);
     -webkit-backdrop-filter: blur(16px) saturate(150%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     transition: background .4s ease, box-shadow .4s ease;
-}
-
-#site-header.is-sticky {
-    position: sticky;
-    top: 0;
 }
 
 #site-header.is-scrolled {
