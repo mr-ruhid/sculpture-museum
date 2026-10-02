@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🗿 Azerbaijan Sculptures
+# Azerbaijan Sculptures
 
 ### Administration Panel
 
@@ -15,7 +15,7 @@ A multilingual web application for cataloging, storing, and presenting sculpture
 
 ---
 
-## 📖 About the Project
+## About the Project
 
 **Azerbaijan Sculptures** is a content management system built to document the sculptural heritage of Azerbaijan. It provides a structured way to catalog sculptures with rich media, detailed metadata, and full multilingual support, with the ability to add new languages at any time.
 
@@ -23,21 +23,21 @@ The project is a derivative product of the **RJ CMS Lite** ecosystem and uses th
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 | Feature | Description |
 |---|---|
-| 🌐 **Multilingual Content** | Manage sculpture data in multiple languages; new languages can be added dynamically |
-| 🖼️ **Media Management** | Image upload and gallery support for each sculpture |
-| 🔄 **360° Panoramas** | Built-in support for 360-degree panoramic views |
-| 🔍 **SEO Management** | Per-page SEO parameters (titles, descriptions, meta data) |
-| ⚙️ **Site Settings** | General, contact, social media, and SMTP configuration |
-| 🔐 **Two-Factor Authentication** | 2FA for secure administrator access |
-| ⚡ **Cache Management** | Clear and manage application cache from the panel |
+| **Multilingual Content** | Manage sculpture data in multiple languages; new languages can be added dynamically |
+| **Media Management** | Image upload and gallery support for each sculpture |
+| **360° Panoramas** | Built-in support for 360-degree panoramic views |
+| **SEO Management** | Per-page SEO parameters (titles, descriptions, meta data) |
+| **Site Settings** | General, contact, social media, and SMTP configuration |
+| **Two-Factor Authentication** | 2FA for secure administrator access |
+| **Cache Management** | Clear and manage application cache from the panel |
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Component | Technology |
 |---|---|
@@ -48,7 +48,7 @@ The project is a derivative product of the **RJ CMS Lite** ecosystem and uses th
 
 ---
 
-## ℹ️ System Information
+## System Information
 
 | | |
 |---|---|
@@ -59,7 +59,7 @@ The project is a derivative product of the **RJ CMS Lite** ecosystem and uses th
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### Requirements
 
@@ -94,7 +94,7 @@ The application will be available at `http://127.0.0.1:8000`.
 
 ---
 
-## 📚 RJ CMS Documentation
+## RJ CMS Documentation
 
 Detailed information about the RJ CMS ecosystem is available here:
 
@@ -104,7 +104,7 @@ Detailed information about the RJ CMS ecosystem is available here:
 
 ---
 
-## 📄 License
+## License
 
 This project is built as a derivative of **RJ CMS Lite**. For usage terms, please refer to the RJ CMS documentation.
 
