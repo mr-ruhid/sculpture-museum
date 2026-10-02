@@ -14,12 +14,12 @@
                 @if ($logo)
                     <img src="{{ asset('storage/' . $logo) }}" class="h-10" alt="Logo">
                 @else
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>
                         </svg>
                     </div>
-                    <div class="font-bold text-lg text-slate-900">
+                    <div class="font-bold text-lg text-white">
                         {{ \App\Models\Setting::get('site_name_' . $locale, config('app.name')) }}
                     </div>
                 @endif
@@ -42,7 +42,7 @@
                     @endphp
                     <a href="{{ url('/' . $locale . ($tab['path'] ? '/' . $tab['path'] : '')) }}"
                        class="relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300
-                              {{ $isActive ? 'text-white bg-slate-900' : 'text-slate-700 hover:text-slate-900 hover:bg-slate-900/5' }}">
+                              {{ $isActive ? 'text-slate-900 bg-white' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
                         {{ $tab['label'] }}
                     </a>
                 @endforeach
@@ -52,23 +52,22 @@
 
                 <div class="lang-switcher relative" id="lang-switcher">
                     <button type="button" id="lang-toggle"
-                            class="group flex items-center gap-2 pl-1.5 pr-3 py-1.5 rounded-full bg-white/70 backdrop-blur border border-white/60 hover:bg-white transition-all duration-300 shadow-sm">
-                        <span class="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-slate-100 flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
+                            class="group flex items-center gap-2 pl-1.5 pr-3 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/20 hover:bg-white/20 transition-all duration-300">
+                        <span class="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-white/20 flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
                             @if ($currentLang?->flag)
                                 <img src="{{ $currentLang->flag }}" class="w-full h-full object-cover" alt="{{ $currentLang->code }}">
                             @else
-                                <span class="text-[11px] font-bold text-slate-700">{{ strtoupper($locale) }}</span>
+                                <span class="text-[11px] font-bold text-white">{{ strtoupper($locale) }}</span>
                             @endif
                         </span>
-                        <span class="text-sm font-semibold text-slate-800 hidden sm:block">{{ strtoupper($locale) }}</span>
-                        <svg id="lang-chevron" class="w-3.5 h-3.5 text-slate-500 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <span class="text-sm font-semibold text-white hidden sm:block">{{ strtoupper($locale) }}</span>
+                        <svg id="lang-chevron" class="w-3.5 h-3.5 text-white/70 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
 
                     <div id="lang-menu"
-                         class="lang-menu absolute right-0 top-full mt-2 min-w-[200px] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden opacity-0 invisible scale-95 origin-top-right transition-all duration-300"
-                         style="z-index: 9999;">
+                         class="lang-menu absolute right-0 top-full mt-2 min-w-[200px] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden opacity-0 invisible scale-95 origin-top-right transition-all duration-300">
                         @foreach (\App\Models\Language::active() as $lang)
                             @php
                                 $targetPath = $currentPath ? '/' . $currentPath : '';
@@ -98,8 +97,8 @@
                     </div>
                 </div>
 
-                <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full hover:bg-slate-100 flex items-center justify-center transition">
-                    <svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full hover:bg-white/10 flex items-center justify-center transition">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
@@ -108,12 +107,12 @@
         </div>
     </div>
 
-    <div id="mobile-menu" class="hidden md:hidden glass border-t border-slate-200">
+    <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur border-t border-slate-800">
         <nav class="max-w-7xl mx-auto px-6 py-4 space-y-1">
-            <a href="{{ url('/' . $locale) }}" class="block py-3 px-4 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">{{ __('frontend.home') }}</a>
-            <a href="{{ url('/' . $locale . '/sculptures') }}" class="block py-3 px-4 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">{{ __('frontend.sculptures') }}</a>
-            <a href="{{ url('/' . $locale . '/about') }}" class="block py-3 px-4 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">{{ __('frontend.about') }}</a>
-            <a href="{{ url('/' . $locale . '/contact') }}" class="block py-3 px-4 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">{{ __('frontend.contact') }}</a>
+            <a href="{{ url('/' . $locale) }}" class="block py-3 px-4 rounded-xl text-sm font-medium text-white hover:bg-white/10 transition">{{ __('frontend.home') }}</a>
+            <a href="{{ url('/' . $locale . '/sculptures') }}" class="block py-3 px-4 rounded-xl text-sm font-medium text-white hover:bg-white/10 transition">{{ __('frontend.sculptures') }}</a>
+            <a href="{{ url('/' . $locale . '/about') }}" class="block py-3 px-4 rounded-xl text-sm font-medium text-white hover:bg-white/10 transition">{{ __('frontend.about') }}</a>
+            <a href="{{ url('/' . $locale . '/contact') }}" class="block py-3 px-4 rounded-xl text-sm font-medium text-white hover:bg-white/10 transition">{{ __('frontend.contact') }}</a>
         </nav>
     </div>
 </header>
