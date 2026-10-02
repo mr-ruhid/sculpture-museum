@@ -5,7 +5,7 @@
     $currentLang = \App\Models\Language::where('code', $locale)->first();
 @endphp
 
-<header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 header-glass">
+<header id="site-header" class="sticky top-0 left-0 right-0 z-50 transition-all duration-500 header-glass">
     <div class="max-w-7xl mx-auto px-6">
         <div class="flex items-center justify-between h-20">
 
@@ -67,7 +67,8 @@
                     </button>
 
                     <div id="lang-menu"
-                         class="lang-menu absolute right-0 top-full mt-2 min-w-[200px] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden opacity-0 invisible scale-95 origin-top-right transition-all duration-300">
+                         class="lang-menu absolute right-0 top-full mt-2 min-w-[200px] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden opacity-0 invisible scale-95 origin-top-right transition-all duration-300"
+                         style="z-index: 9999;">
                         @foreach (\App\Models\Language::active() as $lang)
                             @php
                                 $targetPath = $currentPath ? '/' . $currentPath : '';
