@@ -8,15 +8,9 @@ class Sculpture extends Model
 {
     protected $fillable = [
         'slug',
-        'sculptor',
-        'architect',
         'year',
         'opening_date',
-        'material',
         'dimensions',
-        'style',
-        'city',
-        'address',
         'latitude',
         'longitude',
         'condition',

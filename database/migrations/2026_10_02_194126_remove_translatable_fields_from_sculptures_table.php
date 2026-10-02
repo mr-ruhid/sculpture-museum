@@ -6,22 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::table('sculptures', function (Blueprint $table) {
-            $table->dropColumn(['sculptor', 'architect', 'material', 'style', 'city', 'address']);
+            //
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::table('sculptures', function (Blueprint $table) {
-            $table->string('sculptor')->nullable();
-            $table->string('architect')->nullable();
-            $table->string('material')->nullable();
-            $table->string('style')->nullable();
-            $table->string('city')->nullable();
-            $table->string('address')->nullable();
+            //
         });
     }
 };
