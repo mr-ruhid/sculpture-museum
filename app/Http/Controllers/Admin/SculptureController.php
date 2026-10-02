@@ -77,6 +77,12 @@ class SculptureController extends Controller
         return redirect()->route('admin.sculptures.index')->with('success', 'Heykəl silindi.');
     }
 
+    public function destroyImage(SculptureImage $image)
+    {
+        $image->delete();
+        return back()->with('success', 'Şəkil silindi.');
+    }
+
     private function validateData(Request $request): array
     {
         return $request->validate([
