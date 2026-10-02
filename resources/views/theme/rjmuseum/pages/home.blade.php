@@ -57,27 +57,4 @@
 </section>
 @endif
 
-<section class="relative py-32 bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800 overflow-hidden">
-    <div class="absolute inset-0 opacity-20">
-        <div class="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-white blur-3xl"></div>
-        <div class="absolute bottom-0 right-1/4 w-96 h-96 rounded-full bg-pink-400 blur-3xl"></div>
-    </div>
-
-    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
-        <h2 class="text-4xl md:text-6xl font-black text-white leading-tight mb-6">
-            {{ __('frontend.cta_title') }}
-        </h2>
-        <p class="text-lg text-indigo-100 mb-10 max-w-2xl mx-auto">
-            {{ __('frontend.cta_subtitle') }}
-        </p>
-        <a href="{{ url('/' . app()->getLocale() . '/sculptures') }}"
-           class="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-white text-slate-900 font-bold hover:bg-slate-100 transition shadow-2xl">
-            {{ __('frontend.cta_button') }}
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-            </svg>
-        </a>
-    </div>
-</section>
-
 @endsection
