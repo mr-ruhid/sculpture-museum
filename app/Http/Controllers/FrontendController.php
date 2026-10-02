@@ -22,6 +22,7 @@ class FrontendController extends Controller
                 $tr = $s->translation($locale);
                 return [
                     'id' => $s->id,
+                    'slug' => $s->slug,
                     'lat' => (float) $s->latitude,
                     'lng' => (float) $s->longitude,
                     'title' => $tr?->title ?? '',
