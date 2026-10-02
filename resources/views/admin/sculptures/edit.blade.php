@@ -42,6 +42,44 @@
                                            value="{{ old("translations.{$lang->code}.title", $tr->title ?? '') }}"
                                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
                                 </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Heykəltəraş</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][sculptor]"
+                                               value="{{ old("translations.{$lang->code}.sculptor", $tr->sculptor ?? '') }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Memar</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][architect]"
+                                               value="{{ old("translations.{$lang->code}.architect", $tr->architect ?? '') }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Material</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][material]"
+                                               value="{{ old("translations.{$lang->code}.material", $tr->material ?? '') }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Üslub</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][style]"
+                                               value="{{ old("translations.{$lang->code}.style", $tr->style ?? '') }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Şəhər / rayon</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][city]"
+                                               value="{{ old("translations.{$lang->code}.city", $tr->city ?? '') }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ünvan</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][address]"
+                                               value="{{ old("translations.{$lang->code}.address", $tr->address ?? '') }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
+                                </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-1.5">Qısa təsvir</label>
                                     <textarea name="translations[{{ $lang->code }}][short_description]" rows="2"
@@ -75,16 +113,6 @@
                                class="w-full border border-slate-200 rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Heykəltəraş</label>
-                        <input type="text" name="sculptor" value="{{ old('sculptor', $sculpture->sculptor) }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Memar</label>
-                        <input type="text" name="architect" value="{{ old('architect', $sculpture->architect) }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
-                    <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Yaranma ili</label>
                         <input type="number" name="year" value="{{ old('year', $sculpture->year) }}" min="1000" max="2100"
                                class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
@@ -96,18 +124,8 @@
                                class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Material</label>
-                        <input type="text" name="material" value="{{ old('material', $sculpture->material) }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
-                    <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ölçülər</label>
                         <input type="text" name="dimensions" value="{{ old('dimensions', $sculpture->dimensions) }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Üslub</label>
-                        <input type="text" name="style" value="{{ old('style', $sculpture->style) }}"
                                class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
                     </div>
                 </div>
@@ -116,19 +134,9 @@
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white flex items-center gap-2">
                     <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    <h3 class="font-semibold text-slate-800">Yerləşmə</h3>
+                    <h3 class="font-semibold text-slate-800">Koordinatlar</h3>
                 </div>
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Şəhər / rayon</label>
-                        <input type="text" name="city" value="{{ old('city', $sculpture->city) }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ünvan</label>
-                        <input type="text" name="address" value="{{ old('address', $sculpture->address) }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Latitude</label>
                         <input type="text" name="latitude" value="{{ old('latitude', $sculpture->latitude) }}"
@@ -235,7 +243,7 @@
                 </div>
                 <div class="p-6">
                     <label for="main_image" class="block cursor-pointer">
-                        <div id="main_preview_box" class="w-full aspect-square rounded-xl border-2 border-dashed border-slate-200 hover:border-indigo-400 transition flex flex-col items-center justify-center bg-slate-50 overflow-hidden">
+                        <div class="w-full aspect-square rounded-xl border-2 border-dashed border-slate-200 hover:border-indigo-400 transition flex flex-col items-center justify-center bg-slate-50 overflow-hidden">
                             @if ($sculpture->main_image)
                                 <img id="main_preview" src="{{ asset('storage/' . $sculpture->main_image) }}" class="w-full h-full object-cover">
                                 <div id="main_placeholder" class="hidden"></div>
