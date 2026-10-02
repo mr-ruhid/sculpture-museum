@@ -9,16 +9,11 @@
     <div class="max-w-7xl mx-auto px-6">
         <div class="flex items-center justify-between h-20">
 
-            <a href="{{ url('/' . $locale) }}" class="flex items-center gap-3">
+            <a href="{{ url('/' . $locale) }}" class="flex items-center">
                 @php $logo = \App\Models\Setting::get('logo'); @endphp
                 @if ($logo)
                     <img src="{{ asset('storage/' . $logo) }}" class="h-10" alt="Logo">
                 @else
-                    <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>
-                        </svg>
-                    </div>
                     <div class="font-bold text-lg text-white">
                         {{ \App\Models\Setting::get('site_name_' . $locale, config('app.name')) }}
                     </div>
