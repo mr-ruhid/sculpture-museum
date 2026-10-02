@@ -1,1 +1,76 @@
-{}
+{
+    "frontend.home": "Главная",
+    "frontend.sculptures": "Скульптуры",
+    "frontend.about": "О проекте",
+    "frontend.contact": "Контакты",
+    "frontend.navigation": "Навигация",
+    "frontend.follow": "Подписывайтесь",
+    "frontend.learn_more": "Подробнее",
+    "frontend.explore": "Исследовать",
+    "frontend.view_all": "Смотреть все",
+    "frontend.view_details": "Подробнее",
+    "frontend.close": "Закрыть",
+
+    "frontend.about_us": "О нас",
+    "frontend.latest": "Последние",
+    "frontend.latest_sculptures": "Последние скульптуры",
+    "frontend.scroll_for_more": "Откройте больше",
+    "frontend.browse_sculptures": "Смотреть скульптуры",
+
+    "frontend.stat_sculptures": "Скульптуры",
+    "frontend.stat_cities": "Города",
+    "frontend.stat_sculptors": "Скульпторы",
+    "frontend.stat_years": "Годы",
+
+    "frontend.cta_title": "Откройте скульптурное наследие Азербайджана",
+    "frontend.cta_subtitle": "Откройте памятники, мемориалы и скульптуры, рассказывающие историю нации.",
+    "frontend.cta_button": "Начать путешествие",
+
+    "frontend.catalog": "Каталог",
+    "frontend.sculptures_subtitle": "Просмотрите полную коллекцию скульптур по всему Азербайджану.",
+    "frontend.search_placeholder": "Поиск по названию, скульптору или городу...",
+    "frontend.all_cities": "Все города",
+    "frontend.all_styles": "Все стили",
+    "frontend.all_years": "Все годы",
+    "frontend.filter": "Фильтр",
+    "frontend.clear": "Очистить",
+    "frontend.results_count": "{0} Нет результатов|{1} :count результат|[2,4] :count результата|[5,*] :count результатов",
+    "frontend.no_results": "Результатов не найдено",
+    "frontend.no_results_text": "Попробуйте изменить поиск или фильтры.",
+
+    "frontend.year": "Год",
+    "frontend.opening_date": "Дата открытия",
+    "frontend.city": "Город",
+    "frontend.architect": "Архитектор",
+    "frontend.material": "Материал",
+    "frontend.dimensions": "Размеры",
+    "frontend.description": "Описание",
+    "frontend.history": "История",
+    "frontend.gallery": "Галерея",
+    "frontend.location": "Расположение",
+    "frontend.related": "Похожие скульптуры",
+
+    "frontend.panorama_360": "Панорама 360°",
+    "frontend.panorama_subtitle": "Исследуйте эту скульптуру в полном 360-градусном обзоре.",
+    "frontend.panorama_open": "Открыть вид 360°",
+    "frontend.panorama_fullscreen": "На весь экран",
+
+    "frontend.condition_exists": "Существует",
+    "frontend.condition_destroyed": "Разрушена",
+    "frontend.condition_moved": "Перенесена",
+
+    "frontend.map": "Карта",
+    "frontend.map_title": "Скульптуры на карте",
+    "frontend.map_subtitle": "Исследуйте скульптуры по всему Азербайджану.",
+
+    "frontend.get_in_touch": "Свяжитесь с нами",
+    "frontend.contact_subtitle": "Есть вопрос или предложение? Мы будем рады вас услышать.",
+    "frontend.address": "Адрес",
+    "frontend.phone": "Телефон",
+    "frontend.email": "Эл. почта",
+    "frontend.contact_cta_title": "Откройте коллекцию",
+    "frontend.contact_cta_subtitle": "Просмотрите скульптуры со всех уголков Азербайджана.",
+
+    "frontend.about_empty": "Скоро",
+    "frontend.about_empty_text": "Информация о проекте появится в ближайшее время."
+}
