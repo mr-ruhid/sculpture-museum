@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Sculpture extends Model
 {
@@ -48,14 +47,5 @@ class Sculpture extends Model
         return $this->translations->firstWhere('locale', $locale)
             ?? $this->translations->firstWhere('locale', 'en')
             ?? $this->translations->first();
-    }
-
-    protected static function booted(): void
-    {
-        static::creating(function ($sculpture) {
-            if (empty($sculpture->slug)) {
-                $sculpture->slug = Str::slug($sculpture->translations->first()->title ?? 'sculpture-' . time());
-            }
-        });
     }
 }
