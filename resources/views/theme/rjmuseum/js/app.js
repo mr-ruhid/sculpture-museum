@@ -4,9 +4,9 @@ function bootTheme() {
     if (header) {
         window.addEventListener('scroll', function () {
             if (window.scrollY > 50) {
-                header.classList.add('glass', 'shadow-lg');
+                header.classList.add('is-scrolled');
             } else {
-                header.classList.remove('glass', 'shadow-lg');
+                header.classList.remove('is-scrolled');
             }
         });
     }
@@ -20,13 +20,43 @@ function bootTheme() {
         });
     }
 
+    initLangSwitcher();
     initScrollShowcase();
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bootTheme);
-} else {
-    bootTheme();
+function initLangSwitcher() {
+    const toggle = document.getElementById('lang-toggle');
+    const menu = document.getElementById('lang-menu');
+    const switcher = document.getElementById('lang-switcher');
+
+    if (!toggle || !menu || !switcher) return;
+
+    toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const isOpen = menu.classList.contains('is-open');
+
+        if (isOpen) {
+            menu.classList.remove('is-open');
+            toggle.classList.remove('is-open');
+        } else {
+            menu.classList.add('is-open');
+            toggle.classList.add('is-open');
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!switcher.contains(e.target)) {
+            menu.classList.remove('is-open');
+            toggle.classList.remove('is-open');
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            menu.classList.remove('is-open');
+            toggle.classList.remove('is-open');
+        }
+    });
 }
 
 function initScrollShowcase() {
