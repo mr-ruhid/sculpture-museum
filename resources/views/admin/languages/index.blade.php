@@ -23,8 +23,8 @@
                 <tr class="border-b text-left text-gray-600">
                     <th class="py-2">Kod</th>
                     <th class="py-2">Ad</th>
-                    <th class="py-2">Bayraq</th>
-                    <th class="py-2">Status</th>
+                    <th class="py-2">Bayraq URL</th>
+                    <th class="py-2">Görünüş</th>
                     <th class="py-2">Default</th>
                     <th class="py-2 text-right">Əməliyyat</th>
                 </tr>
@@ -41,7 +41,8 @@
                                 <input type="text" name="name" value="{{ $language->name }}"
                                        class="border border-gray-300 rounded px-2 py-1 text-sm w-32">
                                 <input type="text" name="flag" value="{{ $language->flag }}"
-                                       class="border border-gray-300 rounded px-2 py-1 text-sm w-16 text-center">
+                                       placeholder="https://..."
+                                       class="border border-gray-300 rounded px-2 py-1 text-sm w-64">
                                 <label class="flex items-center gap-1 text-xs text-gray-600">
                                     <input type="checkbox" name="is_active" value="1"
                                            {{ $language->is_active ? 'checked' : '' }}>
@@ -53,12 +54,12 @@
                                 </button>
                             </form>
                         </td>
-                        <td class="py-2 text-2xl">{{ $language->flag }}</td>
                         <td class="py-2">
-                            @if ($language->is_active)
-                                <span class="text-green-600">Aktiv</span>
+                            @if ($language->flag)
+                                <img src="{{ $language->flag }}" alt="{{ $language->code }}"
+                                     class="w-8 h-5 object-cover rounded border border-gray-200">
                             @else
-                                <span class="text-gray-400">Deaktiv</span>
+                                <span class="text-gray-300">—</span>
                             @endif
                         </td>
                         <td class="py-2">
