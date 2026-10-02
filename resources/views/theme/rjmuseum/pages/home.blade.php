@@ -6,28 +6,6 @@
 
 @include('theme.rjmuseum.widgets.scroll-showcase')
 
-@php
-    $stats = [
-        ['value' => \App\Models\Setting::get('stat_sculptures', \App\Models\Sculpture::where('is_published', true)->count()), 'label' => __('frontend.stat_sculptures')],
-        ['value' => \App\Models\Setting::get('stat_cities', '—'), 'label' => __('frontend.stat_cities')],
-        ['value' => \App\Models\Setting::get('stat_sculptors', '—'), 'label' => __('frontend.stat_sculptors')],
-        ['value' => \App\Models\Setting::get('stat_years', '—'), 'label' => __('frontend.stat_years')],
-    ];
-@endphp
-
-<section class="py-20 bg-slate-50">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            @foreach ($stats as $stat)
-                <div class="text-center p-6 rounded-2xl bg-white border border-slate-100">
-                    <div class="text-3xl md:text-4xl font-black text-slate-900 mb-2">{{ $stat['value'] }}</div>
-                    <div class="text-xs md:text-sm text-slate-500 uppercase tracking-wider font-medium">{{ $stat['label'] }}</div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
 @include('theme.rjmuseum.widgets.map', ['sculptures' => $sculptures])
 
 @php
