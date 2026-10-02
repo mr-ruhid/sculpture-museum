@@ -10,8 +10,8 @@
         background: #0f172a;
     }
     .custom-marker {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -20,15 +20,17 @@
         border-radius: 50%;
         box-shadow: 0 6px 18px rgba(99, 102, 241, 0.5);
         transition: transform .3s ease, box-shadow .3s ease;
+        overflow: hidden;
+        padding: 6px;
     }
     .custom-marker:hover {
         transform: scale(1.15);
         box-shadow: 0 8px 25px rgba(99, 102, 241, 0.7);
     }
     .custom-marker svg {
-        width: 22px;
-        height: 22px;
-        color: #fff;
+        width: 100%;
+        height: 100%;
+        display: block;
     }
     .leaflet-popup-content-wrapper {
         border-radius: 16px;
@@ -38,19 +40,19 @@
     }
     .leaflet-popup-content {
         margin: 0;
-        width: 280px !important;
+        width: 300px !important;
     }
     .leaflet-popup-close-button {
         color: #fff !important;
-        font-size: 20px !important;
-        padding: 6px 10px 0 0 !important;
+        font-size: 22px !important;
+        padding: 8px 12px 0 0 !important;
         z-index: 10;
         text-shadow: 0 1px 3px rgba(0,0,0,0.5);
     }
     .map-popup-media {
         position: relative;
         width: 100%;
-        height: 160px;
+        height: 170px;
         background: #000;
         overflow: hidden;
     }
@@ -107,7 +109,7 @@
     }
     .map-popup-buttons {
         display: flex;
-        gap: 6px;
+        gap: 8px;
         flex-wrap: wrap;
     }
     .map-popup-btn {
@@ -115,16 +117,21 @@
         align-items: center;
         gap: 6px;
         background: #0f172a;
-        color: #fff;
-        font-size: 12px;
-        font-weight: 600;
-        padding: 8px 14px;
+        color: #fff !important;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 9px 14px;
         border-radius: 999px;
         text-decoration: none;
         transition: background .2s, transform .2s;
+        white-space: nowrap;
+        line-height: 1;
+    }
+    .map-popup-btn svg {
+        flex-shrink: 0;
     }
     .map-popup-btn:hover {
-        background: #6366f1;
+        background: #1e293b;
         transform: translateY(-1px);
     }
     .map-popup-btn.btn-panorama {
@@ -149,6 +156,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const data = @json($sculptures);
     const locale = '{{ app()->getLocale() }}';
 
+    const statueSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="100%" height="100%">' +
+        '<rect width="800" height="800" fill="#7a7a7a"/>' +
+        '<g>' +
+            '<path d="M352 400 L448 400 L442 688 L358 688 Z" fill="#20b2aa"/>' +
+            '<path d="M380 230 C330 240 300 300 306 410 L320 495 L360 512 L440 512 L480 495 L494 410 C500 300 470 240 420 230 Z" fill="#1da29a"/>' +
+            '<path d="M375 230 L425 230 L400 290 Z" fill="#008080"/>' +
+            '<rect x="375" y="200" width="50" height="40" fill="#20b2aa"/>' +
+            '<path d="M375 230 L400 250 L425 230 Z" fill="#1da29a"/>' +
+            '<circle cx="400" cy="165" r="45" fill="#20b2aa"/>' +
+            '<circle cx="352" cy="165" r="8" fill="#20b2aa"/>' +
+            '<circle cx="448" cy="165" r="8" fill="#20b2aa"/>' +
+            '<path d="M355 160 C355 120 380 110 405 110 C435 110 450 130 450 155 C435 155 430 145 420 140 C410 135 390 145 375 145 C365 145 360 155 355 160 Z" fill="#5f9ea0"/>' +
+            '<path d="M362 143 C375 145 390 145 400 137 L400 111 C385 111 370 120 362 143 Z" fill="#7ac5cd"/>' +
+            '<rect x="266" y="688" width="268" height="32" fill="#526f80"/>' +
+            '<rect x="286" y="720" width="228" height="96" fill="#40596b"/>' +
+            '<rect x="320" y="746" width="160" height="44" fill="#526f80"/>' +
+            '<path d="M250 816 C250 790 270 776 296 776 L504 776 C530 776 550 790 550 816 Z" fill="#526f80"/>' +
+            '<rect x="226" y="816" width="348" height="40" fill="#526f80"/>' +
+        '</g>' +
+    '</svg>';
+
     const map = L.map('sculpture-map', {
         scrollWheelZoom: false,
         zoomControl: true,
@@ -163,14 +191,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const markerIcon = L.divIcon({
         className: '',
-        html: '<div class="custom-marker">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-                '<path d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>' +
-            '</svg>' +
-        '</div>',
-        iconSize: [44, 44],
-        iconAnchor: [22, 22],
-        popupAnchor: [0, -22],
+        html: '<div class="custom-marker">' + statueSvg + '</div>',
+        iconSize: [48, 48],
+        iconAnchor: [24, 24],
+        popupAnchor: [0, -24],
     });
 
     data.forEach(function (item) {
@@ -183,13 +207,17 @@ document.addEventListener('DOMContentLoaded', function () {
         let panoBtn = '';
 
         if (item.panorama) {
-            media = '<img class="map-popup-image" src="' + (item.image || '') + '" alt="">' +
-                    '<div class="map-popup-panorama-badge">' +
+            media = (item.image
+                        ? '<img class="map-popup-image" src="' + item.image + '" alt="">'
+                        : '<div class="map-popup-noimage">' +
+                            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/></svg>' +
+                          '</div>')
+                    + '<div class="map-popup-panorama-badge">' +
                         '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
                             '<path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>' +
                         '</svg>' +
                         '360°' +
-                    '</div>';
+                      '</div>';
 
             panoBtn = '<a href="/' + locale + '/sculptures/' + item.slug + '/360" class="map-popup-btn btn-panorama">' +
                         '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
@@ -221,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 '</div>' +
             '</div>';
 
-        marker.bindPopup(html, { maxWidth: 280, minWidth: 280 });
+        marker.bindPopup(html, { maxWidth: 300, minWidth: 300 });
     });
 
     if (bounds.length > 1) {
