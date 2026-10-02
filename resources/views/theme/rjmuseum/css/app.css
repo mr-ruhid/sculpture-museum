@@ -74,51 +74,166 @@ html {
     scrollbar-width: none;
 }
 
-.showcase-panel {
-    will-change: transform;
+/* =========================================================
+   Scroll showcase
+   All motion is driven by JS (scroll position), so there
+   are intentionally no CSS transitions on animated elements.
+   ========================================================= */
+
+.sc-stage {
+    height: 100vh;
+    height: 100svh;
 }
 
-.showcase-image,
-.showcase-overlay {
-    transition: filter .3s ease, transform .3s ease, opacity .3s ease;
-}
-
-.showcase-content {
-    transition: opacity .1s linear;
-    will-change: transform, opacity;
-}
-
-.showcase-cta {
-    transition: opacity .4s ease;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    background: rgba(15, 23, 42, 0.4);
-}
-.showcase-panel {
-    will-change: transform;
+.sc-slide {
+    will-change: clip-path;
     backface-visibility: hidden;
 }
 
-.showcase-image {
-    transition: transform .1s linear, filter .1s linear;
-    will-change: transform, filter;
+/* Without JS only the first slide is shown */
+.sc-slide:not(:first-child) {
+    visibility: hidden;
 }
 
-.showcase-overlay {
-    transition: opacity .1s linear;
+.sc-image {
+    transform-origin: 50% 50%;
+    will-change: transform;
 }
 
-.showcase-content {
-    transition: opacity .15s linear, transform .15s linear;
-    will-change: opacity, transform;
+.sc-dim {
+    background: #020617;
+    opacity: 0;
+    pointer-events: none;
 }
 
-.showcase-cta {
-    transition: opacity .3s ease, transform .3s ease;
-    will-change: opacity, transform;
+.sc-cta-shade {
+    background: radial-gradient(ellipse at center, rgba(15, 23, 42, 0.55) 0%, rgba(15, 23, 42, 0.92) 100%);
 }
 
-.showcase-last-overlay {
-    transition: opacity .1s linear;
-    background: radial-gradient(ellipse at center, rgba(15,23,42,0.5) 0%, rgba(15,23,42,0.9) 100%);
+.sc-content {
+    will-change: transform, opacity;
+}
+
+/* Big outlined number in the background */
+.sc-ghost {
+    position: absolute;
+    top: 10%;
+    right: 4vw;
+    font-size: clamp(8rem, 28vw, 26rem);
+    font-weight: 900;
+    line-height: .8;
+    letter-spacing: -.04em;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(255, 255, 255, .2);
+    pointer-events: none;
+    user-select: none;
+    will-change: transform, opacity;
+}
+
+/* Word-by-word title reveal */
+.sc-word {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: .12em;
+    margin-bottom: -.12em;
+}
+
+.sc-word > span {
+    display: inline-block;
+    will-change: transform;
+}
+
+.sc-ready [data-reveal] {
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+/* HUD */
+.sc-hud {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.sc-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, .12);
+}
+
+.sc-progress > span {
+    display: block;
+    height: 100%;
+    background: #fff;
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+}
+
+.sc-dots {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    pointer-events: auto;
+}
+
+.sc-dot {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 999px;
+    border: 1.5px solid rgba(255, 255, 255, .7);
+    background: transparent;
+    cursor: pointer;
+    transition: height .5s cubic-bezier(.4, 0, .2, 1), background .3s ease;
+}
+
+.sc-dot.is-active {
+    height: 28px;
+    background: #fff;
+}
+
+.sc-counter {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 2.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: .5rem;
+    color: #fff;
+    transition: opacity .4s ease;
+}
+
+.sc-current {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.sc-total {
+    font-size: .875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .55);
+}
+
+@media (min-width: 768px) {
+    .sc-dots,
+    .sc-counter {
+        right: 2.5rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sc-ghost {
+        display: none;
+    }
 }
