@@ -28,12 +28,12 @@
 </head>
 <body class="bg-slate-950">
 
-<header class="fixed top-0 left-0 right-0 h-16 bg-slate-900 border-b border-slate-800 z-50">
+<header class="fixed top-0 left-0 right-0 h-16 z-50" style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);">
     <div class="h-full px-6 flex items-center justify-between">
 
         <div class="flex items-center gap-3 min-w-0">
-            <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>
                 </svg>
             </div>
@@ -41,14 +41,15 @@
                 <div class="text-sm font-bold text-white truncate">
                     {{ $sculpture->translation()?->title }}
                 </div>
-                <div class="text-[11px] text-indigo-400 font-medium">360°</div>
+                <div class="text-[11px] text-indigo-400 font-medium tracking-wider uppercase">360°</div>
             </div>
         </div>
 
         <a href="{{ url('/' . app()->getLocale() . '/sculptures/' . $sculpture->slug) }}"
-           class="w-10 h-10 rounded-lg hover:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition"
+           class="group flex items-center gap-2 pl-3 pr-4 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/20 hover:bg-white/20 transition-all duration-300"
            title="{{ __('frontend.close') }}">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <span class="text-sm font-semibold text-white hidden sm:block">{{ __('frontend.close') }}</span>
+            <svg class="w-4 h-4 text-white/70 group-hover:text-white transition" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
             </svg>
         </a>
