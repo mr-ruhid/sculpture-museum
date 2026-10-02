@@ -5,7 +5,7 @@
     $currentLang = \App\Models\Language::where('code', $locale)->first();
 @endphp
 
-<header id="site-header" class="sticky top-0 left-0 right-0 z-50 transition-all duration-500 header-glass">
+<header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 header-hidden">
     <div class="max-w-7xl mx-auto px-6">
         <div class="flex items-center justify-between h-20">
 
@@ -60,14 +60,14 @@
                                 <span class="text-[11px] font-bold text-white">{{ strtoupper($locale) }}</span>
                             @endif
                         </span>
-                        <span class="text-sm font-semibold text-white hidden sm:block">{{ strtoupper($locale) }}</span>
+                        <span class="text-sm font-semibold text-white hidden sm:block">{{ $currentLang?->name ?? strtoupper($locale) }}</span>
                         <svg id="lang-chevron" class="w-3.5 h-3.5 text-white/70 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
 
                     <div id="lang-menu"
-                         class="lang-menu absolute right-0 top-full mt-2 min-w-[200px] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden opacity-0 invisible scale-95 origin-top-right transition-all duration-300">
+                         class="lang-menu absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden opacity-0 invisible scale-95 origin-top-right transition-all duration-300">
                         @foreach (\App\Models\Language::active() as $lang)
                             @php
                                 $targetPath = $currentPath ? '/' . $currentPath : '';
@@ -76,17 +76,14 @@
                             <a href="{{ url('/' . $lang->code . $targetPath) }}"
                                class="lang-item flex items-center gap-3 px-4 py-3 transition-colors duration-200
                                       {{ $isCurrent ? 'bg-indigo-50 text-indigo-700' : 'hover:bg-slate-50 text-slate-700' }}">
-                                <span class="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-slate-100 flex-shrink-0">
+                                <span class="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden bg-slate-100 flex-shrink-0">
                                     @if ($lang->flag)
                                         <img src="{{ $lang->flag }}" class="w-full h-full object-cover" alt="{{ $lang->code }}">
                                     @else
                                         <span class="text-[11px] font-bold">{{ strtoupper($lang->code) }}</span>
                                     @endif
                                 </span>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-sm font-semibold">{{ $lang->name }}</div>
-                                    <div class="text-[11px] uppercase tracking-wider {{ $isCurrent ? 'text-indigo-500' : 'text-slate-400' }}">{{ $lang->code }}</div>
-                                </div>
+                                <span class="flex-1 text-sm font-semibold">{{ $lang->name }}</span>
                                 @if ($isCurrent)
                                     <svg class="w-4 h-4 text-indigo-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
