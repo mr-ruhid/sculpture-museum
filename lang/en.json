@@ -1,1 +1,76 @@
-{}
+{
+    "frontend.home": "Home",
+    "frontend.sculptures": "Sculptures",
+    "frontend.about": "About",
+    "frontend.contact": "Contact",
+    "frontend.navigation": "Navigation",
+    "frontend.follow": "Follow Us",
+    "frontend.learn_more": "Learn More",
+    "frontend.explore": "Explore",
+    "frontend.view_all": "View All",
+    "frontend.view_details": "View Details",
+    "frontend.close": "Close",
+
+    "frontend.about_us": "About Us",
+    "frontend.latest": "Latest",
+    "frontend.latest_sculptures": "Latest Sculptures",
+    "frontend.scroll_for_more": "Discover More",
+    "frontend.browse_sculptures": "Browse Sculptures",
+
+    "frontend.stat_sculptures": "Sculptures",
+    "frontend.stat_cities": "Cities",
+    "frontend.stat_sculptors": "Sculptors",
+    "frontend.stat_years": "Years",
+
+    "frontend.cta_title": "Explore the Sculptural Heritage of Azerbaijan",
+    "frontend.cta_subtitle": "Discover monuments, memorials and sculptures that tell the story of a nation.",
+    "frontend.cta_button": "Start Exploring",
+
+    "frontend.catalog": "Catalog",
+    "frontend.sculptures_subtitle": "Browse the full collection of sculptures across Azerbaijan.",
+    "frontend.search_placeholder": "Search by name, sculptor or city...",
+    "frontend.all_cities": "All Cities",
+    "frontend.all_styles": "All Styles",
+    "frontend.all_years": "All Years",
+    "frontend.filter": "Filter",
+    "frontend.clear": "Clear",
+    "frontend.results_count": "{0} No results|{1} :count result|[2,*] :count results",
+    "frontend.no_results": "No results found",
+    "frontend.no_results_text": "Try adjusting your search or filters.",
+
+    "frontend.year": "Year",
+    "frontend.opening_date": "Opening Date",
+    "frontend.city": "City",
+    "frontend.architect": "Architect",
+    "frontend.material": "Material",
+    "frontend.dimensions": "Dimensions",
+    "frontend.description": "Description",
+    "frontend.history": "History",
+    "frontend.gallery": "Gallery",
+    "frontend.location": "Location",
+    "frontend.related": "Related Sculptures",
+
+    "frontend.panorama_360": "360° Panorama",
+    "frontend.panorama_subtitle": "Explore this sculpture in a full 360-degree view.",
+    "frontend.panorama_open": "Open 360° View",
+    "frontend.panorama_fullscreen": "Fullscreen",
+
+    "frontend.condition_exists": "Exists",
+    "frontend.condition_destroyed": "Destroyed",
+    "frontend.condition_moved": "Moved",
+
+    "frontend.map": "Map",
+    "frontend.map_title": "Sculptures on the Map",
+    "frontend.map_subtitle": "Explore sculptures across Azerbaijan.",
+
+    "frontend.get_in_touch": "Get in Touch",
+    "frontend.contact_subtitle": "Have a question or suggestion? We would love to hear from you.",
+    "frontend.address": "Address",
+    "frontend.phone": "Phone",
+    "frontend.email": "Email",
+    "frontend.contact_cta_title": "Discover the Collection",
+    "frontend.contact_cta_subtitle": "Browse sculptures from every corner of Azerbaijan.",
+
+    "frontend.about_empty": "Coming Soon",
+    "frontend.about_empty_text": "Information about the project will be available shortly."
+}
