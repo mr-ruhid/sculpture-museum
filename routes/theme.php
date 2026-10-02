@@ -13,6 +13,7 @@ Route::group(['prefix' => '{locale}', 'middleware' => 'setlocale'], function () 
     Route::get('/', [FrontendController::class, 'home'])->name('home');
     Route::get('/sculptures', [FrontendController::class, 'sculptures'])->name('sculptures.index');
     Route::get('/sculptures/{slug}', [FrontendController::class, 'sculptureShow'])->name('sculpture.show');
+    Route::get('/sculptures/{slug}/360', [FrontendController::class, 'panorama'])->name('sculpture.panorama');
     Route::get('/about', [FrontendController::class, 'about'])->name('about');
     Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
 
