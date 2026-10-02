@@ -19,14 +19,11 @@
                 <div class="border-b border-slate-100 flex overflow-x-auto bg-slate-50/50">
                     @foreach ($languages as $i => $lang)
                         <button type="button" onclick="switchTab('lang', '{{ $lang->code }}')"
-                                class="lang-tab px-5 py-3 text-sm font-medium transition-all relative whitespace-nowrap
+                                class="lang-tab px-5 py-3 text-sm font-medium transition-all whitespace-nowrap
                                        {{ $i === 0 ? 'text-indigo-600 bg-white' : 'text-slate-500 hover:text-slate-800' }}"
                                 data-lang="{{ $lang->code }}">
                             @if ($lang->flag)<img src="{{ $lang->flag }}" class="inline w-5 h-3.5 mr-1.5 rounded-sm object-cover">@endif
                             {{ $lang->name }}
-                            @if ($i === 0)
-                                <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"></span>
-                            @endif
                         </button>
                     @endforeach
                 </div>
@@ -42,6 +39,44 @@
                                     <input type="text" name="translations[{{ $lang->code }}][title]"
                                            value="{{ old("translations.{$lang->code}.title") }}"
                                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Heykəltəraş</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][sculptor]"
+                                               value="{{ old("translations.{$lang->code}.sculptor") }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Memar</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][architect]"
+                                               value="{{ old("translations.{$lang->code}.architect") }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Material</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][material]"
+                                               value="{{ old("translations.{$lang->code}.material") }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Üslub</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][style]"
+                                               value="{{ old("translations.{$lang->code}.style") }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Şəhər / rayon</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][city]"
+                                               value="{{ old("translations.{$lang->code}.city") }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ünvan</label>
+                                        <input type="text" name="translations[{{ $lang->code }}][address]"
+                                               value="{{ old("translations.{$lang->code}.address") }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-1.5">Qısa təsvir</label>
@@ -76,16 +111,6 @@
                                class="w-full border border-slate-200 rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Heykəltəraş</label>
-                        <input type="text" name="sculptor" value="{{ old('sculptor') }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Memar</label>
-                        <input type="text" name="architect" value="{{ old('architect') }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
-                    <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Yaranma ili</label>
                         <input type="number" name="year" value="{{ old('year') }}" min="1000" max="2100"
                                class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
@@ -96,18 +121,8 @@
                                class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Material</label>
-                        <input type="text" name="material" value="{{ old('material') }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
-                    <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ölçülər</label>
                         <input type="text" name="dimensions" value="{{ old('dimensions') }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Üslub</label>
-                        <input type="text" name="style" value="{{ old('style') }}"
                                class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
                     </div>
                 </div>
@@ -116,19 +131,9 @@
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white flex items-center gap-2">
                     <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    <h3 class="font-semibold text-slate-800">Yerləşmə</h3>
+                    <h3 class="font-semibold text-slate-800">Koordinatlar</h3>
                 </div>
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Şəhər / rayon</label>
-                        <input type="text" name="city" value="{{ old('city') }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ünvan</label>
-                        <input type="text" name="address" value="{{ old('address') }}"
-                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    </div>
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Latitude</label>
                         <input type="text" name="latitude" value="{{ old('latitude') }}"
@@ -233,7 +238,7 @@
                 </div>
                 <div class="p-6">
                     <label for="main_image" class="block cursor-pointer">
-                        <div id="main_preview_box" class="w-full aspect-square rounded-xl border-2 border-dashed border-slate-200 hover:border-indigo-400 transition flex flex-col items-center justify-center bg-slate-50 overflow-hidden">
+                        <div class="w-full aspect-square rounded-xl border-2 border-dashed border-slate-200 hover:border-indigo-400 transition flex flex-col items-center justify-center bg-slate-50 overflow-hidden">
                             <img id="main_preview" class="hidden w-full h-full object-cover">
                             <div id="main_placeholder" class="flex flex-col items-center text-slate-400 py-8">
                                 <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
