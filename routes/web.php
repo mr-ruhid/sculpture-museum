@@ -28,6 +28,24 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::get('/about', [AdminController::class, 'about'])->name('about');
 
+        Route::get('/settings/general', [SettingsController::class, 'general'])->name('settings.general');
+        Route::post('/settings/general', [SettingsController::class, 'generalUpdate'])->name('settings.general.update');
+
+        Route::get('/settings/contact', [SettingsController::class, 'contact'])->name('settings.contact');
+        Route::post('/settings/contact', [SettingsController::class, 'contactUpdate'])->name('settings.contact.update');
+
+        Route::get('/settings/social', [SettingsController::class, 'social'])->name('settings.social');
+        Route::post('/settings/social', [SettingsController::class, 'socialUpdate'])->name('settings.social.update');
+
+        Route::get('/settings/seo', [SettingsController::class, 'seo'])->name('settings.seo');
+        Route::post('/settings/seo', [SettingsController::class, 'seoUpdate'])->name('settings.seo.update');
+
+        Route::get('/settings/homepage', [SettingsController::class, 'homepage'])->name('settings.homepage');
+        Route::post('/settings/homepage', [SettingsController::class, 'homepageUpdate'])->name('settings.homepage.update');
+
+        Route::get('/settings/about', [SettingsController::class, 'about'])->name('settings.about');
+        Route::post('/settings/about', [SettingsController::class, 'aboutUpdate'])->name('settings.about.update');
+
         Route::get('/settings/smtp', [SettingsController::class, 'smtp'])->name('settings.smtp');
         Route::post('/settings/smtp', [SettingsController::class, 'smtpUpdate'])->name('settings.smtp.update');
 
