@@ -27,47 +27,57 @@ function initScrollShowcase() {
     const showcase = document.getElementById('scroll-showcase');
     if (!showcase) return;
 
-    const panels = showcase.querySelectorAll('.showcase-panel');
-    if (!panels.length) return;
-
-    const lastPanel = panels[panels.length - 1];
-    const lastCta = lastPanel.querySelector('.showcase-cta');
-    const lastOverlay = lastPanel.querySelector('.showcase-overlay');
-    const lastImage = lastPanel.querySelector('.showcase-image');
+    const panels = Array.from(showcase.querySelectorAll('.showcase-panel'));
+    if (panels.length < 2) return;
 
     function update() {
+        const vh = window.innerHeight;
+
         panels.forEach(function (panel, i) {
+            const image = panel.querySelector('.showcase-image');
             const content = panel.querySelector('.showcase-content');
+            const overlay = panel.querySelector('.showcase-overlay') || panel.querySelector('.showcase-last-overlay');
+            const cta = panel.querySelector('.showcase-cta');
+
             const rect = panel.getBoundingClientRect();
-            const progress = Math.min(Math.max(-rect.top / window.innerHeight, 0), 1);
+            const isLast = i === panels.length - 1;
+
+            let progress = 0;
+
+            if (i < panels.length - 1) {
+                const next = panels[i + 1];
+                const nextRect = next.getBoundingClientRect();
+                progress = Math.min(Math.max(1 - (nextRect.top / vh), 0), 1);
+            } else {
+                progress = 0;
+            }
+
+            if (image) {
+                image.style.transform = 'scale(' + (1 + progress * 0.15) + ')';
+                image.style.filter = 'blur(' + (progress * 16) + 'px) brightness(' + (1 - progress * 0.5) + ')';
+            }
+
+            if (overlay) {
+                overlay.style.opacity = 1 + progress * 0.5;
+            }
 
             if (content) {
-                content.style.transform = 'translateY(' + (progress * 80) + 'px)';
-                content.style.opacity = 1 - progress * 0.6;
+                content.style.opacity = 1 - progress * 1.5;
+                content.style.transform = 'translateY(' + (progress * 60) + 'px)';
+            }
+
+            if (isLast && cta) {
+                const lastImage = panel.querySelector('.showcase-last-image');
+                const ctaRect = panel.getBoundingClientRect();
+                const ctaProgress = Math.min(Math.max(-ctaRect.top / (vh * 0.5), 0), 1);
+
+                if (lastImage) {
+                    lastImage.style.transform = 'scale(' + (1 + ctaProgress * 0.15) + ')';
+                }
+                cta.style.opacity = ctaProgress;
+                cta.style.transform = 'translateY(' + ((1 - ctaProgress) * 40) + 'px)';
             }
         });
-
-        const rect = lastPanel.getBoundingClientRect();
-        const trigger = -rect.top - window.innerHeight * 0.5;
-
-        if (trigger > 0) {
-            const intensity = Math.min(trigger / (window.innerHeight * 0.6), 1);
-
-            if (lastImage) {
-                lastImage.style.filter = 'blur(' + (intensity * 20) + 'px)';
-                lastImage.style.transform = 'scale(' + (1 + intensity * 0.1) + ')';
-            }
-            if (lastOverlay) {
-                lastOverlay.style.opacity = 1 - intensity * 0.3;
-            }
-            if (lastCta) {
-                lastCta.style.opacity = intensity;
-                lastCta.style.pointerEvents = intensity > 0.5 ? 'auto' : 'none';
-            }
-        } else {
-            if (lastImage) lastImage.style.filter = 'blur(0px)';
-            if (lastCta) lastCta.style.opacity = 0;
-        }
     }
 
     window.addEventListener('scroll', update, { passive: true });
