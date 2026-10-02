@@ -1,14 +1,33 @@
 function bootTheme() {
     const header = document.getElementById('site-header');
+    const showcase = document.getElementById('scroll-showcase');
 
     if (header) {
-        window.addEventListener('scroll', function () {
-            if (window.scrollY > 50) {
+        function updateHeader() {
+            const y = window.scrollY;
+
+            if (showcase) {
+                const showcaseEnd = showcase.offsetTop + showcase.offsetHeight - window.innerHeight;
+
+                if (y >= showcaseEnd) {
+                    header.classList.add('is-sticky');
+                } else {
+                    header.classList.remove('is-sticky');
+                }
+            } else {
+                header.classList.add('is-sticky');
+            }
+
+            if (y > 50) {
                 header.classList.add('is-scrolled');
             } else {
                 header.classList.remove('is-scrolled');
             }
-        });
+        }
+
+        window.addEventListener('scroll', updateHeader, { passive: true });
+        window.addEventListener('resize', updateHeader);
+        updateHeader();
     }
 
     const mobileBtn = document.getElementById('mobile-menu-btn');
