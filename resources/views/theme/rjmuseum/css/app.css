@@ -94,3 +94,31 @@ html {
     -webkit-backdrop-filter: blur(8px);
     background: rgba(15, 23, 42, 0.4);
 }
+.showcase-panel {
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.showcase-image {
+    transition: transform .1s linear, filter .1s linear;
+    will-change: transform, filter;
+}
+
+.showcase-overlay {
+    transition: opacity .1s linear;
+}
+
+.showcase-content {
+    transition: opacity .15s linear, transform .15s linear;
+    will-change: opacity, transform;
+}
+
+.showcase-cta {
+    transition: opacity .3s ease, transform .3s ease;
+    will-change: opacity, transform;
+}
+
+.showcase-last-overlay {
+    transition: opacity .1s linear;
+    background: radial-gradient(ellipse at center, rgba(15,23,42,0.5) 0%, rgba(15,23,42,0.9) 100%);
+}
