@@ -12,7 +12,7 @@
     <div class="max-w-7xl mx-auto px-6">
         <div class="flex items-center justify-between py-4">
             <h1 class="text-lg font-semibold text-gray-800">{{ config('app.name') }}</h1>
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
                 <button type="submit" class="text-sm text-red-600 hover:text-red-800">
                     {{ __('admin.logout') }}
