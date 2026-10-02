@@ -32,9 +32,24 @@
     <div class="h-full px-6 flex items-center justify-between">
 
         <div class="flex items-center gap-3 min-w-0">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); border: 2px solid #fff; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.5);">
-                <svg class="w-6 h-6" fill="none" stroke="#ffffff" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>
+            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); border: 2px solid #fff; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.5);">
+                <svg style="width: 22px; height: 22px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+                    <g fill="#ffffff">
+                        <path d="M352 400 L448 400 L442 688 L358 688 Z"/>
+                        <path d="M380 230 C330 240 300 300 306 410 L320 495 L360 512 L440 512 L480 495 L494 410 C500 300 470 240 420 230 Z"/>
+                        <path d="M375 230 L425 230 L400 290 Z" fill="none" stroke="#6366f1" stroke-width="6"/>
+                        <rect x="375" y="200" width="50" height="40"/>
+                        <path d="M375 230 L400 250 L425 230 Z" fill="none" stroke="#6366f1" stroke-width="6"/>
+                        <circle cx="400" cy="165" r="45"/>
+                        <circle cx="352" cy="165" r="8"/>
+                        <circle cx="448" cy="165" r="8"/>
+                        <path d="M355 160 C355 120 380 110 405 110 C435 110 450 130 450 155 C435 155 430 145 420 140 C410 135 390 145 375 145 C365 145 360 155 355 160 Z"/>
+                        <rect x="266" y="688" width="268" height="32"/>
+                        <rect x="286" y="720" width="228" height="96"/>
+                        <rect x="320" y="746" width="160" height="44" fill="none" stroke="#6366f1" stroke-width="6"/>
+                        <path d="M250 816 C250 790 270 776 296 776 L504 776 C530 776 550 790 550 816 Z"/>
+                        <rect x="226" y="816" width="348" height="40"/>
+                    </g>
                 </svg>
             </div>
             <div class="min-w-0">
