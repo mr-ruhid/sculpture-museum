@@ -81,9 +81,8 @@ html {
 }
 
 .sc-stage {
-    height: calc(100vh - 5rem);
-    height: calc(100svh - 5rem);
-    top: 5rem;
+    height: 100vh;
+    height: 100svh;
 }
 
 .sc-slide {
@@ -237,13 +236,23 @@ html {
 
 #site-header {
     z-index: 100;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .5s cubic-bezier(.4, 0, .2, 1), opacity .4s ease, background .4s ease, box-shadow .4s ease;
     background: rgba(15, 23, 42, 0.4);
     backdrop-filter: blur(12px) saturate(150%);
     -webkit-backdrop-filter: blur(12px) saturate(150%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-#site-header.is-scrolled {
+#site-header.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#site-header.is-visible.is-scrolled {
     background: rgba(15, 23, 42, 0.85);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
