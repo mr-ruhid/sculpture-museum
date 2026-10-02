@@ -237,3 +237,21 @@ html {
         display: none;
     }
 }
+
+.header-glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06);
+}
+
+.lang-menu.is-open {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: scale(1) !important;
+}
+
+#lang-toggle.is-open #lang-chevron {
+    transform: rotate(180deg);
+}
