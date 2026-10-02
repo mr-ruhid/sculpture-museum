@@ -73,3 +73,24 @@ html {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+.showcase-panel {
+    will-change: transform;
+}
+
+.showcase-image,
+.showcase-overlay {
+    transition: filter .3s ease, transform .3s ease, opacity .3s ease;
+}
+
+.showcase-content {
+    transition: opacity .1s linear;
+    will-change: transform, opacity;
+}
+
+.showcase-cta {
+    transition: opacity .4s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: rgba(15, 23, 42, 0.4);
+}
