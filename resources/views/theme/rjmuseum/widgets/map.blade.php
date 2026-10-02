@@ -1,6 +1,28 @@
 @if ($sculptures->count())
 <section class="relative">
-    <div id="sculpture-map" class="w-full h-screen"></div>
+    <div class="flex h-screen">
+
+        <div class="flex-1 relative">
+            <div id="sculpture-map" class="w-full h-full"></div>
+        </div>
+
+        <aside class="w-96 bg-white border-l border-slate-200 flex flex-col shadow-2xl z-10">
+            <div class="px-6 py-5 border-b border-slate-100 bg-slate-50">
+                <div class="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-1">
+                    {{ __('frontend.map') }}
+                </div>
+                <h2 class="text-lg font-black text-slate-900">
+                    {{ __('frontend.map_title') }}
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">
+                    {{ $sculptures->count() }} {{ __('frontend.sculptures') }}
+                </p>
+            </div>
+
+            <div id="map-list" class="flex-1 overflow-y-auto"></div>
+        </aside>
+
+    </div>
 </section>
 
 @push('styles')
@@ -141,6 +163,81 @@
     .leaflet-control-attribution {
         font-size: 10px !important;
     }
+
+    .map-list-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 20px;
+        border-bottom: 1px solid #f1f5f9;
+        cursor: pointer;
+        transition: background .2s, border-color .2s;
+    }
+    .map-list-item:hover {
+        background: #f8fafc;
+    }
+    .map-list-item.is-active {
+        background: #eef2ff;
+        border-left: 3px solid #6366f1;
+        padding-left: 17px;
+    }
+    .map-list-thumb {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        object-fit: cover;
+        flex-shrink: 0;
+        background: #f1f5f9;
+    }
+    .map-list-thumb-empty {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        flex-shrink: 0;
+        background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .map-list-thumb-empty svg {
+        width: 20px;
+        height: 20px;
+        color: #94a3b8;
+    }
+    .map-list-info {
+        flex: 1;
+        min-width: 0;
+    }
+    .map-list-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.3;
+        margin-bottom: 2px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .map-list-city {
+        font-size: 11px;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .map-list-city svg {
+        width: 10px;
+        height: 10px;
+    }
+
+    #map-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    #map-list::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+    }
 </style>
 @endpush
 
@@ -153,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const data = @json($sculptures);
     const locale = '{{ app()->getLocale() }}';
+    const listEl = document.getElementById('map-list');
 
     const map = L.map('sculpture-map', {
         scrollWheelZoom: false,
@@ -165,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }).addTo(map);
 
     const bounds = [];
+    const markers = {};
 
     const markerIcon = L.divIcon({
         className: '',
@@ -182,6 +281,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!item.lat || !item.lng) return;
 
         const marker = L.marker([item.lat, item.lng], { icon: markerIcon }).addTo(map);
+        markers[item.id] = marker;
         bounds.push([item.lat, item.lng]);
 
         let media = '';
@@ -231,7 +331,68 @@ document.addEventListener('DOMContentLoaded', function () {
             '</div>';
 
         marker.bindPopup(html, { maxWidth: 300, minWidth: 300 });
+
+        marker.on('click', function () {
+            setActiveItem(item.id);
+        });
     });
+
+    data.forEach(function (item) {
+        if (!item.lat || !item.lng || !listEl) return;
+
+        const el = document.createElement('div');
+        el.className = 'map-list-item';
+        el.dataset.id = item.id;
+
+        const thumb = item.image
+            ? '<img src="' + item.image + '" class="map-list-thumb" alt="">'
+            : '<div class="map-list-thumb-empty">' +
+                '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">' +
+                    '<path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>' +
+                '</svg>' +
+              '</div>';
+
+        el.innerHTML =
+            thumb +
+            '<div class="map-list-info">' +
+                '<div class="map-list-title">' + escapeHtml(item.title) + '</div>' +
+                (item.city
+                    ? '<div class="map-list-city">' +
+                        '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>' +
+                        escapeHtml(item.city) +
+                      '</div>'
+                    : '') +
+            '</div>';
+
+        el.addEventListener('click', function () {
+            focusOn(item);
+        });
+
+        listEl.appendChild(el);
+    });
+
+    function focusOn(item) {
+        if (!markers[item.id]) return;
+
+        map.flyTo([item.lat, item.lng], 15, { duration: 1.2 });
+        setTimeout(function () {
+            markers[item.id].openPopup();
+            setActiveItem(item.id);
+        }, 600);
+    }
+
+    function setActiveItem(id) {
+        if (!listEl) return;
+
+        document.querySelectorAll('.map-list-item').forEach(function (el) {
+            el.classList.toggle('is-active', el.dataset.id == id);
+        });
+
+        const active = listEl.querySelector('.map-list-item.is-active');
+        if (active) {
+            active.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
 
     if (bounds.length > 1) {
         map.fitBounds(bounds, { padding: [60, 60] });
