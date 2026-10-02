@@ -9,7 +9,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('theme/rjmuseum/css/app.css') }}">
+    <link rel="stylesheet" href="{{ url('theme/css/app.css') }}">
 
     @stack('styles')
 </head>
@@ -23,7 +23,7 @@
 
 @include('theme.rjmuseum.widgets.footer')
 
-<script src="{{ asset('theme/rjmuseum/js/app.js') }}"></script>
+<script src="{{ url('theme/js/app.js') }}"></script>
 
 @stack('scripts')
 </body>
