@@ -32,8 +32,8 @@
     <div class="h-full px-6 flex items-center justify-between">
 
         <div class="flex items-center gap-3 min-w-0">
-            <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center flex-shrink-0">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); border: 2px solid #fff; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.5);">
+                <svg class="w-6 h-6" fill="none" stroke="#ffffff" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>
                 </svg>
             </div>

@@ -10,8 +10,8 @@
         background: #0f172a;
     }
     .custom-marker {
-        width: 48px;
-        height: 48px;
+        width: 44px;
+        height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -20,17 +20,15 @@
         border-radius: 50%;
         box-shadow: 0 6px 18px rgba(99, 102, 241, 0.5);
         transition: transform .3s ease, box-shadow .3s ease;
-        overflow: hidden;
-        padding: 7px;
     }
     .custom-marker:hover {
         transform: scale(1.15);
         box-shadow: 0 8px 25px rgba(99, 102, 241, 0.7);
     }
     .custom-marker svg {
-        width: 100%;
-        height: 100%;
-        display: block;
+        width: 22px;
+        height: 22px;
+        color: #ffffff;
     }
     .leaflet-popup-content-wrapper {
         border-radius: 16px;
@@ -156,25 +154,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const data = @json($sculptures);
     const locale = '{{ app()->getLocale() }}';
 
-    const statueSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="100%" height="100%">' +
-        '<g fill="#ffffff">' +
-            '<path d="M352 400 L448 400 L442 688 L358 688 Z"/>' +
-            '<path d="M380 230 C330 240 300 300 306 410 L320 495 L360 512 L440 512 L480 495 L494 410 C500 300 470 240 420 230 Z"/>' +
-            '<path d="M375 230 L425 230 L400 290 Z" fill="none" stroke="#6366f1" stroke-width="6"/>' +
-            '<rect x="375" y="200" width="50" height="40"/>' +
-            '<path d="M375 230 L400 250 L425 230 Z" fill="none" stroke="#6366f1" stroke-width="6"/>' +
-            '<circle cx="400" cy="165" r="45"/>' +
-            '<circle cx="352" cy="165" r="8"/>' +
-            '<circle cx="448" cy="165" r="8"/>' +
-            '<path d="M355 160 C355 120 380 110 405 110 C435 110 450 130 450 155 C435 155 430 145 420 140 C410 135 390 145 375 145 C365 145 360 155 355 160 Z"/>' +
-            '<rect x="266" y="688" width="268" height="32"/>' +
-            '<rect x="286" y="720" width="228" height="96"/>' +
-            '<rect x="320" y="746" width="160" height="44" fill="none" stroke="#6366f1" stroke-width="6"/>' +
-            '<path d="M250 816 C250 790 270 776 296 776 L504 776 C530 776 550 790 550 816 Z"/>' +
-            '<rect x="226" y="816" width="348" height="40"/>' +
-        '</g>' +
-    '</svg>';
-
     const map = L.map('sculpture-map', {
         scrollWheelZoom: false,
         zoomControl: true,
@@ -189,10 +168,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const markerIcon = L.divIcon({
         className: '',
-        html: '<div class="custom-marker">' + statueSvg + '</div>',
-        iconSize: [48, 48],
-        iconAnchor: [24, 24],
-        popupAnchor: [0, -24],
+        html: '<div class="custom-marker">' +
+            '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">' +
+                '<path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>' +
+            '</svg>' +
+        '</div>',
+        iconSize: [44, 44],
+        iconAnchor: [22, 22],
+        popupAnchor: [0, -22],
     });
 
     data.forEach(function (item) {
