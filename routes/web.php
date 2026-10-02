@@ -3,7 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\CacheController;
+use App\Http\Controllers\Admin\LanguageController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SculptureController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\TranslationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,11 +19,34 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    Route::get('/twofactor', [AuthController::class, 'showTwoFactor'])->name('twofactor.show');
+    Route::post('/twofactor', [AuthController::class, 'verifyTwoFactor'])->name('twofactor.verify');
+
     Route::middleware('auth')->group(function () {
         Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/wikis', [AdminController::class, 'wikis'])->name('wikis.index');
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
         Route::get('/about', [AdminController::class, 'about'])->name('about');
+
+        Route::get('/settings/smtp', [SettingsController::class, 'smtp'])->name('settings.smtp');
+        Route::post('/settings/smtp', [SettingsController::class, 'smtpUpdate'])->name('settings.smtp.update');
+
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+        Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+        Route::post('/profile/twofactor', [ProfileController::class, 'updateTwoFactor'])->name('profile.twofactor');
+
+        Route::get('/languages', [LanguageController::class, 'index'])->name('languages.index');
+        Route::put('/languages/{language}', [LanguageController::class, 'update'])->name('languages.update');
+        Route::post('/languages/{language}/default', [LanguageController::class, 'setDefault'])->name('languages.default');
+        Route::get('/languages/{language}/translations', [TranslationController::class, 'edit'])->name('translations.edit');
+        Route::put('/languages/{language}/translations', [TranslationController::class, 'update'])->name('translations.update');
+
+        Route::get('/cache', [CacheController::class, 'index'])->name('cache.index');
+        Route::post('/cache/clear', [CacheController::class, 'clear'])->name('cache.clear');
+        Route::post('/cache/config', [CacheController::class, 'config'])->name('cache.config');
+        Route::post('/cache/route', [CacheController::class, 'route'])->name('cache.route');
+        Route::post('/cache/view', [CacheController::class, 'view'])->name('cache.view');
+
         Route::resource('sculptures', SculptureController::class);
     });
 });
