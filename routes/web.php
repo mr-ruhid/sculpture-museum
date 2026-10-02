@@ -26,7 +26,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/wikis', [SculptureController::class, 'index'])->name('wikis.index');
         Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
-        Route::get('/about', [AdminController::class, 'about'])->name('about');
+
+        Route::get('/about', [SettingsController::class, 'about'])->name('about');
+        Route::post('/about', [SettingsController::class, 'aboutUpdate'])->name('about.update');
 
         Route::get('/settings/general', [SettingsController::class, 'general'])->name('settings.general');
         Route::post('/settings/general', [SettingsController::class, 'generalUpdate'])->name('settings.general.update');
@@ -42,9 +44,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/settings/homepage', [SettingsController::class, 'homepage'])->name('settings.homepage');
         Route::post('/settings/homepage', [SettingsController::class, 'homepageUpdate'])->name('settings.homepage.update');
-
-        Route::get('/settings/about', [SettingsController::class, 'about'])->name('settings.about');
-        Route::post('/settings/about', [SettingsController::class, 'aboutUpdate'])->name('settings.about.update');
 
         Route::get('/settings/smtp', [SettingsController::class, 'smtp'])->name('settings.smtp');
         Route::post('/settings/smtp', [SettingsController::class, 'smtpUpdate'])->name('settings.smtp.update');
