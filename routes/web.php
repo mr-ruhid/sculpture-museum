@@ -9,10 +9,14 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SculptureController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\TranslationController;
+use App\Http\Controllers\FrontendController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [FrontendController::class, 'home'])->name('home');
+Route::get('/sculptures', [FrontendController::class, 'sculptures'])->name('sculptures.index');
+Route::get('/sculptures/{slug}', [FrontendController::class, 'sculptureShow'])->name('sculpture.show');
+Route::get('/about', [FrontendController::class, 'about'])->name('about');
+Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
+Route::get('/lang/{code}', [FrontendController::class, 'switchLang'])->name('lang.switch');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
