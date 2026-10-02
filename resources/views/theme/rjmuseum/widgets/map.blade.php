@@ -1,31 +1,14 @@
 @if ($sculptures->count())
-<section class="py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-6">
-
-        <div class="flex items-end justify-between mb-12">
-            <div>
-                <div class="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-3">
-                    {{ __('frontend.map') }}
-                </div>
-                <h2 class="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
-                    {{ __('frontend.map_title') }}
-                </h2>
-                <p class="text-lg text-slate-500 mt-4 max-w-2xl">
-                    {{ __('frontend.map_subtitle') }}
-                </p>
-            </div>
-        </div>
-
-        <div class="rounded-3xl overflow-hidden shadow-2xl border border-slate-100">
-            <div id="sculpture-map" class="w-full h-[600px]"></div>
-        </div>
-
-    </div>
+<section class="relative">
+    <div id="sculpture-map" class="w-full h-screen"></div>
 </section>
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
+    #sculpture-map {
+        background: #0f172a;
+    }
     .custom-marker {
         background: linear-gradient(135deg, #6366f1, #8b5cf6);
         width: 36px;
@@ -54,9 +37,6 @@
     .leaflet-popup-content {
         margin: 0;
         width: 280px !important;
-    }
-    .leaflet-popup-tip {
-        box-shadow: none;
     }
     .leaflet-popup-close-button {
         color: #fff !important;
@@ -121,19 +101,8 @@
         background: #000;
         height: 160px;
     }
-    .map-panorama-toggle {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        background: rgba(255,255,255,0.9);
-        color: #0f172a;
-        font-size: 11px;
-        font-weight: 700;
-        padding: 5px 10px;
-        border-radius: 999px;
-        cursor: pointer;
-        border: 0;
-        z-index: 2;
+    .leaflet-control-attribution {
+        font-size: 10px !important;
     }
 </style>
 @endpush
@@ -149,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const map = L.map('sculpture-map', {
         scrollWheelZoom: false,
+        zoomControl: true,
     }).setView([40.4093, 49.8671], 7);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
