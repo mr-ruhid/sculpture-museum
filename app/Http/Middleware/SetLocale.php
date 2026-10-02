@@ -11,13 +11,15 @@ class SetLocale
 {
     public function handle(Request $request, Closure $next)
     {
-        $locale = session('locale');
+        $locale = $request->route('locale');
 
-        if (!$locale || !in_array($locale, Language::active()->pluck('code')->toArray())) {
+        if (!$locale || !Language::where('code', $locale)->where('is_active', true)->exists()) {
             $locale = Language::getDefault();
+            return redirect()->to('/' . $locale . '/' . ltrim($request->path(), '/'));
         }
 
         App::setLocale($locale);
+        session(['locale' => $locale]);
 
         return $next($request);
     }
