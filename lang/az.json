@@ -1,1 +1,76 @@
-{}
+{
+    "frontend.home": "Ana səhifə",
+    "frontend.sculptures": "Heykəllər",
+    "frontend.about": "Haqqında",
+    "frontend.contact": "Əlaqə",
+    "frontend.navigation": "Naviqasiya",
+    "frontend.follow": "Bizi izləyin",
+    "frontend.learn_more": "Ətraflı",
+    "frontend.explore": "Kəşf et",
+    "frontend.view_all": "Hamısına bax",
+    "frontend.view_details": "Ətraflı bax",
+    "frontend.close": "Bağla",
+
+    "frontend.about_us": "Haqqımızda",
+    "frontend.latest": "Ən son",
+    "frontend.latest_sculptures": "Son əlavə edilənlər",
+    "frontend.scroll_for_more": "Daha çoxunu kəşf et",
+    "frontend.browse_sculptures": "Heykəllərə bax",
+
+    "frontend.stat_sculptures": "Heykəl",
+    "frontend.stat_cities": "Şəhər",
+    "frontend.stat_sculptors": "Heykəltəraş",
+    "frontend.stat_years": "İl",
+
+    "frontend.cta_title": "Azərbaycanın heykəltəraşlıq irsini kəşf edin",
+    "frontend.cta_subtitle": "Bir millətin tarixini danışan abidələri, memorialları və heykəlləri kəşf edin.",
+    "frontend.cta_button": "Kəşfə başla",
+
+    "frontend.catalog": "Kataloq",
+    "frontend.sculptures_subtitle": "Azərbaycanın hər yerindəki heykəllərin tam kolleksiyasına baxın.",
+    "frontend.search_placeholder": "Ad, heykəltəraş və ya şəhər üzrə axtarın...",
+    "frontend.all_cities": "Bütün şəhərlər",
+    "frontend.all_styles": "Bütün üslublar",
+    "frontend.all_years": "Bütün illər",
+    "frontend.filter": "Filtrlə",
+    "frontend.clear": "Təmizlə",
+    "frontend.results_count": "{0} Nəticə yoxdur|{1} :count nəticə|[2,*] :count nəticə",
+    "frontend.no_results": "Nəticə tapılmadı",
+    "frontend.no_results_text": "Axtarışınızı və ya filtrlərinizi dəyişməyə çalışın.",
+
+    "frontend.year": "İl",
+    "frontend.opening_date": "Açılış tarixi",
+    "frontend.city": "Şəhər",
+    "frontend.architect": "Memar",
+    "frontend.material": "Material",
+    "frontend.dimensions": "Ölçülər",
+    "frontend.description": "Təsvir",
+    "frontend.history": "Tarixi",
+    "frontend.gallery": "Qalereya",
+    "frontend.location": "Yerləşmə",
+    "frontend.related": "Əlaqəli heykəllər",
+
+    "frontend.panorama_360": "360° Panorama",
+    "frontend.panorama_subtitle": "Bu heykəli tam 360 dərəcə görünüşdə kəşf edin.",
+    "frontend.panorama_open": "360° görünüşü aç",
+    "frontend.panorama_fullscreen": "Tam ekran",
+
+    "frontend.condition_exists": "Mövcuddur",
+    "frontend.condition_destroyed": "Dağıdılıb",
+    "frontend.condition_moved": "Köçürülüb",
+
+    "frontend.map": "Xəritə",
+    "frontend.map_title": "Xəritədə heykəllər",
+    "frontend.map_subtitle": "Azərbaycan üzrə heykəlləri kəşf edin.",
+
+    "frontend.get_in_touch": "Bizimlə əlaqə",
+    "frontend.contact_subtitle": "Sualınız və ya təklifiniz var? Sizi dinləməkdən məmnun olarıq.",
+    "frontend.address": "Ünvan",
+    "frontend.phone": "Telefon",
+    "frontend.email": "E-poçt",
+    "frontend.contact_cta_title": "Kolleksiyanı kəşf edin",
+    "frontend.contact_cta_subtitle": "Azərbaycanın hər guşəsindən heykəllərə baxın.",
+
+    "frontend.about_empty": "Tezliklə",
+    "frontend.about_empty_text": "Layihə haqqında məlumat yaxın zamanda əlçatan olacaq."
+}
