@@ -6,225 +6,317 @@
 <form method="POST" action="{{ route('admin.sculptures.store') }}" enctype="multipart/form-data">
     @csrf
 
-    <div class="bg-white rounded-lg shadow mb-4">
-        <div class="border-b flex">
-            @foreach ($languages as $i => $lang)
-                <button type="button" onclick="switchTab('lang', '{{ $lang->code }}')"
-                        class="lang-tab px-4 py-3 text-sm font-medium border-b-2 {{ $i === 0 ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-gray-900' }}"
-                        data-lang="{{ $lang->code }}">
-                    @if ($lang->flag)<img src="{{ $lang->flag }}" class="inline w-5 h-3 mr-1">@endif
-                    {{ $lang->name }}
-                </button>
-            @endforeach
-        </div>
-        <div class="p-6">
-            @foreach ($languages as $i => $lang)
-                <div class="lang-pane {{ $i === 0 ? '' : 'hidden' }}" data-lang="{{ $lang->code }}">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Ad {{ $lang->code === 'en' ? '(məcburi)' : '' }}</label>
-                            <input type="text" name="translations[{{ $lang->code }}][title]"
-                                   value="{{ old("translations.{$lang->code}.title") }}"
-                                   class="w-full border border-gray-300 rounded px-3 py-2">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <div class="lg:col-span-2 space-y-6">
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+                    <h3 class="font-semibold text-slate-800">Mətn məlumatları</h3>
+                </div>
+
+                <div class="border-b border-slate-100 flex overflow-x-auto bg-slate-50/50">
+                    @foreach ($languages as $i => $lang)
+                        <button type="button" onclick="switchTab('lang', '{{ $lang->code }}')"
+                                class="lang-tab px-5 py-3 text-sm font-medium transition-all relative whitespace-nowrap
+                                       {{ $i === 0 ? 'text-indigo-600 bg-white' : 'text-slate-500 hover:text-slate-800' }}"
+                                data-lang="{{ $lang->code }}">
+                            @if ($lang->flag)<img src="{{ $lang->flag }}" class="inline w-5 h-3.5 mr-1.5 rounded-sm object-cover">@endif
+                            {{ $lang->name }}
+                            @if ($i === 0)
+                                <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"></span>
+                            @endif
+                        </button>
+                    @endforeach
+                </div>
+
+                <div class="p-6">
+                    @foreach ($languages as $i => $lang)
+                        <div class="lang-pane {{ $i === 0 ? '' : 'hidden' }}" data-lang="{{ $lang->code }}">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                                        Ad @if ($lang->code === 'en')<span class="text-red-500">*</span>@endif
+                                    </label>
+                                    <input type="text" name="translations[{{ $lang->code }}][title]"
+                                           value="{{ old("translations.{$lang->code}.title") }}"
+                                           class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Qısa təsvir</label>
+                                    <textarea name="translations[{{ $lang->code }}][short_description]" rows="2"
+                                              class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">{{ old("translations.{$lang->code}.short_description") }}</textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Tam təsvir</label>
+                                    <textarea name="translations[{{ $lang->code }}][description]" rows="5"
+                                              class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">{{ old("translations.{$lang->code}.description") }}</textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Tarixi məlumat</label>
+                                    <textarea name="translations[{{ $lang->code }}][history]" rows="4"
+                                              class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">{{ old("translations.{$lang->code}.history") }}</textarea>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Qısa təsvir</label>
-                            <textarea name="translations[{{ $lang->code }}][short_description]" rows="2"
-                                      class="w-full border border-gray-300 rounded px-3 py-2">{{ old("translations.{$lang->code}.short_description") }}</textarea>
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tam təsvir</label>
-                            <textarea name="translations[{{ $lang->code }}][description]" rows="5"
-                                      class="w-full border border-gray-300 rounded px-3 py-2">{{ old("translations.{$lang->code}.description") }}</textarea>
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tarixi məlumat</label>
-                            <textarea name="translations[{{ $lang->code }}][history]" rows="4"
-                                      class="w-full border border-gray-300 rounded px-3 py-2">{{ old("translations.{$lang->code}.history") }}</textarea>
-                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <h3 class="font-semibold text-slate-800">Əsas məlumatlar</h3>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Slug</label>
+                        <input type="text" name="slug" value="{{ old('slug') }}" placeholder="avtomatik yaranacaq"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Heykəltəraş</label>
+                        <input type="text" name="sculptor" value="{{ old('sculptor') }}"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Memar</label>
+                        <input type="text" name="architect" value="{{ old('architect') }}"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Yaranma ili</label>
+                        <input type="number" name="year" value="{{ old('year') }}" min="1000" max="2100"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Açılış tarixi</label>
+                        <input type="date" name="opening_date" value="{{ old('opening_date') }}"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Material</label>
+                        <input type="text" name="material" value="{{ old('material') }}"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ölçülər</label>
+                        <input type="text" name="dimensions" value="{{ old('dimensions') }}"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Üslub</label>
+                        <input type="text" name="style" value="{{ old('style') }}"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
                     </div>
                 </div>
-            @endforeach
-        </div>
-    </div>
+            </div>
 
-    <div class="bg-white rounded-lg shadow mb-4 p-6">
-        <h3 class="text-base font-semibold text-gray-800 mb-4">Əsas məlumatlar</h3>
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
-                <input type="text" name="slug" value="{{ old('slug') }}" placeholder="avtomatik yaranacaq"
-                       class="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <h3 class="font-semibold text-slate-800">Yerləşmə</h3>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Şəhər / rayon</label>
+                        <input type="text" name="city" value="{{ old('city') }}"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ünvan</label>
+                        <input type="text" name="address" value="{{ old('address') }}"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Latitude</label>
+                        <input type="text" name="latitude" value="{{ old('latitude') }}"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Longitude</label>
+                        <input type="text" name="longitude" value="{{ old('longitude') }}"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                    </div>
+                </div>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Heykəltəraş</label>
-                <input type="text" name="sculptor" value="{{ old('sculptor') }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Memar</label>
-                <input type="text" name="architect" value="{{ old('architect') }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Yaranma ili</label>
-                <input type="number" name="year" value="{{ old('year') }}" min="1000" max="2100"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Açılış tarixi</label>
-                <input type="date" name="opening_date" value="{{ old('opening_date') }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Material</label>
-                <input type="text" name="material" value="{{ old('material') }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Ölçülər</label>
-                <input type="text" name="dimensions" value="{{ old('dimensions') }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Üslub</label>
-                <input type="text" name="style" value="{{ old('style') }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-        </div>
-    </div>
 
-    <div class="bg-white rounded-lg shadow mb-4 p-6">
-        <h3 class="text-base font-semibold text-gray-800 mb-4">Yerləşmə</h3>
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Şəhər / rayon</label>
-                <input type="text" name="city" value="{{ old('city') }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <h3 class="font-semibold text-slate-800">SEO</h3>
+                </div>
+                <div class="border-b border-slate-100 flex overflow-x-auto bg-slate-50/50">
+                    @foreach ($languages as $i => $lang)
+                        <button type="button" onclick="switchTab('seo', '{{ $lang->code }}')"
+                                class="seo-tab px-5 py-3 text-sm font-medium transition-all whitespace-nowrap
+                                       {{ $i === 0 ? 'text-indigo-600 bg-white' : 'text-slate-500 hover:text-slate-800' }}"
+                                data-lang="{{ $lang->code }}">
+                            {{ $lang->name }}
+                        </button>
+                    @endforeach
+                </div>
+                <div class="p-6">
+                    @foreach ($languages as $i => $lang)
+                        <div class="seo-pane {{ $i === 0 ? '' : 'hidden' }}" data-lang="{{ $lang->code }}">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Meta title</label>
+                                    <input type="text" name="translations[{{ $lang->code }}][meta_title]"
+                                           value="{{ old("translations.{$lang->code}.meta_title") }}"
+                                           class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Meta description</label>
+                                    <textarea name="translations[{{ $lang->code }}][meta_description]" rows="2"
+                                              class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">{{ old("translations.{$lang->code}.meta_description") }}</textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Meta keywords</label>
+                                    <input type="text" name="translations[{{ $lang->code }}][meta_keywords]"
+                                           value="{{ old("translations.{$lang->code}.meta_keywords") }}"
+                                           class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Ünvan</label>
-                <input type="text" name="address" value="{{ old('address') }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
-                <input type="text" name="latitude" value="{{ old('latitude') }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
-                <input type="text" name="longitude" value="{{ old('longitude') }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-        </div>
-    </div>
 
-    <div class="bg-white rounded-lg shadow mb-4 p-6">
-        <h3 class="text-base font-semibold text-gray-800 mb-4">Status</h3>
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Vəziyyət</label>
-                <select name="condition" class="w-full border border-gray-300 rounded px-3 py-2">
-                    <option value="exists" {{ old('condition') === 'exists' ? 'selected' : '' }}>Mövcuddur</option>
-                    <option value="destroyed" {{ old('condition') === 'destroyed' ? 'selected' : '' }}>Dağıdılıb</option>
-                    <option value="moved" {{ old('condition') === 'moved' ? 'selected' : '' }}>Köçürülüb</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Dövlət qeydiyyatı</label>
-                <input type="text" name="registration_info" value="{{ old('registration_info') }}"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-            <div class="col-span-2">
-                <label class="flex items-center gap-2">
-                    <input type="checkbox" name="is_published" value="1" {{ old('is_published', true) ? 'checked' : '' }}>
-                    <span class="text-sm text-gray-700">Dərc edilsin</span>
+        </div>
+
+        <div class="space-y-6">
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <h3 class="font-semibold text-slate-800 mb-4">Nəşr</h3>
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" name="is_published" value="1" {{ old('is_published', true) ? 'checked' : '' }}
+                           class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500">
+                    <span class="text-sm text-slate-700">Dərc edilsin</span>
                 </label>
+                <div class="mt-6 space-y-3">
+                    <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/30 transition">
+                        Yadda saxla
+                    </button>
+                    <a href="{{ route('admin.sculptures.index') }}" class="block text-center text-sm text-slate-500 hover:text-slate-800 py-2">
+                        Ləğv et
+                    </a>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <div class="bg-white rounded-lg shadow mb-4 p-6">
-        <h3 class="text-base font-semibold text-gray-800 mb-4">Media</h3>
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Əsas şəkil</label>
-                <input type="file" name="main_image" accept="image/*"
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Qalereya (çoxlu)</label>
-                <input type="file" name="gallery[]" accept="image/*" multiple
-                       class="w-full border border-gray-300 rounded px-3 py-2">
-            </div>
-            <div class="col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1">360° panorama (embed kodu)</label>
-                <textarea name="panorama_embed" rows="3"
-                          class="w-full border border-gray-300 rounded px-3 py-2 font-mono text-xs">{{ old('panorama_embed') }}</textarea>
-            </div>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-lg shadow mb-4">
-        <div class="border-b flex">
-            @foreach ($languages as $i => $lang)
-                <button type="button" onclick="switchTab('seo', '{{ $lang->code }}')"
-                        class="seo-tab px-4 py-3 text-sm font-medium border-b-2 {{ $i === 0 ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600' }}"
-                        data-lang="{{ $lang->code }}">
-                    SEO — {{ $lang->name }}
-                </button>
-            @endforeach
-        </div>
-        <div class="p-6">
-            @foreach ($languages as $i => $lang)
-                <div class="seo-pane {{ $i === 0 ? '' : 'hidden' }}" data-lang="{{ $lang->code }}">
-                    <div class="grid grid-cols-1 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Meta title</label>
-                            <input type="text" name="translations[{{ $lang->code }}][meta_title]"
-                                   value="{{ old("translations.{$lang->code}.meta_title") }}"
-                                   class="w-full border border-gray-300 rounded px-3 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Meta description</label>
-                            <textarea name="translations[{{ $lang->code }}][meta_description]" rows="2"
-                                      class="w-full border border-gray-300 rounded px-3 py-2">{{ old("translations.{$lang->code}.meta_description") }}</textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Meta keywords</label>
-                            <input type="text" name="translations[{{ $lang->code }}][meta_keywords]"
-                                   value="{{ old("translations.{$lang->code}.meta_keywords") }}"
-                                   class="w-full border border-gray-300 rounded px-3 py-2">
-                        </div>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100">
+                    <h3 class="font-semibold text-slate-800">Status</h3>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Vəziyyət</label>
+                        <select name="condition" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                            <option value="exists" {{ old('condition') === 'exists' ? 'selected' : '' }}>Mövcuddur</option>
+                            <option value="destroyed" {{ old('condition') === 'destroyed' ? 'selected' : '' }}>Dağıdılıb</option>
+                            <option value="moved" {{ old('condition') === 'moved' ? 'selected' : '' }}>Köçürülüb</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Dövlət qeydiyyatı</label>
+                        <input type="text" name="registration_info" value="{{ old('registration_info') }}"
+                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
                     </div>
                 </div>
-            @endforeach
-        </div>
-    </div>
+            </div>
 
-    <div class="flex items-center gap-3 mb-8">
-        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded text-sm hover:bg-blue-700">
-            Yadda saxla
-        </button>
-        <a href="{{ route('admin.sculptures.index') }}" class="text-sm text-gray-600 hover:text-gray-900">
-            Ləğv et
-        </a>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800">Əsas şəkil</h3>
+                    <span class="text-xs text-slate-400">PNG, JPG</span>
+                </div>
+                <div class="p-6">
+                    <label for="main_image" class="block cursor-pointer">
+                        <div id="main_preview_box" class="w-full aspect-square rounded-xl border-2 border-dashed border-slate-200 hover:border-indigo-400 transition flex flex-col items-center justify-center bg-slate-50 overflow-hidden">
+                            <img id="main_preview" class="hidden w-full h-full object-cover">
+                            <div id="main_placeholder" class="flex flex-col items-center text-slate-400 py-8">
+                                <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <span class="text-sm">Şəkil seç</span>
+                            </div>
+                        </div>
+                        <input id="main_image" type="file" name="main_image" accept="image/*" class="hidden">
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800">Qalereya</h3>
+                    <span class="text-xs text-slate-400">Çoxlu seçim</span>
+                </div>
+                <div class="p-6">
+                    <label for="gallery" class="block cursor-pointer">
+                        <div class="w-full py-6 rounded-xl border-2 border-dashed border-slate-200 hover:border-indigo-400 transition flex flex-col items-center justify-center bg-slate-50 text-slate-400">
+                            <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                            <span class="text-sm">Şəkillər əlavə et</span>
+                        </div>
+                        <input id="gallery" type="file" name="gallery[]" accept="image/*" multiple class="hidden">
+                    </label>
+                    <div id="gallery_preview" class="grid grid-cols-3 gap-2 mt-4"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100">
+                    <h3 class="font-semibold text-slate-800">360° Panorama</h3>
+                </div>
+                <div class="p-6">
+                    <textarea name="panorama_embed" rows="4" placeholder="<iframe src=&quot;...&quot;></iframe>"
+                              class="w-full border border-slate-200 rounded-xl px-4 py-2.5 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">{{ old('panorama_embed') }}</textarea>
+                    <p class="text-xs text-slate-400 mt-2">Google Maps embed kodunu yapışdırın</p>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 </form>
 
 <script>
 function switchTab(group, code) {
     document.querySelectorAll('.' + group + '-tab').forEach(el => {
-        const isActive = el.dataset.lang === code;
-        el.classList.toggle('border-blue-600', isActive);
-        el.classList.toggle('text-blue-600', isActive);
-        el.classList.toggle('border-transparent', !isActive);
-        el.classList.toggle('text-gray-600', !isActive);
+        const on = el.dataset.lang === code;
+        el.classList.toggle('text-indigo-600', on);
+        el.classList.toggle('bg-white', on);
+        el.classList.toggle('text-slate-500', !on);
     });
     document.querySelectorAll('.' + group + '-pane').forEach(el => {
         el.classList.toggle('hidden', el.dataset.lang !== code);
     });
 }
+
+document.getElementById('main_image').addEventListener('change', function(e) {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+        const img = document.getElementById('main_preview');
+        img.src = ev.target.result;
+        img.classList.remove('hidden');
+        document.getElementById('main_placeholder').classList.add('hidden');
+    };
+    r.readAsDataURL(f);
+});
+
+document.getElementById('gallery').addEventListener('change', function(e) {
+    const box = document.getElementById('gallery_preview');
+    box.innerHTML = '';
+    Array.from(e.target.files).forEach(f => {
+        const r = new FileReader();
+        r.onload = ev => {
+            const div = document.createElement('div');
+            div.className = 'aspect-square rounded-lg overflow-hidden border border-slate-200';
+            div.innerHTML = '<img src="' + ev.target.result + '" class="w-full h-full object-cover">';
+            box.appendChild(div);
+        };
+        r.readAsDataURL(f);
+    });
+});
 </script>
 @endsection
