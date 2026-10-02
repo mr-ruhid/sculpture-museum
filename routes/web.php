@@ -48,5 +48,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/cache/view', [CacheController::class, 'view'])->name('cache.view');
 
         Route::resource('sculptures', SculptureController::class);
+        Route::delete('/sculptures/images/{image}', [SculptureController::class, 'destroyImage'])->name('sculptures.images.destroy');
     });
 });
