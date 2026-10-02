@@ -22,14 +22,18 @@ class TranslationController extends Controller
 
     public function update(Request $request, Language $language)
     {
-        $data = $request->validate([
-            'translations' => ['nullable', 'array'],
-            'translations.*' => ['nullable', 'string'],
-        ]);
+        $keys = $request->input('keys', []);
+        $values = $request->input('values', []);
 
-        $translations = collect($data['translations'] ?? [])
-            ->filter(fn ($value, $key) => !empty($key))
-            ->toArray();
+        $translations = [];
+
+        foreach ($keys as $i => $key) {
+            $key = trim($key);
+            if ($key === '') {
+                continue;
+            }
+            $translations[$key] = $values[$i] ?? '';
+        }
 
         $path = lang_path("{$language->code}.json");
 
