@@ -41,6 +41,7 @@ function bootTheme() {
 
     initLangSwitcher();
     initScrollShowcase();
+    initCardRipple();
 }
 
 if (document.readyState === 'loading') {
@@ -82,6 +83,47 @@ function initLangSwitcher() {
             menu.classList.remove('is-open');
             toggle.classList.remove('is-open');
         }
+    });
+}
+
+function initCardRipple() {
+    const cards = document.querySelectorAll('.sculpture-card');
+    if (!cards.length) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    cards.forEach(function (card) {
+        const ripple = card.querySelector('.card-ripple');
+        if (!ripple) return;
+
+        card.addEventListener('click', function (e) {
+            if (reduceMotion || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
+                return;
+            }
+
+            e.preventDefault();
+
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const size = Math.max(rect.width, rect.height) * 2.2;
+
+            ripple.style.width = size + 'px';
+            ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+
+            ripple.classList.remove('is-active');
+            void ripple.offsetWidth;
+            ripple.classList.add('is-active');
+
+            const href = card.getAttribute('href');
+            const delay = 620;
+
+            setTimeout(function () {
+                if (href) window.location.href = href;
+            }, delay);
+        });
     });
 }
 
