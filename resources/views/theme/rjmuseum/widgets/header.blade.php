@@ -5,7 +5,7 @@
     $currentLang = \App\Models\Language::where('code', $locale)->first();
 @endphp
 
-<header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+<header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 header-glass">
     <div class="max-w-7xl mx-auto px-6">
         <div class="flex items-center justify-between h-20">
 
@@ -42,7 +42,7 @@
                     @endphp
                     <a href="{{ url('/' . $locale . ($tab['path'] ? '/' . $tab['path'] : '')) }}"
                        class="relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300
-                              {{ $isActive ? 'text-white bg-slate-900' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' }}">
+                              {{ $isActive ? 'text-white bg-slate-900' : 'text-slate-700 hover:text-slate-900 hover:bg-slate-900/5' }}">
                         {{ $tab['label'] }}
                     </a>
                 @endforeach
@@ -52,7 +52,7 @@
 
                 <div class="lang-switcher relative" id="lang-switcher">
                     <button type="button" id="lang-toggle"
-                            class="group flex items-center gap-2 pl-1.5 pr-3 py-1.5 rounded-full bg-white/60 backdrop-blur border border-slate-200 hover:border-slate-300 hover:bg-white transition-all duration-300 shadow-sm">
+                            class="group flex items-center gap-2 pl-1.5 pr-3 py-1.5 rounded-full bg-white/70 backdrop-blur border border-white/60 hover:bg-white transition-all duration-300 shadow-sm">
                         <span class="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-slate-100 flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
                             @if ($currentLang?->flag)
                                 <img src="{{ $currentLang->flag }}" class="w-full h-full object-cover" alt="{{ $currentLang->code }}">
