@@ -10,23 +10,25 @@
         background: #0f172a;
     }
     .custom-marker {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        width: 36px;
-        height: 36px;
-        border-radius: 50% 50% 50% 0;
-        transform: rotate(-45deg);
-        border: 3px solid #fff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        width: 44px;
+        height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
-    }
-    .custom-marker::after {
-        content: '';
-        width: 10px;
-        height: 10px;
-        background: #fff;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border: 3px solid #fff;
         border-radius: 50%;
+        box-shadow: 0 6px 18px rgba(99, 102, 241, 0.5);
+        transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .custom-marker:hover {
+        transform: scale(1.15);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.7);
+    }
+    .custom-marker svg {
+        width: 22px;
+        height: 22px;
+        color: #fff;
     }
     .leaflet-popup-content-wrapper {
         border-radius: 16px;
@@ -45,19 +47,48 @@
         z-index: 10;
         text-shadow: 0 1px 3px rgba(0,0,0,0.5);
     }
-    .map-popup-image {
+    .map-popup-media {
+        position: relative;
         width: 100%;
         height: 160px;
+        background: #000;
+        overflow: hidden;
+    }
+    .map-popup-image {
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         display: block;
     }
     .map-popup-noimage {
         width: 100%;
-        height: 160px;
+        height: 100%;
         background: linear-gradient(135deg, #1e293b, #0f172a);
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    .map-popup-noimage svg {
+        width: 60px;
+        height: 60px;
+        color: #475569;
+    }
+    .map-popup-panorama-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 10px;
+        background: rgba(99, 102, 241, 0.95);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        backdrop-filter: blur(4px);
     }
     .map-popup-body {
         padding: 14px 16px;
@@ -74,6 +105,11 @@
         color: #64748b;
         margin-bottom: 12px;
     }
+    .map-popup-buttons {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
     .map-popup-btn {
         display: inline-flex;
         align-items: center;
@@ -85,21 +121,17 @@
         padding: 8px 14px;
         border-radius: 999px;
         text-decoration: none;
-        transition: background .2s;
+        transition: background .2s, transform .2s;
     }
     .map-popup-btn:hover {
         background: #6366f1;
+        transform: translateY(-1px);
     }
-    .map-panorama {
-        width: 100%;
-        height: 160px;
-        border: 0;
-        display: block;
+    .map-popup-btn.btn-panorama {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
     }
-    .map-panorama-wrap {
-        position: relative;
-        background: #000;
-        height: 160px;
+    .map-popup-btn.btn-panorama:hover {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
     }
     .leaflet-control-attribution {
         font-size: 10px !important;
@@ -115,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!mapEl) return;
 
     const data = @json($sculptures);
+    const locale = '{{ app()->getLocale() }}';
 
     const map = L.map('sculpture-map', {
         scrollWheelZoom: false,
@@ -130,10 +163,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const markerIcon = L.divIcon({
         className: '',
-        html: '<div class="custom-marker"></div>',
-        iconSize: [36, 36],
-        iconAnchor: [18, 36],
-        popupAnchor: [0, -36],
+        html: '<div class="custom-marker">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<path d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>' +
+            '</svg>' +
+        '</div>',
+        iconSize: [44, 44],
+        iconAnchor: [22, 22],
+        popupAnchor: [0, -22],
     });
 
     data.forEach(function (item) {
@@ -143,27 +180,45 @@ document.addEventListener('DOMContentLoaded', function () {
         bounds.push([item.lat, item.lng]);
 
         let media = '';
+        let panoBtn = '';
+
         if (item.panorama) {
-            media = '<div class="map-panorama-wrap">' +
-                        '<iframe class="map-panorama" src="' + extractSrc(item.panorama) + '" loading="lazy" allowfullscreen></iframe>' +
+            media = '<img class="map-popup-image" src="' + (item.image || '') + '" alt="">' +
+                    '<div class="map-popup-panorama-badge">' +
+                        '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
+                            '<path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>' +
+                        '</svg>' +
+                        '360°' +
                     '</div>';
+
+            panoBtn = '<a href="/' + locale + '/sculptures/' + item.slug + '/360" class="map-popup-btn btn-panorama">' +
+                        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
+                            '<path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>' +
+                        '</svg>' +
+                        '360°' +
+                      '</a>';
         } else if (item.image) {
             media = '<img class="map-popup-image" src="' + item.image + '" alt="">';
         } else {
             media = '<div class="map-popup-noimage">' +
-                        '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/></svg>' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">' +
+                            '<path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>' +
+                        '</svg>' +
                     '</div>';
         }
 
         const html =
-            media +
+            '<div class="map-popup-media">' + media + '</div>' +
             '<div class="map-popup-body">' +
                 '<div class="map-popup-title">' + escapeHtml(item.title) + '</div>' +
                 (item.city ? '<div class="map-popup-city">' + escapeHtml(item.city) + '</div>' : '') +
-                '<a href="' + item.url + '" class="map-popup-btn">' +
-                    '{{ __("frontend.view_details") }}' +
-                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>' +
-                '</a>' +
+                '<div class="map-popup-buttons">' +
+                    '<a href="' + item.url + '" class="map-popup-btn">' +
+                        '{{ __("frontend.view_details") }}' +
+                        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>' +
+                    '</a>' +
+                    panoBtn +
+                '</div>' +
             '</div>';
 
         marker.bindPopup(html, { maxWidth: 280, minWidth: 280 });
@@ -181,11 +236,6 @@ document.addEventListener('DOMContentLoaded', function () {
     mapEl.addEventListener('mouseleave', function () {
         map.scrollWheelZoom.disable();
     });
-
-    function extractSrc(embed) {
-        const match = embed.match(/src=["']([^"']+)["']/);
-        return match ? match[1] : '';
-    }
 
     function escapeHtml(text) {
         const div = document.createElement('div');
