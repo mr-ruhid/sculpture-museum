@@ -1,100 +1,71 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Haqqında səhifəsi')
+@section('title', 'About')
 
 @section('content')
-<form method="POST" action="{{ route('admin.settings.about.update') }}" enctype="multipart/form-data">
-    @csrf
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        <div class="lg:col-span-2 space-y-6">
-
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
-                    <h3 class="font-semibold text-slate-800">Məzmun</h3>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <h3 class="font-semibold text-slate-800 mb-4">Site Details</h3>
+            <dl class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <dt class="text-slate-500">Backend</dt>
+                    <dd class="font-medium text-slate-800">RJBackend / RJ CMS Lite derivative</dd>
                 </div>
-
-                <div class="border-b border-slate-100 flex overflow-x-auto bg-slate-50/50">
-                    @foreach ($languages as $i => $lang)
-                        <button type="button" onclick="switchTab('about', '{{ $lang->code }}')"
-                                class="about-tab px-5 py-3 text-sm font-medium transition-all whitespace-nowrap
-                                       {{ $i === 0 ? 'text-indigo-600 bg-white' : 'text-slate-500 hover:text-slate-800' }}"
-                                data-lang="{{ $lang->code }}">
-                            @if ($lang->flag)<img src="{{ $lang->flag }}" class="inline w-5 h-3.5 mr-1.5 rounded-sm object-cover">@endif
-                            {{ $lang->name }}
-                        </button>
-                    @endforeach
+                <div class="flex justify-between">
+                    <dt class="text-slate-500">Frontend</dt>
+                    <dd class="font-medium text-slate-800">RJ CMS Museum Theme</dd>
                 </div>
-
-                <div class="p-6">
-                    @foreach ($languages as $i => $lang)
-                        <div class="about-pane {{ $i === 0 ? '' : 'hidden' }}" data-lang="{{ $lang->code }}">
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Başlıq</label>
-                                    <input type="text" name="about_title_{{ $lang->code }}"
-                                           value="{{ $settings['about_title_' . $lang->code] ?? '' }}"
-                                           class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Qısa təsvir</label>
-                                    <textarea name="about_short_{{ $lang->code }}" rows="2"
-                                              class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">{{ $settings['about_short_' . $lang->code] ?? '' }}</textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Tam məzmun</label>
-                                    <textarea name="about_content_{{ $lang->code }}" rows="10"
-                                              class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">{{ $settings['about_content_' . $lang->code] ?? '' }}</textarea>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+                <div class="flex justify-between">
+                    <dt class="text-slate-500">Version</dt>
+                    <dd class="font-medium text-slate-800">1.1.5</dd>
                 </div>
-            </div>
-
+            </dl>
         </div>
 
-        <div class="space-y-6">
-
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-                <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/30 transition">
-                    Yadda saxla
-                </button>
-                <a href="{{ route('admin.settings') }}" class="block text-center text-sm text-slate-500 hover:text-slate-800 py-2 mt-2">
-                    Geri
-                </a>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-100">
-                    <h3 class="font-semibold text-slate-800">Şəkil</h3>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <h3 class="font-semibold text-slate-800 mb-4">System Information</h3>
+            <dl class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <dt class="text-slate-500">Laravel Version</dt>
+                    <dd class="font-medium text-slate-800">{{ app()->version() }}</dd>
                 </div>
-                <div class="p-6">
-                    @if (!empty($settings['about_image']))
-                        <img src="{{ asset('storage/' . $settings['about_image']) }}" class="w-full rounded-lg mb-3">
-                    @endif
-                    <input type="file" name="about_image" accept="image/*"
-                           class="w-full text-sm border border-slate-200 rounded-xl px-3 py-2">
+                <div class="flex justify-between">
+                    <dt class="text-slate-500">PHP Version</dt>
+                    <dd class="font-medium text-slate-800">{{ phpversion() }}</dd>
                 </div>
-            </div>
-
+                <div class="flex justify-between">
+                    <dt class="text-slate-500">Server Software</dt>
+                    <dd class="font-medium text-slate-800">{{ $_SERVER['SERVER_SOFTWARE'] ?? 'N/A' }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-slate-500">Server OS</dt>
+                    <dd class="font-medium text-slate-800">{{ PHP_OS }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-slate-500">Database Driver</dt>
+                    <dd class="font-medium text-slate-800">{{ config('database.default') }}</dd>
+                </div>
+            </dl>
         </div>
 
     </div>
-</form>
 
-<script>
-function switchTab(group, code) {
-    document.querySelectorAll('.' + group + '-tab').forEach(el => {
-        const on = el.dataset.lang === code;
-        el.classList.toggle('text-indigo-600', on);
-        el.classList.toggle('bg-white', on);
-        el.classList.toggle('text-slate-500', !on);
-    });
-    document.querySelectorAll('.' + group + '-pane').forEach(el => {
-        el.classList.toggle('hidden', el.dataset.lang !== code);
-    });
-}
-</script>
+    <div class="mt-6 flex flex-wrap gap-3">
+        <a href="https://ruhidjavadoff.blogspot.com/2026/07/rj-cms-sistemlri.html" target="_blank"
+           class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition">
+            RJ CMS Systems
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <a href="https://ruhidjavadoff.blogspot.com/2023/12/rj-cms-derivative-sites.html" target="_blank"
+           class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition">
+            RJ CMS Derivative Sites
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <a href="https://ruhidjavadoff.blogspot.com/2021/03/rj-cms-lite.html" target="_blank"
+           class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition">
+            RJ CMS Lite
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+    </div>
 @endsection
