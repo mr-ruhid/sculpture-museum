@@ -39,6 +39,11 @@ class Language extends Model
         return static::where('is_active', true)->get();
     }
 
+    public static function activeQuery()
+    {
+        return static::where('is_active', true);
+    }
+
     public static function getDefault(): ?string
     {
         $default = static::where('is_default', true)->first();
