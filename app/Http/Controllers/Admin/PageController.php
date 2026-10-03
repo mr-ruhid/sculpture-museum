@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 class PageController extends Controller
 {
     protected string $pagesPath;
+    protected array $hidden = ['panorama', 'sculpture'];
 
     public function __construct()
     {
@@ -23,6 +24,7 @@ class PageController extends Controller
         $files = collect(File::files($this->pagesPath))
             ->map(fn ($f) => preg_replace('/\.blade\.php$/', '', $f->getFilename()))
             ->reject(fn ($slug) => Str::startsWith($slug, '_'))
+            ->reject(fn ($slug) => in_array($slug, $this->hidden))
             ->values();
 
         $dbPages = Page::with('translations')->get()->keyBy('slug');
@@ -32,6 +34,9 @@ class PageController extends Controller
                 'slug' => $slug,
                 'model' => $dbPages->get($slug),
                 'is_custom' => $dbPages->has($slug),
+                'url' => $slug === 'home'
+                    ? url('/' . app()->getLocale())
+                    : url('/' . app()->getLocale() . '/' . $slug),
             ];
         });
 
@@ -57,7 +62,7 @@ class PageController extends Controller
 
         $slug = $data['slug'];
 
-        if (in_array($slug, Page::reservedSlugs())) {
+        if (in_array($slug, Page::reservedSlugs()) || in_array($slug, $this->hidden)) {
             return back()->withErrors(['slug' => 'Bu slug rezerv edilib.'])->withInput();
         }
 
