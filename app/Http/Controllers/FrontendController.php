@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Language;
+use App\Models\Page;
 use App\Models\Sculpture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -149,6 +150,21 @@ class FrontendController extends Controller
         }
 
         return view('theme.rjmuseum.pages.panorama', compact('sculpture'));
+    }
+
+    public function page($locale, $slug)
+    {
+        App::setLocale($locale);
+
+        $page = Page::with('translations')
+            ->where('slug', $slug)
+            ->where('is_published', true)
+            ->firstOrFail();
+
+        return view('theme.rjmuseum.pages._dynamic', [
+            'slug' => $slug,
+            'page' => $page,
+        ]);
     }
 
     public function switchLang($code)
