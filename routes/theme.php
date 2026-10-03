@@ -42,3 +42,8 @@ Route::group(['prefix' => '{locale}', 'middleware' => 'setlocale'], function () 
 });
 
 Route::get('/lang/{code}', [FrontendController::class, 'switchLang'])->name('lang.switch');
+
+Route::get('/{locale}/{slug}', [App\Http\Controllers\FrontendController::class, 'page'])
+    ->where('locale', '[a-z]{2}')
+    ->where('slug', '[a-z0-9\-]+')
+    ->name('page.show');
