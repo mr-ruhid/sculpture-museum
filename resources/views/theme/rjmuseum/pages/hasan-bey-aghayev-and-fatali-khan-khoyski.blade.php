@@ -1,0 +1,1 @@
+@include('theme.rjmuseum.pages._dynamic', ['slug' => 'hasan-bey-aghayev-and-fatali-khan-khoyski'])
