@@ -161,6 +161,14 @@ class FrontendController extends Controller
             ->where('is_published', true)
             ->firstOrFail();
 
+        $customView = 'theme.rjmuseum.pages.templates.' . $slug;
+        if (view()->exists($customView)) {
+            return view($customView, [
+                'page' => $page,
+                'slug' => $slug,
+            ]);
+        }
+
         return view('theme.rjmuseum.pages._dynamic', [
             'slug' => $slug,
             'page' => $page,
@@ -169,7 +177,7 @@ class FrontendController extends Controller
 
     public function switchLang($code)
     {
-        if (Language::where('code', $code)->where('is_active', true)->exists()) {
+        if (Language::where('lang', $code)->where('is_active', true)->exists()) {
             session(['locale' => $code]);
             return redirect()->to('/' . $code);
         }
