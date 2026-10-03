@@ -1,0 +1,1 @@
+@include('theme.rjmuseum.pages._dynamic', ['slug' => 'hesen-bey-agayev'])
