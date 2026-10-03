@@ -53,14 +53,26 @@ class PageController extends Controller
     {
         $languages = Language::active();
 
-        $rules = ['slug' => ['required', 'string', 'max:100', 'regex:/^[a-z0-9\-]+$/']];
+        $rules = ['slug' => ['nullable', 'string', 'max:100', 'regex:/^[a-z0-9\-]*$/']];
         foreach ($languages as $lang) {
             $rules["title_{$lang->code}"] = ['required', 'string', 'max:255'];
         }
 
         $data = $request->validate($rules);
 
-        $slug = $data['slug'];
+        $slug = trim((string) ($data['slug'] ?? ''));
+
+        if ($slug === '') {
+            $source = $data['title_en'] ?? '';
+            if (trim($source) === '') {
+                $source = $data['title_az'] ?? '';
+            }
+            $slug = $this->slugify($source);
+        }
+
+        if ($slug === '') {
+            return back()->withErrors(['slug' => 'Slug yaradıla bilmədi. Zəhmət olmasa əl ilə yazın.'])->withInput();
+        }
 
         if (in_array($slug, Page::reservedSlugs()) || in_array($slug, $this->hidden)) {
             return back()->withErrors(['slug' => 'Bu slug rezerv edilib.'])->withInput();
@@ -169,6 +181,25 @@ class PageController extends Controller
         $page->delete();
 
         return redirect()->route('admin.pages.index')->with('success', 'Səhifə silindi.');
+    }
+
+    protected function slugify(string $str): string
+    {
+        $map = [
+            'ə'=>'e','ı'=>'i','ö'=>'o','ü'=>'u','ç'=>'c','ş'=>'s','ğ'=>'g',
+            'Ə'=>'e','I'=>'i','İ'=>'i','Ö'=>'o','Ü'=>'u','Ç'=>'c','Ş'=>'s','Ğ'=>'g',
+            'а'=>'a','б'=>'b','в'=>'v','г'=>'g','д'=>'d','е'=>'e','ё'=>'e','ж'=>'zh','з'=>'z',
+            'и'=>'i','й'=>'y','к'=>'k','л'=>'l','м'=>'m','н'=>'n','о'=>'o','п'=>'p','р'=>'r',
+            'с'=>'s','т'=>'t','у'=>'u','ф'=>'f','х'=>'h','ц'=>'ts','ч'=>'ch','ш'=>'sh','щ'=>'shch',
+            'ъ'=>'','ы'=>'y','ь'=>'','э'=>'e','ю'=>'yu','я'=>'ya',
+        ];
+
+        $str = str_replace(array_keys($map), array_values($map), $str);
+        $str = strtolower($str);
+        $str = preg_replace('/[^a-z0-9]+/', '-', $str);
+        $str = trim($str, '-');
+
+        return substr($str, 0, 100);
     }
 
     protected function writeStub(string $slug): void
