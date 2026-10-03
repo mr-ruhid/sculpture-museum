@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CacheController;
 use App\Http\Controllers\Admin\LanguageController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SculptureController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -53,6 +54,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/languages/{language}/default', [LanguageController::class, 'setDefault'])->name('languages.default');
         Route::get('/languages/{language}/translations', [TranslationController::class, 'edit'])->name('translations.edit');
         Route::put('/languages/{language}/translations', [TranslationController::class, 'update'])->name('translations.update');
+
+        Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
+        Route::get('/pages/create', [PageController::class, 'create'])->name('pages.create');
+        Route::post('/pages', [PageController::class, 'store'])->name('pages.store');
+        Route::get('/pages/{page}/edit', [PageController::class, 'edit'])->name('pages.edit');
+        Route::put('/pages/{page}', [PageController::class, 'update'])->name('pages.update');
+        Route::delete('/pages/{page}', [PageController::class, 'destroy'])->name('pages.destroy');
 
         Route::get('/cache', [CacheController::class, 'index'])->name('cache.index');
         Route::post('/cache/clear', [CacheController::class, 'clear'])->name('cache.clear');
