@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
 {
-    protected $fillable = ['slug', 'is_published'];
+    protected $fillable = ['slug', 'is_published', 'is_static'];
 
     protected $casts = [
         'is_published' => 'boolean',
+        'is_static' => 'boolean',
     ];
 
     public function translations()
@@ -27,6 +28,6 @@ class Page extends Model
 
     public static function reservedSlugs(): array
     {
-        return ['panorama', 'sculpture', 'sculptures', 'home'];
+        return ['panorama', 'sculpture', 'sculptures'];
     }
 }

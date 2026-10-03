@@ -33,7 +33,7 @@ class PageController extends Controller
             return (object) [
                 'slug' => $slug,
                 'model' => $dbPages->get($slug),
-                'is_custom' => $dbPages->has($slug),
+                'is_static' => !$dbPages->has($slug),
                 'url' => $slug === 'home'
                     ? url('/' . app()->getLocale())
                     : url('/' . app()->getLocale() . '/' . $slug),
@@ -73,6 +73,7 @@ class PageController extends Controller
         $page = Page::create([
             'slug' => $slug,
             'is_published' => $request->boolean('is_published', true),
+            'is_static' => false,
         ]);
 
         foreach ($languages as $lang) {
@@ -88,44 +89,79 @@ class PageController extends Controller
 
         $this->writeStub($slug);
 
-        return redirect()->route('admin.pages.edit', $page)->with('success', 'Səhifə yaradıldı.');
+        return redirect()->route('admin.pages.edit', $slug)->with('success', 'Səhifə yaradıldı.');
     }
 
-    public function edit(Page $page)
+    public function edit(string $slug)
     {
         $languages = Language::active();
+
+        $filePath = $this->pagesPath . '/' . $slug . '.blade.php';
+        if (!File::exists($filePath) || in_array($slug, $this->hidden)) {
+            abort(404);
+        }
+
+        $page = Page::firstOrCreate(
+            ['slug' => $slug],
+            ['is_published' => true, 'is_static' => true]
+        );
+
         $page->load('translations');
         $translations = $page->translations->keyBy('locale');
 
-        return view('admin.pages.edit', compact('page', 'languages', 'translations'));
+        return view('admin.pages.edit', [
+            'page' => $page,
+            'languages' => $languages,
+            'translations' => $translations,
+            'is_static' => $page->is_static,
+        ]);
     }
 
-    public function update(Request $request, Page $page)
+    public function update(Request $request, string $slug)
     {
         $languages = Language::active();
 
-        $page->update(['is_published' => $request->boolean('is_published', true)]);
+        $page = Page::where('slug', $slug)->firstOrFail();
+
+        if (!$page->is_static) {
+            $page->update(['is_published' => $request->boolean('is_published', true)]);
+        }
 
         foreach ($languages as $lang) {
+            $data = [
+                'meta_title' => $request->input("meta_title_{$lang->code}", ''),
+                'meta_description' => $request->input("meta_description_{$lang->code}", ''),
+                'meta_keywords' => $request->input("meta_keywords_{$lang->code}", ''),
+            ];
+
+            if (!$page->is_static) {
+                $data['title'] = $request->input("title_{$lang->code}", '');
+                $data['content'] = $request->input("content_{$lang->code}", '');
+            }
+
             $page->translations()->updateOrCreate(
                 ['locale' => $lang->code],
-                [
-                    'title' => $request->input("title_{$lang->code}", ''),
-                    'content' => $request->input("content_{$lang->code}", ''),
-                    'meta_title' => $request->input("meta_title_{$lang->code}", ''),
-                    'meta_description' => $request->input("meta_description_{$lang->code}", ''),
-                    'meta_keywords' => $request->input("meta_keywords_{$lang->code}", ''),
-                ]
+                $data
             );
         }
 
         return back()->with('success', 'Səhifə yeniləndi.');
     }
 
-    public function destroy(Page $page)
+    public function destroy(string $slug)
     {
-        $file = $this->pagesPath . '/' . $page->slug . '.blade.php';
+        $page = Page::where('slug', $slug)->first();
 
+        if (!$page) {
+            return redirect()->route('admin.pages.index')->with('success', 'Səhifə silindi.');
+        }
+
+        if ($page->is_static) {
+            $page->delete();
+            return redirect()->route('admin.pages.index')->with('success', 'Statik səhifə məlumatları təmizləndi.');
+        }
+
+        $file = $this->pagesPath . '/' . $page->slug . '.blade.php';
         if (File::exists($file) && !in_array($page->slug, Page::reservedSlugs())) {
             File::delete($file);
         }

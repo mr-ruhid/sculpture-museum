@@ -21,7 +21,7 @@
 
 @section('content')
 
-<form method="POST" action="{{ route('admin.pages.update', $page) }}">
+<form method="POST" action="{{ route('admin.pages.update', $page->slug) }}">
     @csrf
     @method('PUT')
 
@@ -29,49 +29,61 @@
 
         <div class="lg:col-span-2 space-y-6">
 
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-indigo-50 to-white flex items-center gap-2">
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    <h3 class="font-semibold text-slate-800">Səhifə məzmunu</h3>
-                </div>
+            @if (!$is_static)
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-indigo-50 to-white flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <h3 class="font-semibold text-slate-800">Səhifə məzmunu</h3>
+                    </div>
 
-                <div class="border-b border-slate-100 flex overflow-x-auto bg-slate-50/50">
-                    @foreach ($languages as $i => $lang)
-                        <button type="button" onclick="switchTab('page', '{{ $lang->code }}')"
-                                class="page-tab px-5 py-3 text-sm font-medium transition-all whitespace-nowrap
-                                       {{ $i === 0 ? 'text-indigo-600 bg-white' : 'text-slate-500 hover:text-slate-800' }}"
-                                data-lang="{{ $lang->code }}">
-                            @if ($lang->flag)<img src="{{ $lang->flag }}" class="inline w-5 h-3.5 mr-1.5 rounded-sm object-cover">@endif
-                            {{ $lang->name }}
-                        </button>
-                    @endforeach
-                </div>
+                    <div class="border-b border-slate-100 flex overflow-x-auto bg-slate-50/50">
+                        @foreach ($languages as $i => $lang)
+                            <button type="button" onclick="switchTab('page', '{{ $lang->code }}')"
+                                    class="page-tab px-5 py-3 text-sm font-medium transition-all whitespace-nowrap
+                                           {{ $i === 0 ? 'text-indigo-600 bg-white' : 'text-slate-500 hover:text-slate-800' }}"
+                                    data-lang="{{ $lang->code }}">
+                                @if ($lang->flag)<img src="{{ $lang->flag }}" class="inline w-5 h-3.5 mr-1.5 rounded-sm object-cover">@endif
+                                {{ $lang->name }}
+                            </button>
+                        @endforeach
+                    </div>
 
-                <div class="p-6">
-                    @foreach ($languages as $i => $lang)
-                        @php $tr = $translations->get($lang->code); @endphp
-                        <div class="page-pane {{ $i === 0 ? '' : 'hidden' }}" data-lang="{{ $lang->code }}">
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Başlıq</label>
-                                    <input type="text" name="title_{{ $lang->code }}"
-                                           value="{{ old('title_' . $lang->code, $tr?->title) }}"
-                                           class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                                </div>
+                    <div class="p-6">
+                        @foreach ($languages as $i => $lang)
+                            @php $tr = $translations->get($lang->code); @endphp
+                            <div class="page-pane {{ $i === 0 ? '' : 'hidden' }}" data-lang="{{ $lang->code }}">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Başlıq</label>
+                                        <input type="text" name="title_{{ $lang->code }}"
+                                               value="{{ old('title_' . $lang->code, $tr?->title) }}"
+                                               class="w-full border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
+                                    </div>
 
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Məzmun (HTML)</label>
-                                    <textarea name="content_{{ $lang->code }}"
-                                              class="cm-editor">{{ old('content_' . $lang->code, $tr?->content) }}</textarea>
-                                    <p class="text-xs text-slate-400 mt-2">HTML teqləri frontend-də olduğu kimi render olunacaq.</p>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Məzmun (HTML)</label>
+                                        <textarea name="content_{{ $lang->code }}"
+                                                  class="cm-editor">{{ old('content_' . $lang->code, $tr?->content) }}</textarea>
+                                        <p class="text-xs text-slate-400 mt-2">HTML teqləri frontend-də olduğu kimi render olunacaq.</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="bg-violet-50 border border-violet-200 rounded-2xl p-5 flex gap-3">
+                    <svg class="w-5 h-5 text-violet-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div class="text-sm text-violet-900">
+                        <p class="font-semibold mb-1">Statik səhifə</p>
+                        <p class="text-violet-700">Bu səhifənin məzmunu birbaşa <code class="bg-violet-100 px-1.5 py-0.5 rounded font-mono text-xs">{{ $page->slug }}.blade.php</code> faylında saxlanılır. Burada yalnız SEO məlumatlarını redaktə edə bilərsiniz.</p>
+                    </div>
+                </div>
+            @endif
 
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white flex items-center gap-2">
@@ -129,7 +141,8 @@
                         class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/30 transition">
                     Yadda saxla
                 </button>
-                <a href="{{ url('/' . app()->getLocale() . '/' . $page->slug) }}" target="_blank" rel="noopener"
+                <a href="{{ $page->slug === 'home' ? url('/' . app()->getLocale()) : url('/' . app()->getLocale() . '/' . $page->slug) }}"
+                   target="_blank" rel="noopener"
                    class="w-full mt-3 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-sm font-semibold hover:bg-blue-100 hover:text-blue-700 transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
@@ -154,19 +167,21 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 border-b border-slate-100">
-                    <h3 class="font-semibold text-slate-800">Status</h3>
+            @if (!$is_static)
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100">
+                        <h3 class="font-semibold text-slate-800">Status</h3>
+                    </div>
+                    <div class="p-6">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" name="is_published" value="1"
+                                   {{ old('is_published', $page->is_published) ? 'checked' : '' }}
+                                   class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500">
+                            <span class="text-sm text-slate-700">Dərc edilsin</span>
+                        </label>
+                    </div>
                 </div>
-                <div class="p-6">
-                    <label class="flex items-center gap-3 cursor-pointer">
-                        <input type="checkbox" name="is_published" value="1"
-                               {{ old('is_published', $page->is_published) ? 'checked' : '' }}
-                               class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500">
-                        <span class="text-sm text-slate-700">Dərc edilsin</span>
-                    </label>
-                </div>
-            </div>
+            @endif
 
         </div>
 

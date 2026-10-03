@@ -41,7 +41,6 @@
                     $title = $model?->translation('az')?->title
                         ?? $model?->translation('en')?->title
                         ?? '—';
-                    $frontendUrl = url('/' . app()->getLocale() . '/' . $item->slug);
                 @endphp
                 <tr class="hover:bg-slate-50/60 transition">
                     <td class="px-6 py-4">
@@ -51,58 +50,42 @@
                         <span class="text-sm font-medium text-slate-800">{{ $title }}</span>
                     </td>
                     <td class="px-6 py-4">
-                        @if ($item->is_custom)
-                            @if ($model?->is_published)
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                    Aktiv
-                                </span>
-                            @else
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                                    Qaralama
-                                </span>
-                            @endif
-                        @else
+                        @if ($item->is_static)
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
                                 <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                                Statik fayl
+                                Statik
+                            </span>
+                        @elseif ($model?->is_published)
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                Aktiv
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                Qaralama
                             </span>
                         @endif
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex items-center justify-end gap-2">
-                            @if ($item->is_custom)
-                                <a href="{{ route('admin.pages.edit', $model) }}"
-                                   title="Redaktə"
-                                   class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-indigo-100 text-slate-600 hover:text-indigo-600 flex items-center justify-center transition">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                    </svg>
-                                </a>
-                            @else
-                                <form method="POST" action="{{ route('admin.pages.store') }}">
-                                    @csrf
-                                    <input type="hidden" name="slug" value="{{ $item->slug }}">
-                                    <input type="hidden" name="title_az" value="{{ ucfirst($item->slug) }}">
-                                    <button type="submit" title="Məzmun yarat"
-                                            class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-emerald-100 text-slate-600 hover:text-emerald-600 flex items-center justify-center transition">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                                        </svg>
-                                    </button>
-                                </form>
-                            @endif
+                            <a href="{{ route('admin.pages.edit', $item->slug) }}"
+                               title="{{ $item->is_static ? 'SEO redaktə' : 'Redaktə' }}"
+                               class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-indigo-100 text-slate-600 hover:text-indigo-600 flex items-center justify-center transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                            </a>
 
-                            <a href="{{ $frontendUrl }}" target="_blank" rel="noopener" title="Brauzerdə aç"
+                            <a href="{{ $item->url }}" target="_blank" rel="noopener" title="Brauzerdə aç"
                                class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-600 hover:text-blue-600 flex items-center justify-center transition">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                                 </svg>
                             </a>
 
-                            @if ($item->is_custom)
-                                <form method="POST" action="{{ route('admin.pages.destroy', $model) }}"
+                            @if (!$item->is_static)
+                                <form method="POST" action="{{ route('admin.pages.destroy', $item->slug) }}"
                                       onsubmit="return confirm('Bu səhifəni silmək istəyirsiniz?');">
                                     @csrf
                                     @method('DELETE')
