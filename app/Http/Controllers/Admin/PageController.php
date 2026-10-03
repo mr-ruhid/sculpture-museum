@@ -21,7 +21,7 @@ class PageController extends Controller
     public function index()
     {
         $files = collect(File::files($this->pagesPath))
-            ->map(fn ($f) => $f->getFilenameWithoutExtension())
+            ->map(fn ($f) => preg_replace('/\.blade\.php$/', '', $f->getFilename()))
             ->reject(fn ($slug) => Str::startsWith($slug, '_'))
             ->values();
 

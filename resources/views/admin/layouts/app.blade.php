@@ -38,6 +38,7 @@
                     $tabs = [
                         ['route' => 'admin.dashboard', 'pattern' => 'admin.dashboard', 'label' => 'Ana səhifə'],
                         ['route' => 'admin.wikis.index', 'pattern' => 'admin.wikis.*', 'label' => 'Wikilər'],
+                        ['route' => 'admin.pages.index', 'pattern' => 'admin.pages.*', 'label' => 'Səhifələr'],
                         ['route' => 'admin.settings', 'pattern' => 'admin.settings*', 'label' => 'Ayarlar'],
                         ['route' => 'admin.about', 'pattern' => 'admin.about', 'label' => 'Haqqında'],
                     ];
