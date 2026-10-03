@@ -146,7 +146,7 @@
                 <div class="p-6">
                     <input type="text" id="slug-input" name="slug" value="{{ old('slug') }}" placeholder="haqqimizda"
                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition">
-                    <p class="text-xs text-slate-400 mt-2">Yalnız kiçik hərf, rəqəm və defis. URL-də görünəcək.</p>
+                    <p class="text-xs text-slate-400 mt-2">Başlıq yazın — avtomatik yaranacaq. İstəsəniz əl ilə yazın.</p>
                     @error('slug')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                     @enderror
@@ -171,6 +171,62 @@
     </div>
 </form>
 
+<script>
+(function () {
+    function translit(str) {
+        const map = {
+            'ə':'e','ı':'i','ö':'o','ü':'u','ç':'c','ş':'s','ğ':'g',
+            'Ə':'e','I':'i','İ':'i','Ö':'o','Ü':'u','Ç':'c','Ş':'s','Ğ':'g',
+            'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z',
+            'и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r',
+            'с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'ts','ч':'ch','ш':'sh','щ':'shch',
+            'ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'
+        };
+        return str.split('').map(ch => map[ch] !== undefined ? map[ch] : ch).join('');
+    }
+
+    function slugify(str) {
+        return translit(str)
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 100);
+    }
+
+    const slugInput = document.getElementById('slug-input');
+    const titleInputs = document.querySelectorAll('[data-title-input]');
+    if (!slugInput) return;
+
+    let userEditedSlug = slugInput.value.length > 0;
+
+    function generateFromTitle() {
+        const az = document.querySelector('[data-title-input="az"]');
+        const en = document.querySelector('[data-title-input="en"]');
+        const source = (az && az.value.trim()) ? az : en;
+        if (source && source.value.trim()) {
+            slugInput.value = slugify(source.value);
+        }
+    }
+
+    slugInput.addEventListener('blur', function () {
+        this.value = slugify(this.value);
+    });
+
+    slugInput.addEventListener('input', function () {
+        userEditedSlug = true;
+    });
+
+    titleInputs.forEach(input => {
+        input.addEventListener('input', function () {
+            if (userEditedSlug) return;
+            generateFromTitle();
+        });
+    });
+
+    if (!userEditedSlug) generateFromTitle();
+})();
+</script>
+
 @endsection
 
 @push('scripts')
@@ -180,7 +236,7 @@
 <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/mode/css/css.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
 <script>
-function switchTab(group, code) {
+window.switchTab = function (group, code) {
     document.querySelectorAll('.' + group + '-tab').forEach(el => {
         const on = el.dataset.lang === code;
         el.classList.toggle('text-indigo-600', on);
@@ -194,7 +250,7 @@ function switchTab(group, code) {
             el.querySelectorAll('.CodeMirror').forEach(cm => cm.CodeMirror.refresh());
         }
     });
-}
+};
 
 document.querySelectorAll('.cm-editor').forEach(el => {
     CodeMirror.fromTextArea(el, {
@@ -203,45 +259,6 @@ document.querySelectorAll('.cm-editor').forEach(el => {
         lineWrapping: true,
         indentUnit: 4,
         tabSize: 4,
-    });
-});
-
-const slugInput = document.getElementById('slug-input');
-const titleInputs = document.querySelectorAll('[data-title-input]');
-let slugTouched = slugInput.value.length > 0;
-
-function slugify(str) {
-    const map = {
-        'ə': 'e', 'ı': 'i', 'ö': 'o', 'ü': 'u', 'ç': 'c', 'ş': 's', 'ğ': 'g',
-        'Ə': 'e', 'I': 'i', 'İ': 'i', 'Ö': 'o', 'Ü': 'u', 'Ç': 'c', 'Ş': 's', 'Ğ': 'g',
-        'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e', 'ж': 'zh',
-        'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
-        'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'ts',
-        'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
-    };
-    return str
-        .split('')
-        .map(c => map[c] !== undefined ? map[c] : c)
-        .join('')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .slice(0, 100);
-}
-
-slugInput.addEventListener('input', function () {
-    slugTouched = true;
-    const cursor = this.selectionStart;
-    this.value = this.value.toLowerCase().replace(/[^a-z0-9\-]/g, '');
-});
-
-titleInputs.forEach(input => {
-    input.addEventListener('input', function () {
-        if (slugTouched) return;
-        const azInput = document.querySelector('[data-title-input="az"]');
-        const enInput = document.querySelector('[data-title-input="en"]');
-        const source = (azInput && azInput.value) ? azInput : enInput;
-        if (source) slugInput.value = slugify(source.value);
     });
 });
 </script>
