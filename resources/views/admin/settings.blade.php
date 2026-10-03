@@ -61,6 +61,17 @@
             <p class="text-sm text-slate-500">Hero, statistika</p>
         </a>
 
+        <a href="{{ route('admin.about') }}"
+           class="group bg-white rounded-2xl shadow-sm border border-slate-100 p-6 hover:shadow-md hover:border-indigo-200 transition">
+            <div class="w-12 h-12 rounded-xl bg-violet-50 flex items-center justify-center mb-4 group-hover:bg-violet-100 transition">
+                <svg class="w-6 h-6 text-violet-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <h3 class="text-base font-semibold text-slate-800 mb-1">Haqqında</h3>
+            <p class="text-sm text-slate-500">Səhifə məzmunu və SEO</p>
+        </a>
+
         <a href="{{ route('admin.settings.smtp') }}"
            class="group bg-white rounded-2xl shadow-sm border border-slate-100 p-6 hover:shadow-md hover:border-indigo-200 transition">
             <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center mb-4 group-hover:bg-red-100 transition">
