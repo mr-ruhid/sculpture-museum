@@ -14,18 +14,8 @@
 
 @section('content')
 
-<section class="pt-32 pb-16 bg-slate-950 text-white">
-    <div class="max-w-7xl mx-auto px-6">
-        <h1 class="text-5xl md:text-6xl font-black leading-tight mb-4">
-            {{ $tr->title }}
-        </h1>
-    </div>
-</section>
-
-<section class="py-16 bg-white">
-    <div class="max-w-4xl mx-auto px-6 page-content">
-        {!! $tr->content !!}
-    </div>
-</section>
+<div class="page-content">
+    {!! $tr->content !!}
+</div>
 
 @endsection
