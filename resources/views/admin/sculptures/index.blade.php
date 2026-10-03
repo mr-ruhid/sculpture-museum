@@ -44,9 +44,9 @@
                         <td class="py-2 font-medium text-gray-800">
                             {{ $sculpture->translation()?->title ?? '—' }}
                         </td>
-                        <td class="py-2">{{ $sculpture->sculptor ?? '—' }}</td>
+                        <td class="py-2">{{ $sculpture->translation()?->sculptor ?? '—' }}</td>
                         <td class="py-2">{{ $sculpture->year ?? '—' }}</td>
-                        <td class="py-2">{{ $sculpture->city ?? '—' }}</td>
+                        <td class="py-2">{{ $sculpture->translation()?->city ?? '—' }}</td>
                         <td class="py-2">
                             @if ($sculpture->is_published)
                                 <span class="text-green-600 text-xs">Dərc edilib</span>
@@ -57,6 +57,9 @@
                         <td class="py-2 text-right whitespace-nowrap">
                             <a href="{{ route('admin.sculptures.edit', $sculpture) }}"
                                class="text-blue-600 hover:underline text-xs">Redaktə</a>
+                            <a href="{{ url('/' . app()->getLocale() . '/sculptures/' . $sculpture->slug) }}"
+                               target="_blank" rel="noopener"
+                               class="text-green-600 hover:underline text-xs ml-2">Bax</a>
                             <form action="{{ route('admin.sculptures.destroy', $sculpture) }}"
                                   method="POST" class="inline"
                                   onsubmit="return confirm('Silinsin?')">
