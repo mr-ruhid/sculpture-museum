@@ -1,8 +1,9 @@
 @php
     $locale = app()->getLocale();
-    $featured = \App\Models\Sculpture::with('translations')
+    $featured = $featured ?? \App\Models\Sculpture::with('translations')
         ->where('is_published', true)
-        ->latest()
+        ->orderBy('sort_order')
+        ->orderBy('id')
         ->take(3)
         ->get();
     $count = $featured->count();
