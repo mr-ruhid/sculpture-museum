@@ -76,5 +76,7 @@
     "frontend.back_home": "Back to home",
     "frontend.map_cluster_title": "Multiple sculptures",
     "frontend.follow_us": "Follow us",
-    "frontend.social_media": "Social media"
+    "frontend.social_media": "Social media",
+    "frontend.share": "Share",
+    "frontend.copy_link": "Copy link"
 }

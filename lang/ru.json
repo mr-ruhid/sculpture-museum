@@ -80,5 +80,7 @@
     "browse_sculptures": "Смотреть скульптуры",
     "frontend.map_cluster_title": "Несколько скульптур",
     "frontend.follow_us": "Подписывайтесь",
-    "frontend.social_media": "Социальные сети"
+    "frontend.social_media": "Социальные сети",
+    "frontend.share": "Поделиться",
+    "frontend.copy_link": "Копировать ссылку"
 }

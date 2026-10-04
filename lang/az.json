@@ -79,5 +79,7 @@
     "frontend.back_home": "Ana səhifəyə",
     "frontend.map_cluster_title": "Bir neçə heykəl",
     "frontend.follow_us": "Bizi izləyin",
-    "frontend.social_media": "Sosial şəbəkələr"
+    "frontend.social_media": "Sosial şəbəkələr",
+    "frontend.share": "Paylaş",
+    "frontend.copy_link": "Linki kopyala"
 }

@@ -79,5 +79,7 @@
     "frontend.back_home": "მთავარ გვერდზე",
     "frontend.map_cluster_title": "რამდენიმე სკულპტურა",
     "frontend.follow_us": "გამოგვყევით",
-    "frontend.social_media": "სოციალური ქსელები"
+    "frontend.social_media": "სოციალური ქსელები",
+    "frontend.share": "გაზიარება",
+    "frontend.copy_link": "ბმულის კოპირება"
 }
