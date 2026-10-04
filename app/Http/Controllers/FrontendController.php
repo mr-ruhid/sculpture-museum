@@ -115,13 +115,64 @@ class FrontendController extends Controller
             ->where('is_published', true)
             ->firstOrFail();
 
-        $related = Sculpture::with('translations')
-            ->where('is_published', true)
-            ->where('id', '!=', $sculpture->id)
-            ->take(3)
-            ->get();
+        $related = $this->findRelatedSculptures($sculpture, $locale, 3);
 
         return view('theme.rjmuseum.pages.sculpture', compact('sculpture', 'related'));
+    }
+
+    protected function findRelatedSculptures(Sculpture $sculpture, string $locale, int $limit = 3)
+    {
+        $currentTr = $sculpture->translation($locale);
+        $city = $currentTr?->city;
+        $sculptor = $currentTr?->sculptor;
+
+        $collected = collect();
+        $usedIds = [$sculpture->id];
+
+        if ($city) {
+            $sameCity = Sculpture::with('translations')
+                ->where('is_published', true)
+                ->where('id', '!=', $sculpture->id)
+                ->whereHas('translations', function ($q) use ($city) {
+                    $q->where('city', $city);
+                })
+                ->take($limit)
+                ->get();
+
+            $collected = $collected->merge($sameCity);
+            $usedIds = array_merge($usedIds, $sameCity->pluck('id')->toArray());
+        }
+
+        if ($collected->count() < $limit && $sculptor) {
+            $need = $limit - $collected->count();
+
+            $sameSculptor = Sculpture::with('translations')
+                ->where('is_published', true)
+                ->whereNotIn('id', $usedIds)
+                ->whereHas('translations', function ($q) use ($sculptor) {
+                    $q->where('sculptor', $sculptor);
+                })
+                ->take($need)
+                ->get();
+
+            $collected = $collected->merge($sameSculptor);
+            $usedIds = array_merge($usedIds, $sameSculptor->pluck('id')->toArray());
+        }
+
+        if ($collected->count() < $limit) {
+            $need = $limit - $collected->count();
+
+            $random = Sculpture::with('translations')
+                ->where('is_published', true)
+                ->whereNotIn('id', $usedIds)
+                ->inRandomOrder()
+                ->take($need)
+                ->get();
+
+            $collected = $collected->merge($random);
+        }
+
+        return $collected->values();
     }
 
     public function about($locale)
