@@ -10,7 +10,14 @@
         $defaultDesc = \App\Models\Setting::get('site_description_' . app()->getLocale(), '');
         $defaultImage = \App\Models\Setting::get('logo') ? asset('storage/' . \App\Models\Setting::get('logo')) : null;
         $currentUrl = url()->current();
+        $favicon = \App\Models\Setting::get('favicon');
     @endphp
+
+    @if ($favicon)
+        <link rel="icon" type="image/png" href="{{ asset('storage/' . $favicon) }}?v={{ filemtime(storage_path('app/public/' . $favicon)) }}">
+        <link rel="apple-touch-icon" href="{{ asset('storage/' . $favicon) }}">
+        <link rel="shortcut icon" href="{{ asset('storage/' . $favicon) }}">
+    @endif
 
     <title>@yield('title', $defaultTitle)</title>
     <meta name="description" content="@yield('meta_description', $defaultDesc)">
