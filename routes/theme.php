@@ -3,8 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\ImageController;
 
-Route::get('/test-500', function () { abort(500); });
+Route::get('/img/{path}', [ImageController::class, 'show'])
+    ->where('path', '.*')
+    ->name('image.show');
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
