@@ -72,5 +72,9 @@
     "frontend.contact_cta_subtitle": "Azərbaycanın hər guşəsindən heykəllərə baxın.",
 
     "frontend.about_empty": "Tezliklə",
-    "frontend.about_empty_text": "Layihə haqqında məlumat yaxın zamanda əlçatan olacaq."
+    "frontend.about_empty_text": "Layihə haqqında məlumat yaxın zamanda əlçatan olacaq.",
+
+    "frontend.404_title": "Səhifə tapılmadı",
+    "frontend.404_text": "Axtardığınız səhifə mövcud deyil və ya başqa ünvana köçürülüb.",
+    "frontend.back_home": "Ana səhifəyə"
 }

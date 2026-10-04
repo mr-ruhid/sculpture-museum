@@ -71,6 +71,7 @@
     "frontend.contact_cta_title": "Discover the Collection",
     "frontend.contact_cta_subtitle": "Browse sculptures from every corner of Azerbaijan.",
 
-    "frontend.about_empty": "Coming Soon",
-    "frontend.about_empty_text": "Information about the project will be available shortly."
+    "frontend.404_title": "Sculpture not found",
+    "frontend.404_text": "The page you're looking for doesn't exist or may have been moved to another location.",
+    "frontend.back_home": "Back to home"
 }
