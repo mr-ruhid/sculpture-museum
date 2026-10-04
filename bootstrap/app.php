@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'setlocale' => \App\Http\Middleware\SetLocale::class,
         ]);
+
+        $middleware->redirectGuestsTo(fn () => route('admin.login'));
+        $middleware->redirectUsersTo('/admin');
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
