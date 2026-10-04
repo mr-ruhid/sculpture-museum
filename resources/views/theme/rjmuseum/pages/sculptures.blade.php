@@ -1,6 +1,24 @@
 @extends('theme.rjmuseum.layouts.app')
 
-@section('title', __('frontend.sculptures') . ' — ' . \App\Models\Setting::get('site_name_' . app()->getLocale(), config('app.name')))
+@php
+    $siteName = \App\Models\Setting::get('site_name_' . app()->getLocale(), config('app.name'));
+    $pageTitle = __('frontend.sculptures') . ' — ' . $siteName;
+    $pageDesc = __('frontend.sculptures_subtitle');
+    $firstWithImage = $sculptures->first(fn ($s) => !empty($s->main_image));
+    $ogImage = $firstWithImage
+        ? asset('storage/' . $firstWithImage->main_image)
+        : (\App\Models\Setting::get('logo') ? asset('storage/' . \App\Models\Setting::get('logo')) : null);
+@endphp
+
+@section('title', $pageTitle)
+@section('meta_description', $pageDesc)
+
+@section('og_type', 'website')
+@section('og_title', $pageTitle)
+@section('og_description', $pageDesc)
+@if ($ogImage)
+    @section('og_image', $ogImage)
+@endif
 
 @section('content')
 
