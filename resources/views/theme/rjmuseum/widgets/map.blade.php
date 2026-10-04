@@ -1,22 +1,53 @@
 @if ($sculptures->count())
 <section class="relative" style="isolation: isolate;">
-    <div class="flex h-screen">
+    <div class="flex h-screen relative">
 
         <div class="flex-1 relative">
             <div id="sculpture-map" class="w-full h-full"></div>
         </div>
 
-        <aside class="w-96 bg-white border-l border-slate-200 flex flex-col shadow-2xl z-10">
-            <div class="px-6 py-5 border-b border-slate-100 bg-slate-50">
-                <div class="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-1">
-                    {{ __('frontend.map') }}
+        {{-- Mobil üçün açma düyməsi --}}
+        <button type="button" id="map-sidebar-toggle"
+                class="lg:hidden absolute top-4 right-4 z-30 inline-flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full bg-slate-900/95 backdrop-blur text-white text-sm font-semibold shadow-2xl shadow-slate-900/30 border border-white/10 active:scale-95 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+            <span id="map-sidebar-toggle-text">
+                {{ __('frontend.map_title') }}
+            </span>
+            <span class="inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-full bg-indigo-500 text-white text-[11px] font-bold">
+                {{ $sculptures->count() }}
+            </span>
+        </button>
+
+        {{-- Mobil üçün qaralma --}}
+        <div id="map-sidebar-backdrop"
+             class="lg:hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 opacity-0 invisible transition-opacity duration-300"></div>
+
+        {{-- Sidebar --}}
+        <aside id="map-sidebar"
+               class="fixed lg:static top-0 right-0 h-full w-[85%] max-w-sm lg:w-96 bg-white lg:border-l border-slate-200 flex flex-col shadow-2xl z-50 lg:z-10
+                      translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out">
+
+            <div class="px-6 py-5 border-b border-slate-100 bg-slate-50 flex items-start justify-between gap-4">
+                <div>
+                    <div class="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-1">
+                        {{ __('frontend.map') }}
+                    </div>
+                    <h2 class="text-lg font-black text-slate-900">
+                        {{ __('frontend.map_title') }}
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">
+                        {{ $sculptures->count() }} {{ __('frontend.sculptures') }}
+                    </p>
                 </div>
-                <h2 class="text-lg font-black text-slate-900">
-                    {{ __('frontend.map_title') }}
-                </h2>
-                <p class="text-xs text-slate-500 mt-1">
-                    {{ $sculptures->count() }} {{ __('frontend.sculptures') }}
-                </p>
+
+                <button type="button" id="map-sidebar-close"
+                        class="lg:hidden w-9 h-9 rounded-full bg-white hover:bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 flex-shrink-0 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
             </div>
 
             <div id="map-list" class="flex-1 overflow-y-auto"></div>
@@ -61,7 +92,7 @@
     }
     .leaflet-popup-content {
         margin: 0;
-        width: 320px !important;
+        width: 300px !important;
         max-height: 480px;
         overflow-y: auto;
     }
@@ -329,6 +360,24 @@
         background: #cbd5e1;
         border-radius: 3px;
     }
+
+    /* Sidebar açıldıqda */
+    #map-sidebar-backdrop.is-open {
+        opacity: 1;
+        visibility: visible;
+    }
+    #map-sidebar.is-open {
+        transform: translateX(0) !important;
+    }
+
+    @media (max-width: 1023px) {
+        .leaflet-popup-content {
+            width: 260px !important;
+        }
+        .map-popup-media {
+            height: 140px;
+        }
+    }
 </style>
 @endpush
 
@@ -342,6 +391,33 @@ document.addEventListener('DOMContentLoaded', function () {
     const data = @json($sculptures);
     const locale = '{{ app()->getLocale() }}';
     const listEl = document.getElementById('map-list');
+
+    const sidebar = document.getElementById('map-sidebar');
+    const sidebarToggle = document.getElementById('map-sidebar-toggle');
+    const sidebarClose = document.getElementById('map-sidebar-close');
+    const sidebarBackdrop = document.getElementById('map-sidebar-backdrop');
+
+    function openSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.add('is-open');
+        sidebarBackdrop.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.remove('is-open');
+        sidebarBackdrop.classList.remove('is-open');
+        document.body.style.overflow = '';
+    }
+
+    if (sidebarToggle) sidebarToggle.addEventListener('click', openSidebar);
+    if (sidebarClose) sidebarClose.addEventListener('click', closeSidebar);
+    if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', closeSidebar);
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeSidebar();
+    });
 
     const map = L.map('sculpture-map', {
         scrollWheelZoom: false,
@@ -410,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ? buildClusterPopup(group)
             : buildSinglePopup(group.items[0]);
 
-        marker.bindPopup(popupHtml, { maxWidth: 320, minWidth: 320 });
+        marker.bindPopup(popupHtml, { maxWidth: 320, minWidth: 260 });
 
         marker.on('click', function () {
             markActiveGroup(group.key);
@@ -528,6 +604,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         el.addEventListener('click', function () {
             focusOnItem(item, key);
+            if (window.innerWidth < 1024) {
+                closeSidebar();
+            }
         });
 
         listEl.appendChild(el);
