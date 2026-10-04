@@ -53,6 +53,3 @@ Route::get('/{locale}/{slug}', [App\Http\Controllers\FrontendController::class, 
     ->name('page.show');
 
 
-Route::get('/{locale}/admin/{path?}', function ($locale, $path = null) {
-    return redirect('/admin' . ($path ? '/' . $path : ''), 301);
-})->where('locale', '[a-z]{2}')->where('path', '.*');
