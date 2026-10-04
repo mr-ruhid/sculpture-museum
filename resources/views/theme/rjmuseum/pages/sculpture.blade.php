@@ -12,6 +12,89 @@
 
     $shareUrl = urlencode(url()->current());
     $shareTitle = urlencode($tr?->title ?? '');
+
+    $schemaData = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Sculpture',
+        'name' => $tr?->title,
+        'url' => url()->current(),
+        'inLanguage' => app()->getLocale(),
+    ];
+
+    if ($tr?->short_description) {
+        $schemaData['description'] = $tr->short_description;
+    } elseif ($tr?->description) {
+        $schemaData['description'] = \Illuminate\Support\Str::limit(strip_tags($tr->description), 300);
+    }
+
+    if ($tr?->sculptor) {
+        $schemaData['creator'] = [
+            '@type' => 'Person',
+            'name' => $tr->sculptor,
+        ];
+    }
+
+    if ($tr?->architect) {
+        $schemaData['contributor'] = [
+            '@type' => 'Person',
+            'name' => $tr->architect,
+        ];
+    }
+
+    if ($sculpture->year) {
+        $schemaData['dateCreated'] = (string) $sculpture->year;
+    }
+
+    if ($tr?->material) {
+        $schemaData['material'] = $tr->material;
+    }
+
+    if ($tr?->style) {
+        $schemaData['artform'] = $tr->style;
+    }
+
+    if ($ogImage) {
+        $images = [];
+        if ($sculpture->main_image) {
+            $images[] = asset('storage/' . $sculpture->main_image);
+        }
+        foreach ($sculpture->images as $img) {
+            $images[] = asset('storage/' . $img->path);
+        }
+        if (count($images) === 1) {
+            $schemaData['image'] = $images[0];
+        } elseif (count($images) > 1) {
+            $schemaData['image'] = $images;
+        }
+    }
+
+    if ($sculpture->latitude && $sculpture->longitude) {
+        $place = [
+            '@type' => 'Place',
+            'geo' => [
+                '@type' => 'GeoCoordinates',
+                'latitude' => (float) $sculpture->latitude,
+                'longitude' => (float) $sculpture->longitude,
+            ],
+        ];
+
+        if ($tr?->city) {
+            $place['name'] = $tr->city;
+            $place['address'] = [
+                '@type' => 'PostalAddress',
+                'addressLocality' => $tr->city,
+            ];
+        }
+
+        if ($tr?->address) {
+            if (!isset($place['address'])) {
+                $place['address'] = ['@type' => 'PostalAddress'];
+            }
+            $place['address']['streetAddress'] = $tr->address;
+        }
+
+        $schemaData['locationCreated'] = $place;
+    }
 @endphp
 
 @section('title', $metaTitle . ' — ' . \App\Models\Setting::get('site_name_' . app()->getLocale(), config('app.name')))
@@ -113,6 +196,10 @@
 @endpush
 
 @section('content')
+
+<script type="application/ld+json">
+{!! json_encode($schemaData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+</script>
 
 <section class="pt-32 pb-12 bg-white">
     <div class="max-w-7xl mx-auto px-6">
