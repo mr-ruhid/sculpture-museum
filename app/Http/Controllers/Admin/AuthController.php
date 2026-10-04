@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\LoginAttempt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -21,11 +22,23 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
+        $ip = $request->ip();
+        $userAgent = $request->userAgent();
+
         if (!Auth::attempt($credentials)) {
+            LoginAttempt::registerFailure($ip, $userAgent);
+
+            $attempt = LoginAttempt::findForIp($ip);
+            $remaining = $attempt && $attempt->isBlocked()
+                ? ' Hesabınız ' . $attempt->remainingMinutes() . ' dəqiqə bloklandı.'
+                : '';
+
             return back()->withErrors([
-                'name' => 'İstifadəçi adı və ya şifrə yanlışdır.',
-            ]);
+                'name' => 'İstifadəçi adı və ya şifrə yanlışdır.' . $remaining,
+            ])->withInput($request->only('name'));
         }
+
+        LoginAttempt::clear($ip);
 
         $user = Auth::user();
 
@@ -34,6 +47,7 @@ class AuthController extends Controller
             Mail::raw("Giriş kodunuz: {$user->two_factor_code}", function ($message) use ($user) {
                 $message->to($user->email)->subject('Giriş təsdiqi');
             });
+
             return redirect()->route('admin.twofactor.show');
         }
 
@@ -46,6 +60,7 @@ class AuthController extends Controller
         if (!Auth::check()) {
             return redirect()->route('admin.login');
         }
+
         return view('admin.auth.twofactor');
     }
 
