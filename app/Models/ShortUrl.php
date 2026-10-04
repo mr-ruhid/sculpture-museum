@@ -45,26 +45,17 @@ class ShortUrl extends Model
                 if ($p->slug === 'home') {
                     return url("/{$locale}");
                 }
-                $customView = 'theme.rjmuseum.pages.templates.' . $p->slug;
-                if (view()->exists($customView)) {
-                    return url("/{$locale}/{$p->slug}");
-                }
                 return url("/{$locale}/{$p->slug}");
 
             case 'sculptures_pair':
-                $slugs = $this->target_params['slugs'] ?? [];
-                if (count($slugs) < 1) return null;
-                $first = Sculpture::where('slug', $slugs[0])->first();
-                return $first ? url("/{$locale}/sculptures/{$first->slug}") : null;
-
-            case 'custom':
-                $url = $this->target_params['url'] ?? null;
-                if (!$url) return null;
-                if (str_starts_with($url, 'http')) return $url;
-                return url("/{$locale}/" . ltrim($url, '/'));
-
-            default:
-                return null;
+                $ids = $this->target_params['ids'] ?? [];
+                if (count($ids) < 2) return null;
+                $first = Sculpture::find($ids[0]);
+                if (!$first) return null;
+                $firstSlug = $first->slug;
+                return url("/{$locale}/{$firstSlug}");
         }
+
+        return null;
     }
 }
