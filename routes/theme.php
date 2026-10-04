@@ -30,6 +30,10 @@ Route::get('/', function () {
     return redirect()->to('/' . $default);
 });
 
+Route::get('/q/{code}', [FrontendController::class, 'shortUrl'])
+    ->where('code', '[a-zA-Z0-9\-]+')
+    ->name('short-url.redirect');
+
 Route::group(['prefix' => '{locale}', 'middleware' => 'setlocale'], function () {
 
     Route::get('/', [FrontendController::class, 'home'])->name('home');
