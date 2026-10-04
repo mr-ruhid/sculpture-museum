@@ -1,235 +1,256 @@
-# Azərbaycan Heykəlləri — Gürcüstan
+# Azerbaijan Sculptures — Georgia
 
 [![Version](https://img.shields.io/badge/version-1.1.5-blue.svg)](https://github.com/mr-ruhid/sculpture-museum)
 [![License](https://img.shields.io/badge/license-Proprietary-red.svg)](https://github.com/mr-ruhid/sculpture-museum/blob/main/LICENSE.md)
 [![Laravel](https://img.shields.io/badge/Laravel-12.x-red.svg)](https://laravel.com)
 
-> Abidələr, heykəllər və tarixi obyektlərin rəqəmsal kataloqlaşdırılması üçün çoxdilli veb platforma və admin panel.
+> A multilingual web platform and admin panel for the digital cataloging of monuments, sculptures, and historical objects.
 
 ---
 
-## Layihə Haqqında
+## About the Project
 
-**Azərbaycan Heykəlləri** — Azərbaycan ərazisindəki heykəllərin, abidələrin və tarixi obyektlərin rəqəmsal kataloqlaşdırılması üçün hazırlanmış müstəqil veb platformadır. Layihə [RJ CMS Lite](https://ruhidjavadoff.blogspot.com/2021/03/rj-cms-lite.html) ekosisteminin törəməsidir və frontend-də **RJ Museum Theme**-dən istifadə edir.
+**Azerbaijan Sculptures** is a standalone web platform for the digital cataloging of sculptures, monuments, and historical objects in Azerbaijan. The project is a derivative of the [RJ CMS Lite](https://ruhidjavadoff.blogspot.com/2021/03/rj-cms-lite.html) ecosystem and uses the **RJ Museum Theme** on the frontend.
 
-Platforma iki əsas hissədən ibarətdir:
+The platform consists of two main parts:
 
-- **Public veb-sayt**: heykəllərin kataloqu, interaktiv xəritə, scroll-driven showcase, qalereya və 360° panorama
-- **Admin panel**: məzmun, dillər, media, SEO və sayt ayarlarının idarə edilməsi üçün interfeys
+- **Public website**: a sculpture catalog, interactive map, scroll-driven showcase, gallery, and 360° panorama
+- **Admin panel**: an interface for managing content, languages, media, SEO, and site settings
 
 ---
 
-## Əsas Xüsusiyyətlər
+## Screenshots
 
-### Public Veb-Sayt
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="public/gallery/01.png" alt="Home page showcase" width="100%"><br>
+      <sub>Home page: scroll-driven showcase</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="public/gallery/02.png" alt="Interactive map" width="100%"><br>
+      <sub>Interactive map</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="public/gallery/03.png" alt="Sculpture detail page" width="100%"><br>
+      <sub>Sculpture detail page</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="public/gallery/04.png" alt="Admin panel: sculptures" width="100%"><br>
+      <sub>Admin panel: sculptures</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+      <img src="public/gallery/05.png" alt="Admin panel: settings" width="50%"><br>
+      <sub>Admin panel: settings</sub>
+    </td>
+  </tr>
+</table>
 
-- **İnteraktiv xəritə**: Leaflet + OpenStreetMap (API açarı tələb etmir)
-- **Scroll-driven showcase**: ana səhifədə ən son dərc edilmiş heykəllərin təqdimatı
-- **Lightbox qalereya**: tam ekran şəkil baxışı
-- **360° panorama**: Google Maps embed dəstəyi
-- **Qısa URL sistemi**: QR kodlar üçün sabit linklər (`/q/{code}`)
-- **Tam responsiv**: mobil, tablet və desktop üçün optimallaşdırılmış
+---
+
+## Key Features
+
+### Public Website
+
+- **Interactive map**: Leaflet + OpenStreetMap (no API key required)
+- **Scroll-driven showcase**: presents the latest published sculptures on the home page
+- **Lightbox gallery**: full-screen image viewing
+- **360° panorama**: Google Maps embed support
+- **Short URL system**: permanent links for QR codes (`/q/{code}`)
+- **Fully responsive**: optimized for mobile, tablet, and desktop
 
 ### Admin Panel
 
-- Çoxdilli məzmun idarəsi
-- Şəkil və qalereya yükləmə (WebP çevrilməsi ilə)
-- 360° panorama idarəsi
-- SEO parametrləri
-- Sayt ayarları
-- Dinamik dil idarəsi
-- İki faktorlu autentifikasiya (2FA)
-- Keş idarəsi
-- QR qısa link idarəsi (bloklama və statistika)
+- Multilingual content management
+- Image and gallery upload (with WebP conversion)
+- 360° panorama management
+- SEO settings
+- Site settings
+- Dynamic language management
+- Two-factor authentication (2FA)
+- Cache management
+- QR short link management (blocking and statistics)
 
-### Çoxdilli Dəstək
+### Multilingual Support
 
-- **4 dil:** Azərbaycan, İngilis, Rus, Gürcü
-- URL prefiksləri (`/az/...`, `/en/...`)
-- `Accept-Language` header ilə avtomatik dil seçimi
-- Admin panel yalnız Azərbaycan dilində (hardcoded)
+- **4 languages:** Azerbaijani, English, Russian, Georgian
+- URL prefixes (`/az/...`, `/en/...`)
+- Automatic language selection via the `Accept-Language` header
+- Admin panel is available in Azerbaijani only (hardcoded)
 
-### Qısa URL-lər və QR Kodlar
+### Short URLs and QR Codes
 
-QR kodlar üçün nəzərdə tutulmuş sabit linklər:
+Permanent links designed for QR codes:
 
-- `/{domain}/q/{code}` ünvanı `/{locale}/sculptures/{slug}` ünvanına 301 yönləndirilir
-- Brauzer dilinə uyğun avtomatik dil seçimi
-- Admin paneldə idarəetmə (bloklama, statistika)
+- `/{domain}/q/{code}` issues a 301 redirect to `/{locale}/sculptures/{slug}`
+- Language is selected automatically based on the browser language
+- Managed from the admin panel (blocking and statistics)
 
 ---
 
-## Texnologiyalar
+## Technology Stack
 
-| Kateqoriya | Texnologiya |
+| Category | Technology |
 |---|---|
 | **Backend** | Laravel 12.x |
 | **Frontend** | Blade + Tailwind CSS (CDN), vanilla JavaScript |
-| **Xəritə** | Leaflet + OpenStreetMap |
-| **Şəkillər** | Intervention/Image (WebP) |
-| **Baza** | MySQL |
-| **Veb Server** | Apache / Nginx |
+| **Map** | Leaflet + OpenStreetMap |
+| **Images** | Intervention/Image (WebP) |
+| **Database** | MySQL |
+| **Web Server** | Apache / Nginx |
 | **PHP** | 8.2+ |
 
 ---
 
-## Layihə Strukturu
+## Project Structure
 
-### Frontend Tema: `resources/views/theme/rjmuseum/`
+### Frontend Theme: `resources/views/theme/rjmuseum/`
 
 ```text
 theme/rjmuseum/
 ├── layouts/
-│   └── app.blade.php               # Əsas layout (header, footer, meta)
+│   └── app.blade.php               # Main layout (header, footer, meta)
 ├── widgets/
-│   ├── header.blade.php            # Tünd glass header + dil seçimi
-│   ├── footer.blade.php            # Sosial media ikonları ilə footer
-│   ├── scroll-showcase.blade.php   # Scroll-driven heykəl showcase
-│   ├── map.blade.php               # Leaflet xəritə + siyahı paneli
-│   └── sculpture-card.blade.php    # Heykəl kartı
+│   ├── header.blade.php            # Dark glass header + language switcher
+│   ├── footer.blade.php            # Footer with social media icons
+│   ├── scroll-showcase.blade.php   # Scroll-driven sculpture showcase
+│   ├── map.blade.php               # Leaflet map + list panel
+│   └── sculpture-card.blade.php    # Sculpture card
 ├── pages/
-│   ├── home.blade.php              # Ana səhifə
-│   ├── sculptures.blade.php        # Heykəllər kataloqu (filtr)
-│   ├── sculpture.blade.php         # Heykəl detal səhifəsi
-│   ├── panorama.blade.php          # 360° tam ekran səhifə
-│   ├── about.blade.php             # Haqqında
-│   ├── contact.blade.php           # Əlaqə
-│   ├── _dynamic.blade.php          # Dinamik səhifə render
-│   └── templates/                  # Xüsusi template səhifələri
+│   ├── home.blade.php              # Home page
+│   ├── sculptures.blade.php        # Sculpture catalog (with filters)
+│   ├── sculpture.blade.php         # Sculpture detail page
+│   ├── panorama.blade.php          # Full-screen 360° page
+│   ├── about.blade.php             # About page
+│   ├── contact.blade.php           # Contact page
+│   ├── _dynamic.blade.php          # Dynamic page renderer
+│   └── templates/                  # Custom template pages
 ├── css/
-│   └── app.css                     # Xüsusi stillər (glass, showcase)
+│   └── app.css                     # Custom styles (glass, showcase)
 └── js/
-    └── app.js                      # Showcase, lang switcher, ripple
+    └── app.js                      # Showcase, language switcher, ripple effect
 ```
 
-**Tam kod:** [resources/views/theme/rjmuseum](https://github.com/mr-ruhid/sculpture-museum/tree/main/resources/views/theme/rjmuseum)
+**Full source:** [resources/views/theme/rjmuseum](https://github.com/mr-ruhid/sculpture-museum/tree/main/resources/views/theme/rjmuseum)
 
 ### Admin Panel: `resources/views/admin/`
 
 ```text
 admin/
 ├── layouts/
-│   └── app.blade.php               # Admin layout (header, navigasiya)
+│   └── app.blade.php               # Admin layout (header, navigation)
 ├── auth/
-│   ├── login.blade.php             # Giriş səhifəsi
-│   └── twofactor.blade.php         # 2FA təsdiq səhifəsi
+│   ├── login.blade.php             # Login page
+│   └── twofactor.blade.php         # 2FA verification page
 ├── sculptures/
-│   ├── index.blade.php             # Heykəllər siyahısı (drag & drop sıralama)
-│   ├── create.blade.php            # Yeni heykəl
-│   └── edit.blade.php              # Redaktə
+│   ├── index.blade.php             # Sculpture list (drag & drop ordering)
+│   ├── create.blade.php            # New sculpture
+│   └── edit.blade.php              # Edit sculpture
 ├── pages/
-│   ├── index.blade.php             # Səhifələr
-│   ├── create.blade.php            # Yeni səhifə
-│   └── edit.blade.php              # Redaktə
+│   ├── index.blade.php             # Pages
+│   ├── create.blade.php            # New page
+│   └── edit.blade.php              # Edit page
 ├── settings/
-│   ├── index.blade.php             # Ayarlar hub
-│   ├── general.blade.php           # Ümumi
-│   ├── contact.blade.php           # Əlaqə
-│   ├── social.blade.php            # Sosial
+│   ├── index.blade.php             # Settings hub
+│   ├── general.blade.php           # General
+│   ├── contact.blade.php           # Contact
+│   ├── social.blade.php            # Social
 │   ├── seo.blade.php               # SEO
-│   ├── homepage.blade.php          # Ana səhifə
+│   ├── homepage.blade.php          # Home page
 │   ├── smtp.blade.php              # SMTP
-│   └── about.blade.php             # Haqqında
+│   └── about.blade.php             # About
 ├── short-urls/
-│   └── index.blade.php             # Qısa URL-lər (yarat, redaktə, sil)
+│   └── index.blade.php             # Short URLs (create, edit, delete)
 ├── security/
-│   └── blocked-ips.blade.php       # Bloklanmış IP-lər
+│   └── blocked-ips.blade.php       # Blocked IPs
 ├── languages/
-│   └── index.blade.php             # Dillər
+│   └── index.blade.php             # Languages
 ├── profile/
-│   └── index.blade.php             # Profil (şifrə, 2FA)
+│   └── index.blade.php             # Profile (password, 2FA)
 └── cache/
-    └── index.blade.php             # Keş idarəsi
+    └── index.blade.php             # Cache management
 ```
 
-**Tam kod:** [resources/views/admin](https://github.com/mr-ruhid/sculpture-museum/tree/main/resources/views/admin)
+**Full source:** [resources/views/admin](https://github.com/mr-ruhid/sculpture-museum/tree/main/resources/views/admin)
 
 ---
 
-## Ekran Görüntüləri
-
-| # | Şəkil |
-|---|---|
-| 01 | [Ana səhifə — showcase](https://github.com/mr-ruhid/sculpture-museum/blob/main/public/gallery/01.png) |
-| 02 | [Xəritə — interaktiv](https://github.com/mr-ruhid/sculpture-museum/blob/main/public/gallery/02.png) |
-| 03 | [Heykəl detal səhifəsi](https://github.com/mr-ruhid/sculpture-museum/blob/main/public/gallery/03.png) |
-| 04 | [Admin panel — heykəllər](https://github.com/mr-ruhid/sculpture-museum/blob/main/public/gallery/04.png) |
-| 05 | [Admin panel — ayarlar](https://github.com/mr-ruhid/sculpture-museum/blob/main/public/gallery/05.png) |
-
----
-
-## Quraşdırma
+## Installation
 
 ```bash
-# 1. Reponu klonlayın
+# 1. Clone the repository
 git clone https://github.com/mr-ruhid/sculpture-museum.git
 cd sculpture-museum
 
-# 2. Asılılıqları quraşdırın
+# 2. Install dependencies
 composer install
 
-# 3. Mühit faylını hazırlayın
+# 3. Prepare the environment file
 cp .env.example .env
 php artisan key:generate
 
-# 4. .env faylında baza məlumatlarını qeyd edin, sonra miqrasiyaları işə salın
+# 4. Configure the database in .env, then run the migrations
 php artisan migrate
 
-# 5. Storage symlink yaradın
+# 5. Create the storage symlink
 php artisan storage:link
 
-# 6. Tətbiqi işə salın
+# 6. Start the application
 php artisan serve
 ```
 
-Tətbiq `http://127.0.0.1:8000` ünvanında əlçatan olacaq.
+The application will be available at `http://127.0.0.1:8000`.
 
 ---
 
-## RJ CMS Sənədləşməsi
+## RJ CMS Documentation
 
-RJ CMS ekosistemi haqqında ətraflı məlumat:
+More information about the RJ CMS ecosystem:
 
-- [RJ CMS Sistemləri](https://github.com/mr-ruhid)
-- [RJ CMS Törəmə Saytlar](https://github.com/mr-ruhid)
+- [RJ CMS Systems](https://github.com/mr-ruhid)
+- [RJ CMS Derivative Sites](https://github.com/mr-ruhid)
 - [RJ CMS Lite](https://ruhidjavadoff.blogspot.com/2021/03/rj-cms-lite.html)
 - [RJ Theme](https://github.com/mr-ruhid)
 - [RJ AI Agent — Agsaggal AI](https://github.com/mr-ruhid)
 
 ---
 
-## Lisenziya
+## License
 
-Bu layihə RJ CMS Lite törəməsidir və xüsusi müəllif lisenziyası ilə qorunur. İstifadə şərtləri üçün [LICENSE.md](LICENSE.md) faylına baxın.
+This project is a derivative of RJ CMS Lite and is protected by a proprietary license. For usage terms, see [LICENSE.md](LICENSE.md).
 
-**Xülasə:**
+**Summary:**
 
-- **İcazə verilir:** kodu görmək, oxumaq və şəxsi, qeyri-kommersiya məqsədləri ilə öyrənmək
-- **İcazə verilmir:** yazılı icazə olmadan kopyalamaq, yaymaq və istehsalatda (production) istifadə etmək
-- **İcazə verilmir:** dəyişdirmək və ya törəmə əsər yaratmaq (şəxsi öyrənmə istisna olmaqla)
-- **Qeyd:** kommersiya və ya istehsalat istifadəsi üçün müəllif ilə əlaqə saxlamaq lazımdır
+- **Permitted:** viewing, reading, and studying the code for personal, non-commercial purposes
+- **Not permitted:** copying, distributing, or using the code in production without written permission
+- **Not permitted:** modifying it or creating derivative works (except for private study)
+- **Note:** contact the author for commercial or production use
 
 ---
 
-## Dəstək
+## Support the Project
 
-Bu layihə sizə faydalı olubsa, onun davamlı inkişafına dəstək verə bilərsiniz.
+If this project has been useful to you, consider supporting its continued development and maintenance.
 
 <div align="center">
 
 <a href="https://kofe.al/@ruhidjavadoff">
-  <img src="https://kofe.al/assets/images/kofeal-logo.svg" height="36" alt="Kofe.al ilə dəstək" style="background-color:#ffffff; padding:6px; border-radius:6px;">
+  <img src="https://kofe.al/assets/images/kofeal-logo.svg" height="36" alt="Support on Kofe.al" style="background-color:#ffffff; padding:6px; border-radius:6px;">
 </a>
 &nbsp;&nbsp;
 <a href="https://www.paypal.com/paypalme/ruhidjavadoff">
-  <img src="https://img.shields.io/badge/Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal ilə dəstək" height="36">
+  <img src="https://img.shields.io/badge/Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="Donate via PayPal" height="36">
 </a>
 
 </div>
 
 <br>
 
-| Üsul | Məlumat |
+| Method | Details |
 |---|---|
 | Kofe.al | [@ruhidjavadoff](https://kofe.al/@ruhidjavadoff) |
 | Çayvoy | [ruhid4715](https://cayvoy.com/donate/ruhid4715) |
@@ -238,17 +259,17 @@ Bu layihə sizə faydalı olubsa, onun davamlı inkişafına dəstək verə bil�
 
 ---
 
-## Müəllif
+## Author
 
 **Ruhid Javadov**
 
 - GitHub: [@mr-ruhid](https://github.com/mr-ruhid)
-- Layihə: [sculpture-museum](https://github.com/mr-ruhid/sculpture-museum)
+- Project: [sculpture-museum](https://github.com/mr-ruhid/sculpture-museum)
 
 ---
 
 <div align="center">
 
-**Azərbaycan Heykəlləri** · RJ CMS Lite ilə hazırlanıb · © 2026
+**Azerbaijan Sculptures** · Built with RJ CMS Lite · © 2026
 
 </div>
