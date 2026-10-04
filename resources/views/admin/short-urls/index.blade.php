@@ -106,23 +106,21 @@
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                                     </a>
                                     <button type="button"
-                                            onclick="copyShortUrl('{{ url('/q/' . $shortUrl->code) }}', this)"
+                                            data-copy-url="{{ url('/q/' . $shortUrl->code) }}"
                                             title="Kopyala"
-                                            class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-emerald-100 text-slate-600 hover:text-emerald-600 flex items-center justify-center transition">
+                                            class="copy-btn w-8 h-8 rounded-lg bg-slate-100 hover:bg-emerald-100 text-slate-600 hover:text-emerald-600 flex items-center justify-center transition">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                                     </button>
                                     <button type="button"
-                                            onclick='openEditModal(@json([
-                                                "id" => $shortUrl->id,
-                                                "code" => $shortUrl->code,
-                                                "target_type" => $shortUrl->target_type,
-                                                "target_id" => $shortUrl->target_id,
-                                                "target_params" => $shortUrl->target_params,
-                                                "note" => $shortUrl->note,
-                                                "is_active" => $shortUrl->is_active,
-                                            ]))'
-                                            title="Redaktə"
-                                            class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-indigo-100 text-slate-600 hover:text-indigo-600 flex items-center justify-center transition">
+                                            class="edit-btn w-8 h-8 rounded-lg bg-slate-100 hover:bg-indigo-100 text-slate-600 hover:text-indigo-600 flex items-center justify-center transition"
+                                            data-id="{{ $shortUrl->id }}"
+                                            data-code="{{ $shortUrl->code }}"
+                                            data-target-type="{{ $shortUrl->target_type }}"
+                                            data-target-id="{{ $shortUrl->target_id }}"
+                                            data-target-params="{{ json_encode($shortUrl->target_params ?? []) }}"
+                                            data-note="{{ $shortUrl->note }}"
+                                            data-is-active="{{ $shortUrl->is_active ? '1' : '0' }}"
+                                            title="Redaktə">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                     </button>
                                     <form method="POST" action="{{ route('admin.short-urls.destroy', $shortUrl) }}"
@@ -229,7 +227,6 @@
                 </div>
 
                 <input type="hidden" name="target_id" id="create-target-id">
-                <input type="hidden" name="sculpture_ids_present" value="1">
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1.5">Qeyd</label>
@@ -254,7 +251,7 @@
 
 <div id="edit-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden" onclick="event.stopPropagation()">
-        <form method="POST" id="edit-form" enctype="multipart/form-data">
+        <form method="POST" id="edit-form">
             @csrf
             @method('PUT')
 
@@ -325,7 +322,6 @@
                 </div>
 
                 <input type="hidden" name="target_id" id="edit-target-id">
-                <input type="hidden" name="sculpture_ids_present" value="1">
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1.5">Qeyd</label>
@@ -355,19 +351,24 @@
 </div>
 
 <script>
-function copyShortUrl(url, btn) {
-    navigator.clipboard.writeText(url).then(() => {
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
-        btn.classList.add('bg-emerald-100', 'text-emerald-600');
-        setTimeout(() => {
-            btn.innerHTML = orig;
-            btn.classList.remove('bg-emerald-100', 'text-emerald-600');
-        }, 1400);
-    });
-}
-
 (function () {
+    // Copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const url = this.dataset.copyUrl;
+            navigator.clipboard.writeText(url).then(() => {
+                const orig = this.innerHTML;
+                this.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
+                this.classList.add('bg-emerald-100', 'text-emerald-600');
+                setTimeout(() => {
+                    this.innerHTML = orig;
+                    this.classList.remove('bg-emerald-100', 'text-emerald-600');
+                }, 1400);
+            });
+        });
+    });
+
+    // Create form — type switch
     const createRadios = document.querySelectorAll('.create-type-radio');
     const createPanes = document.querySelectorAll('.create-type-pane');
     const createBtns = document.querySelectorAll('[data-create-type-btn]');
@@ -391,6 +392,8 @@ function copyShortUrl(url, btn) {
 
     createForm.addEventListener('submit', function () {
         const sel = document.querySelector('.create-type-radio:checked')?.value;
+        createForm.querySelectorAll('input[name="sculpture_ids[]"]').forEach(el => el.remove());
+
         if (sel === 'sculpture') {
             createTargetId.value = document.querySelector('[data-create-select="sculpture"]').value;
         } else if (sel === 'page') {
@@ -398,13 +401,6 @@ function copyShortUrl(url, btn) {
         } else {
             createTargetId.value = '';
             const pairSelect = document.querySelector('[data-create-select="pair"]');
-            pairSelect.querySelectorAll('option').forEach(o => o.selected = o.selected);
-            const hidden = document.createElement('input');
-            hidden.type = 'hidden';
-            hidden.name = 'sculpture_ids[]';
-            hidden.value = '';
-            createForm.appendChild(hidden);
-            createForm.querySelectorAll('input[name="sculpture_ids[]"]').forEach(el => el.remove());
             Array.from(pairSelect.selectedOptions).forEach(o => {
                 const inp = document.createElement('input');
                 inp.type = 'hidden';
@@ -414,85 +410,100 @@ function copyShortUrl(url, btn) {
             });
         }
     });
-})();
 
-function openEditModal(data) {
-    const modal = document.getElementById('edit-modal');
-    const form = document.getElementById('edit-form');
-    form.action = '/admin/short-urls/' + data.id;
+    // Edit modal
+    window.openEditModal = function (data) {
+        const modal = document.getElementById('edit-modal');
+        const form = document.getElementById('edit-form');
+        form.action = '/admin/short-urls/' + data.id;
 
-    document.getElementById('edit-code').value = data.code;
-    document.getElementById('edit-note').value = data.note ?? '';
-    document.getElementById('edit-is-active').checked = !!data.is_active;
+        document.getElementById('edit-code').value = data.code;
+        document.getElementById('edit-note').value = data.note ?? '';
+        document.getElementById('edit-is-active').checked = !!data.is_active;
 
-    document.querySelectorAll('.edit-type-radio').forEach(r => {
-        r.checked = (r.value === data.target_type);
-    });
-
-    const editBtns = document.querySelectorAll('[data-edit-type-btn]');
-    editBtns.forEach(b => {
-        const on = b.dataset.editTypeBtn === data.target_type;
-        b.classList.toggle('border-indigo-500', on);
-        b.classList.toggle('bg-indigo-50', on);
-        b.classList.toggle('text-indigo-700', on);
-        b.classList.toggle('border-slate-200', !on);
-    });
-
-    document.querySelectorAll('.edit-type-pane').forEach(p => {
-        p.classList.toggle('hidden', p.dataset.editPane !== data.target_type);
-    });
-
-    if (data.target_type === 'sculpture') {
-        document.querySelector('[data-edit-select="sculpture"]').value = data.target_id ?? '';
-    } else if (data.target_type === 'page') {
-        document.querySelector('[data-edit-select="page"]').value = data.target_id ?? '';
-    } else if (data.target_type === 'sculptures_pair') {
-        const ids = (data.target_params?.ids ?? []).map(String);
-        const pairSelect = document.querySelector('[data-edit-select="pair"]');
-        Array.from(pairSelect.options).forEach(o => {
-            o.selected = ids.includes(o.value);
+        document.querySelectorAll('.edit-type-radio').forEach(r => {
+            r.checked = (r.value === data.target_type);
         });
-    }
 
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-}
-
-function closeEditModal() {
-    const modal = document.getElementById('edit-modal');
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-}
-
-document.getElementById('edit-modal')?.addEventListener('click', function (e) {
-    if (e.target === this) closeEditModal();
-});
-
-document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeEditModal();
-});
-
-(function () {
-    const editForm = document.getElementById('edit-form');
-    const editRadios = document.querySelectorAll('.edit-type-radio');
-    const editBtns = document.querySelectorAll('[data-edit-type-btn]');
-    const editPanes = document.querySelectorAll('.edit-type-pane');
-    const editTargetId = document.getElementById('edit-target-id');
-
-    editRadios.forEach(r => r.addEventListener('change', function () {
-        editBtns.forEach(b => {
-            const on = b.dataset.editTypeBtn === this.value;
+        document.querySelectorAll('[data-edit-type-btn]').forEach(b => {
+            const on = b.dataset.editTypeBtn === data.target_type;
             b.classList.toggle('border-indigo-500', on);
             b.classList.toggle('bg-indigo-50', on);
             b.classList.toggle('text-indigo-700', on);
             b.classList.toggle('border-slate-200', !on);
         });
-        editPanes.forEach(p => p.classList.toggle('hidden', p.dataset.editPane !== this.value));
-    }));
+
+        document.querySelectorAll('.edit-type-pane').forEach(p => {
+            p.classList.toggle('hidden', p.dataset.editPane !== data.target_type);
+        });
+
+        if (data.target_type === 'sculpture') {
+            document.querySelector('[data-edit-select="sculpture"]').value = data.target_id ?? '';
+        } else if (data.target_type === 'page') {
+            document.querySelector('[data-edit-select="page"]').value = data.target_id ?? '';
+        } else if (data.target_type === 'sculptures_pair') {
+            const ids = (data.target_params?.ids ?? []).map(String);
+            const pairSelect = document.querySelector('[data-edit-select="pair"]');
+            Array.from(pairSelect.options).forEach(o => {
+                o.selected = ids.includes(o.value);
+            });
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    };
+
+    window.closeEditModal = function () {
+        const modal = document.getElementById('edit-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    };
+
+    // Edit button handlers
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            let params = {};
+            try {
+                params = JSON.parse(this.dataset.targetParams || '{}');
+            } catch (e) {
+                params = {};
+            }
+            window.openEditModal({
+                id: parseInt(this.dataset.id),
+                code: this.dataset.code,
+                target_type: this.dataset.targetType,
+                target_id: this.dataset.targetId ? parseInt(this.dataset.targetId) : null,
+                target_params: params,
+                note: this.dataset.note || '',
+                is_active: this.dataset.isActive === '1',
+            });
+        });
+    });
+
+    // Edit modal — type switch
+    document.querySelectorAll('.edit-type-radio').forEach(r => {
+        r.addEventListener('change', function () {
+            document.querySelectorAll('[data-edit-type-btn]').forEach(b => {
+                const on = b.dataset.editTypeBtn === this.value;
+                b.classList.toggle('border-indigo-500', on);
+                b.classList.toggle('bg-indigo-50', on);
+                b.classList.toggle('text-indigo-700', on);
+                b.classList.toggle('border-slate-200', !on);
+            });
+            document.querySelectorAll('.edit-type-pane').forEach(p => {
+                p.classList.toggle('hidden', p.dataset.editPane !== this.value);
+            });
+        });
+    });
+
+    // Edit form submit
+    const editForm = document.getElementById('edit-form');
+    const editTargetId = document.getElementById('edit-target-id');
 
     editForm.addEventListener('submit', function () {
         const sel = document.querySelector('.edit-type-radio:checked')?.value;
         editForm.querySelectorAll('input[name="sculpture_ids[]"]').forEach(el => el.remove());
+
         if (sel === 'sculpture') {
             editTargetId.value = document.querySelector('[data-edit-select="sculpture"]').value;
         } else if (sel === 'page') {
@@ -508,6 +519,15 @@ document.addEventListener('keydown', function (e) {
                 editForm.appendChild(inp);
             });
         }
+    });
+
+    // Modal close on backdrop click
+    document.getElementById('edit-modal')?.addEventListener('click', function (e) {
+        if (e.target === this) window.closeEditModal();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') window.closeEditModal();
     });
 })();
 </script>
