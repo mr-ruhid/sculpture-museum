@@ -9,7 +9,7 @@
     if (file_exists(storage_path('framework/down'))) {
         $downData = json_decode(file_get_contents(storage_path('framework/down')), true);
         if (!empty($downData['retry'])) {
-            $retryAfter = (int) $downData['retry'];
+            $retryAfter = max(0, (int) $downData['retry'] - time());
         }
     }
 
@@ -26,7 +26,6 @@
             'text' => 'Sayt hazırda texniki yenilənmə mərhələsindədir. Zəhmət olmasa bir az sonra yenidən cəhd edin.',
             'eta' => 'Təxmini açılış',
             'retry' => 'Yenidən cəhd et',
-            'minutes' => 'dəqiqə',
             'lang' => 'az',
         ],
         'en' => [
@@ -34,7 +33,6 @@
             'text' => 'The site is currently undergoing scheduled maintenance. Please try again in a few moments.',
             'eta' => 'Estimated return',
             'retry' => 'Try again',
-            'minutes' => 'minutes',
             'lang' => 'en',
         ],
         'ru' => [
@@ -42,7 +40,6 @@
             'text' => 'Сайт находится на плановом техническом обслуживании. Пожалуйста, попробуйте позже.',
             'eta' => 'Примерное время',
             'retry' => 'Попробовать снова',
-            'minutes' => 'минут',
             'lang' => 'ru',
         ],
         'ka' => [
@@ -50,7 +47,6 @@
             'text' => 'საიტი ამჟამად ტექნიკური მომსახურების პროცესშია. გთხოვთ, სცადოთ ცოტა მოგვიანებით.',
             'eta' => 'სავარაუდო დაბრუნება',
             'retry' => 'კიდევ სცადეთ',
-            'minutes' => 'წუთი',
             'lang' => 'ka',
         ],
     ];
@@ -327,7 +323,8 @@
 
     let seconds = parseInt(el.dataset.seconds) || 0;
     const label = el.textContent.split(':')[0];
-    const minutesWord = '{{ $t['minutes'] }}';
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
     function tick() {
         if (seconds <= 0) {
@@ -335,9 +332,18 @@
             return;
         }
 
-        const m = Math.floor(seconds / 60);
+        const d = Math.floor(seconds / 86400);
+        const h = Math.floor((seconds % 86400) / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
         const s = seconds % 60;
-        el.textContent = label + ': ' + m + ' ' + minutesWord + ' ' + (s < 10 ? '0' + s : s) + ' s';
+
+        let parts = [];
+        if (d > 0) parts.push(d + ' gün');
+        if (h > 0 || d > 0) parts.push(pad(h) + ' saat');
+        parts.push(pad(m) + ' dəq');
+        parts.push(pad(s) + ' san');
+
+        el.textContent = label + ': ' + parts.join(' ');
         seconds--;
         setTimeout(tick, 1000);
     }
