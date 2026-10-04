@@ -1,6 +1,23 @@
 @extends('theme.rjmuseum.layouts.app')
 
-@section('title', \App\Models\Setting::get('site_name_' . app()->getLocale(), config('app.name')))
+@php
+    $siteName = \App\Models\Setting::get('site_name_' . app()->getLocale(), config('app.name'));
+    $siteDesc = \App\Models\Setting::get('site_description_' . app()->getLocale(), '');
+    $heroImage = \App\Models\Setting::get('about_image');
+    $ogImage = $heroImage
+        ? asset('storage/' . $heroImage)
+        : (\App\Models\Setting::get('logo') ? asset('storage/' . \App\Models\Setting::get('logo')) : null);
+@endphp
+
+@section('title', $siteName)
+@section('meta_description', $siteDesc)
+
+@section('og_type', 'website')
+@section('og_title', $siteName)
+@section('og_description', $siteDesc)
+@if ($ogImage)
+    @section('og_image', $ogImage)
+@endif
 
 @section('content')
 
