@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') — {{ config('app.name') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,6 +17,10 @@
     @stack('styles')
 </head>
 <body class="bg-slate-50 min-h-screen">
+
+@php
+    $blockedCount = \App\Models\LoginAttempt::where('blocked_until', '>', now())->count();
+@endphp
 
 <div class="bg-white/80 backdrop-blur-xl border-b border-slate-200/80 sticky top-0 z-40">
     <div class="px-6 md:px-8 h-16 flex items-center justify-between gap-4">
@@ -51,6 +56,22 @@
                         {{ $tab['label'] }}
                     </a>
                 @endforeach
+
+                <a href="{{ route('admin.security.blockedIps') }}"
+                   class="nav-pill relative px-4 py-2 text-sm font-semibold rounded-full whitespace-nowrap
+                          {{ request()->routeIs('admin.security.*') ? 'bg-red-600 text-white shadow-lg shadow-red-600/20' : 'text-slate-600 hover:bg-slate-100' }}">
+                    <span class="inline-flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        Təhlükəsizlik
+                    </span>
+                    @if ($blockedCount > 0)
+                        <span class="absolute -top-1 -right-1 min-w-[20px] h-5 px-1.5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-white">
+                            {{ $blockedCount }}
+                        </span>
+                    @endif
+                </a>
             </nav>
         </div>
 
