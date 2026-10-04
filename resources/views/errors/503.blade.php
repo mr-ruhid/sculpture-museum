@@ -13,6 +13,13 @@
         }
     }
 
+    $maintLogo = null;
+    try {
+        $maintLogo = \App\Models\Setting::get('logo');
+    } catch (\Throwable $e) {
+        $maintLogo = null;
+    }
+
     $texts = [
         'az' => [
             'title' => 'Texniki işlər aparılır',
@@ -230,15 +237,13 @@
             top: 2rem;
             left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: rgba(255,255,255,.4);
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
             z-index: 10;
+        }
+
+        .maint-brand img {
+            max-height: 40px;
+            max-width: 200px;
+            object-fit: contain;
         }
 
         .maint-statue {
@@ -277,12 +282,11 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>
     </svg>
 
-    <div class="maint-brand">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>
-        </svg>
-        Azərbaycan Heykəlləri
-    </div>
+    @if ($maintLogo)
+        <div class="maint-brand">
+            <img src="{{ asset('storage/' . $maintLogo) }}" alt="">
+        </div>
+    @endif
 
     <div class="maint-content">
 
