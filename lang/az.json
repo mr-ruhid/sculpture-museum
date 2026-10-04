@@ -77,5 +77,7 @@
     "frontend.404_title": "Səhifə tapılmadı",
     "frontend.404_text": "Axtardığınız səhifə mövcud deyil və ya başqa ünvana köçürülüb.",
     "frontend.back_home": "Ana səhifəyə",
-    "frontend.map_cluster_title": "Bir neçə heykəl"
+    "frontend.map_cluster_title": "Bir neçə heykəl",
+    "frontend.follow_us": "Bizi izləyin",
+    "frontend.social_media": "Sosial şəbəkələr"
 }
