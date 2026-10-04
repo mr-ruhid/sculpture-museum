@@ -4,11 +4,23 @@
     $tr = $sculpture->translation();
     $metaTitle = $tr?->meta_title ?: $tr?->title;
     $metaDesc = $tr?->meta_description ?: $tr?->short_description;
+    $ogDesc = $tr?->short_description
+        ?: \Illuminate\Support\Str::limit(strip_tags($tr?->description ?? ''), 160);
+    $ogImage = $sculpture->main_image
+        ? asset('storage/' . $sculpture->main_image)
+        : (\App\Models\Setting::get('logo') ? asset('storage/' . \App\Models\Setting::get('logo')) : null);
 @endphp
 
 @section('title', $metaTitle . ' — ' . \App\Models\Setting::get('site_name_' . app()->getLocale(), config('app.name')))
 @section('meta_description', $metaDesc)
 @section('meta_keywords', $tr?->meta_keywords)
+
+@section('og_type', 'article')
+@section('og_title', $metaTitle)
+@section('og_description', $ogDesc)
+@if ($ogImage)
+    @section('og_image', $ogImage)
+@endif
 
 @section('content')
 
