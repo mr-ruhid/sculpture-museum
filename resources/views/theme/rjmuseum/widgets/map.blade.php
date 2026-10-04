@@ -48,8 +48,8 @@
         box-shadow: 0 8px 25px rgba(99, 102, 241, 0.7);
     }
     .custom-marker svg {
-        width: 22px;
-        height: 22px;
+        width: 26px;
+        height: 26px;
         color: #ffffff;
     }
     .leaflet-popup-content-wrapper {
@@ -265,13 +265,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const bounds = [];
     const markers = {};
 
+    const statueSvg =
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" fill="currentColor">' +
+            '<path d="M352 400 L448 400 L442 688 L358 688 Z"/>' +
+            '<path d="M380 230 C330 240 300 300 306 410 L320 495 L360 512 L440 512 L480 495 L494 410 C500 300 470 240 420 230 Z"/>' +
+            '<rect x="375" y="200" width="50" height="40"/>' +
+            '<circle cx="400" cy="165" r="45"/>' +
+            '<circle cx="352" cy="165" r="8"/>' +
+            '<circle cx="448" cy="165" r="8"/>' +
+            '<path d="M355 160 C355 120 380 110 405 110 C435 110 450 130 450 155 C435 155 430 145 420 140 C410 135 390 145 375 145 C365 145 360 155 355 160 Z"/>' +
+            '<rect x="266" y="688" width="268" height="32"/>' +
+            '<rect x="286" y="720" width="228" height="96"/>' +
+            '<path d="M250 816 C250 790 270 776 296 776 L504 776 C530 776 550 790 550 816 Z"/>' +
+            '<rect x="226" y="816" width="348" height="40"/>' +
+        '</svg>';
+
     const markerIcon = L.divIcon({
         className: '',
-        html: '<div class="custom-marker">' +
-            '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">' +
-                '<path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>' +
-            '</svg>' +
-        '</div>',
+        html: '<div class="custom-marker">' + statueSvg + '</div>',
         iconSize: [44, 44],
         iconAnchor: [22, 22],
         popupAnchor: [0, -22],
@@ -290,9 +301,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (item.panorama) {
             media = (item.image
                         ? '<img class="map-popup-image" src="' + item.image + '" alt="">'
-                        : '<div class="map-popup-noimage">' +
-                            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/></svg>' +
-                          '</div>')
+                        : '<div class="map-popup-noimage">' + statueSvg + '</div>')
                     + '<div class="map-popup-panorama-badge">' +
                         '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
                             '<path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>' +
@@ -309,11 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (item.image) {
             media = '<img class="map-popup-image" src="' + item.image + '" alt="">';
         } else {
-            media = '<div class="map-popup-noimage">' +
-                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">' +
-                            '<path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>' +
-                        '</svg>' +
-                    '</div>';
+            media = '<div class="map-popup-noimage">' + statueSvg + '</div>';
         }
 
         const html =
@@ -346,11 +351,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const thumb = item.image
             ? '<img src="' + item.image + '" class="map-list-thumb" alt="">'
-            : '<div class="map-list-thumb-empty">' +
-                '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">' +
-                    '<path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0 0V9a2 2 0 012-2h2m-4 6h4m12 8v-7m0 0V9a2 2 0 00-2-2h-2m4 6h-4M12 3v18"/>' +
-                '</svg>' +
-              '</div>';
+            : '<div class="map-list-thumb-empty">' + statueSvg + '</div>';
 
         el.innerHTML =
             thumb +
