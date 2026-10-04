@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Allow: /
+
+Disallow: /admin
+Disallow: /admin/
+Disallow: /q/
+Disallow: /theme/
+Disallow: /lang/
+
+Sitemap: https://azerbaijanimonuments.world/sitemap.xml
