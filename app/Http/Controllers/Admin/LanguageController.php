@@ -19,7 +19,7 @@ class LanguageController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
-            'flag' => ['nullable', 'string', 'max:20'],
+            'flag' => ['nullable', 'string', 'max:500'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
