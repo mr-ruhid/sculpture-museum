@@ -94,6 +94,17 @@
             <p class="text-sm text-slate-500">Dil idarəsi və tərcümələr</p>
         </a>
 
+        <a href="{{ route('admin.short-urls.index') }}"
+           class="group bg-white rounded-2xl shadow-sm border border-slate-100 p-6 hover:shadow-md hover:border-indigo-200 transition">
+            <div class="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center mb-4 group-hover:bg-teal-100 transition">
+                <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                </svg>
+            </div>
+            <h3 class="text-base font-semibold text-slate-800 mb-1">Qısa URL-lər</h3>
+            <p class="text-sm text-slate-500">QR kodlar üçün sabit linklər</p>
+        </a>
+
         <a href="{{ route('admin.profile.index') }}"
            class="group bg-white rounded-2xl shadow-sm border border-slate-100 p-6 hover:shadow-md hover:border-indigo-200 transition">
             <div class="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center mb-4 group-hover:bg-indigo-100 transition">
