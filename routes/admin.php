@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SculptureController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\ShortUrlController;
 use App\Http\Controllers\Admin\TranslationController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -61,6 +62,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/pages/{slug}/edit', [PageController::class, 'edit'])->name('pages.edit');
         Route::put('/pages/{slug}', [PageController::class, 'update'])->name('pages.update');
         Route::delete('/pages/{slug}', [PageController::class, 'destroy'])->name('pages.destroy');
+
+        Route::get('/short-urls', [ShortUrlController::class, 'index'])->name('short-urls.index');
+        Route::post('/short-urls', [ShortUrlController::class, 'store'])->name('short-urls.store');
+        Route::put('/short-urls/{short_url}', [ShortUrlController::class, 'update'])->name('short-urls.update');
+        Route::delete('/short-urls/{short_url}', [ShortUrlController::class, 'destroy'])->name('short-urls.destroy');
 
         Route::get('/cache', [CacheController::class, 'index'])->name('cache.index');
         Route::post('/cache/clear', [CacheController::class, 'clear'])->name('cache.clear');
