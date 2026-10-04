@@ -74,6 +74,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/cache/route', [CacheController::class, 'route'])->name('cache.route');
         Route::post('/cache/view', [CacheController::class, 'view'])->name('cache.view');
 
+        Route::post('/sculptures/update-sort', [SculptureController::class, 'updateSort'])->name('sculptures.updateSort');
         Route::resource('sculptures', SculptureController::class);
         Route::delete('/sculptures/images/{image}', [SculptureController::class, 'destroyImage'])->name('sculptures.images.destroy');
     });
