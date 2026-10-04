@@ -2,7 +2,7 @@
 <section class="relative" style="isolation: isolate;">
     <div class="flex h-screen relative">
 
-        <div class="flex-1 relative">
+        <div class="flex-1 relative" style="isolation: isolate;">
             <div id="sculpture-map" class="w-full h-full"></div>
         </div>
 
