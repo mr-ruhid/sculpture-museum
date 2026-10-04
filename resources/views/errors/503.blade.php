@@ -26,6 +26,10 @@
             'text' => 'Sayt hazırda texniki yenilənmə mərhələsindədir. Zəhmət olmasa bir az sonra yenidən cəhd edin.',
             'eta' => 'Təxmini açılış',
             'retry' => 'Yenidən cəhd et',
+            'day' => 'gün',
+            'hour' => 'saat',
+            'min' => 'dəq',
+            'sec' => 'san',
             'lang' => 'az',
         ],
         'en' => [
@@ -33,6 +37,10 @@
             'text' => 'The site is currently undergoing scheduled maintenance. Please try again in a few moments.',
             'eta' => 'Estimated return',
             'retry' => 'Try again',
+            'day' => 'day',
+            'hour' => 'hour',
+            'min' => 'min',
+            'sec' => 'sec',
             'lang' => 'en',
         ],
         'ru' => [
@@ -40,6 +48,10 @@
             'text' => 'Сайт находится на плановом техническом обслуживании. Пожалуйста, попробуйте позже.',
             'eta' => 'Примерное время',
             'retry' => 'Попробовать снова',
+            'day' => 'дн',
+            'hour' => 'ч',
+            'min' => 'мин',
+            'sec' => 'сек',
             'lang' => 'ru',
         ],
         'ka' => [
@@ -47,6 +59,10 @@
             'text' => 'საიტი ამჟამად ტექნიკური მომსახურების პროცესშია. გთხოვთ, სცადოთ ცოტა მოგვიანებით.',
             'eta' => 'სავარაუდო დაბრუნება',
             'retry' => 'კიდევ სცადეთ',
+            'day' => 'დღე',
+            'hour' => 'სთ',
+            'min' => 'წთ',
+            'sec' => 'წმ',
             'lang' => 'ka',
         ],
     ];
@@ -324,6 +340,13 @@
     let seconds = parseInt(el.dataset.seconds) || 0;
     const label = el.textContent.split(':')[0];
 
+    const words = {
+        day: '{{ $t['day'] }}',
+        hour: '{{ $t['hour'] }}',
+        min: '{{ $t['min'] }}',
+        sec: '{{ $t['sec'] }}',
+    };
+
     function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
     function tick() {
@@ -338,10 +361,10 @@
         const s = seconds % 60;
 
         let parts = [];
-        if (d > 0) parts.push(d + ' gün');
-        if (h > 0 || d > 0) parts.push(pad(h) + ' saat');
-        parts.push(pad(m) + ' dəq');
-        parts.push(pad(s) + ' san');
+        if (d > 0) parts.push(d + ' ' + words.day);
+        if (h > 0 || d > 0) parts.push(pad(h) + ' ' + words.hour);
+        parts.push(pad(m) + ' ' + words.min);
+        parts.push(pad(s) + ' ' + words.sec);
 
         el.textContent = label + ': ' + parts.join(' ');
         seconds--;
