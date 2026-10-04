@@ -1,5 +1,5 @@
 @if ($sculptures->count())
-<section class="relative">
+<section class="relative" style="isolation: isolate;">
     <div class="flex h-screen">
 
         <div class="flex-1 relative">
