@@ -3,7 +3,7 @@
     $num = str_pad(($index ?? 0) + 1, 2, '0', STR_PAD_LEFT);
 @endphp
 
-<a href="{{ route('sculpture.show', $sculpture->slug) }}"
+<a href="{{ route('sculpture.show', ['locale' => app()->getLocale(), 'slug' => $sculpture->slug]) }}"
    class="sculpture-card group relative block bg-white rounded-3xl overflow-hidden border border-slate-100 card-hover">
 
     <div class="relative aspect-[4/5] overflow-hidden bg-slate-100">
