@@ -13,57 +13,20 @@ class ShortUrlController extends Controller
     public function index()
     {
         $shortUrls = ShortUrl::latest()->paginate(20);
-        return view('admin.short-urls.index', compact('shortUrls'));
-    }
-
-    public function create()
-    {
         $sculptures = Sculpture::with('translations')->orderBy('id')->get();
         $pages = Page::orderBy('slug')->get();
-        return view('admin.short-urls.create', compact('sculptures', 'pages'));
+
+        return view('admin.short-urls.index', compact('shortUrls', 'sculptures', 'pages'));
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'code' => ['required', 'string', 'max:32', 'regex:/^[a-z0-9\-]+$/', 'unique:short_urls,code'],
-            'target_type' => ['required', 'in:sculpture,page,sculptures_pair,custom'],
-            'target_id' => ['nullable', 'integer'],
-            'sculpture_ids' => ['nullable', 'array'],
-            'sculpture_ids.*' => ['integer', 'exists:sculptures,id'],
-            'custom_url' => ['nullable', 'string', 'max:500'],
-            'note' => ['nullable', 'string', 'max:255'],
-            'is_active' => ['nullable', 'boolean'],
-        ]);
+        $data = $this->validateData($request, true);
 
-        $targetId = null;
-        $targetParams = null;
+        [$targetId, $targetParams] = $this->resolveTarget($data, $request);
 
-        if ($data['target_type'] === 'sculpture') {
-            if (empty($data['target_id'])) {
-                return back()->withErrors(['target_id' => 'Heykəl seçilməlidir.'])->withInput();
-            }
-            $targetId = $data['target_id'];
-        } elseif ($data['target_type'] === 'page') {
-            if (empty($data['target_id'])) {
-                return back()->withErrors(['target_id' => 'Səhifə seçilməlidir.'])->withInput();
-            }
-            $targetId = $data['target_id'];
-        } elseif ($data['target_type'] === 'sculptures_pair') {
-            $ids = $data['sculpture_ids'] ?? [];
-            if (count($ids) < 2) {
-                return back()->withErrors(['sculpture_ids' => 'Ən azı 2 heykəl seçilməlidir.'])->withInput();
-            }
-            $slugs = Sculpture::whereIn('id', $ids)
-                ->orderByRaw('FIELD(id, ' . implode(',', $ids) . ')')
-                ->pluck('slug')
-                ->toArray();
-            $targetParams = ['slugs' => $slugs];
-        } elseif ($data['target_type'] === 'custom') {
-            if (empty($data['custom_url'])) {
-                return back()->withErrors(['custom_url' => 'URL daxil edilməlidir.'])->withInput();
-            }
-            $targetParams = ['url' => $data['custom_url']];
+        if ($targetId === false) {
+            return back()->withErrors($this->errorBag())->withInput();
         }
 
         ShortUrl::create([
@@ -78,42 +41,14 @@ class ShortUrlController extends Controller
         return redirect()->route('admin.short-urls.index')->with('success', 'Qısa URL yaradıldı.');
     }
 
-    public function edit(ShortUrl $shortUrl)
-    {
-        $sculptures = Sculpture::with('translations')->orderBy('id')->get();
-        $pages = Page::orderBy('slug')->get();
-        return view('admin.short-urls.edit', compact('shortUrl', 'sculptures', 'pages'));
-    }
-
     public function update(Request $request, ShortUrl $shortUrl)
     {
-        $data = $request->validate([
-            'target_type' => ['required', 'in:sculpture,page,sculptures_pair,custom'],
-            'target_id' => ['nullable', 'integer'],
-            'sculpture_ids' => ['nullable', 'array'],
-            'sculpture_ids.*' => ['integer', 'exists:sculptures,id'],
-            'custom_url' => ['nullable', 'string', 'max:500'],
-            'note' => ['nullable', 'string', 'max:255'],
-            'is_active' => ['nullable', 'boolean'],
-        ]);
+        $data = $this->validateData($request, false);
 
-        $targetId = null;
-        $targetParams = null;
+        [$targetId, $targetParams] = $this->resolveTarget($data, $request);
 
-        if ($data['target_type'] === 'sculpture' || $data['target_type'] === 'page') {
-            $targetId = $data['target_id'] ?? null;
-        } elseif ($data['target_type'] === 'sculptures_pair') {
-            $ids = $data['sculpture_ids'] ?? [];
-            if (count($ids) < 2) {
-                return back()->withErrors(['sculpture_ids' => 'Ən azı 2 heykəl seçilməlidir.'])->withInput();
-            }
-            $slugs = Sculpture::whereIn('id', $ids)
-                ->orderByRaw('FIELD(id, ' . implode(',', $ids) . ')')
-                ->pluck('slug')
-                ->toArray();
-            $targetParams = ['slugs' => $slugs];
-        } elseif ($data['target_type'] === 'custom') {
-            $targetParams = ['url' => $data['custom_url'] ?? ''];
+        if ($targetId === false) {
+            return back()->withErrors($this->errorBag())->withInput();
         }
 
         $shortUrl->update([
@@ -124,12 +59,70 @@ class ShortUrlController extends Controller
             'is_active' => $request->boolean('is_active', true),
         ]);
 
-        return back()->with('success', 'Qısa URL yeniləndi.');
+        return redirect()->route('admin.short-urls.index')->with('success', 'Qısa URL yeniləndi.');
     }
 
     public function destroy(ShortUrl $shortUrl)
     {
         $shortUrl->delete();
         return redirect()->route('admin.short-urls.index')->with('success', 'Qısa URL silindi.');
+    }
+
+    private function validateData(Request $request, bool $isCreate): array
+    {
+        $rules = [
+            'target_type' => ['required', 'in:sculpture,page,sculptures_pair'],
+            'target_id' => ['nullable', 'integer'],
+            'sculpture_ids' => ['nullable', 'array'],
+            'sculpture_ids.*' => ['integer', 'exists:sculptures,id'],
+            'note' => ['nullable', 'string', 'max:255'],
+            'is_active' => ['nullable', 'boolean'],
+        ];
+
+        if ($isCreate) {
+            $rules['code'] = ['required', 'string', 'max:32', 'regex:/^[a-z0-9\-]+$/', 'unique:short_urls,code'];
+        }
+
+        return $request->validate($rules);
+    }
+
+    private function resolveTarget(array $data, Request $request): array
+    {
+        $this->errorBag = [];
+
+        if ($data['target_type'] === 'sculpture') {
+            if (empty($data['target_id'])) {
+                $this->errorBag = ['target_id' => 'Heykəl seçilməlidir.'];
+                return [false, null];
+            }
+            return [(int) $data['target_id'], null];
+        }
+
+        if ($data['target_type'] === 'page') {
+            if (empty($data['target_id'])) {
+                $this->errorBag = ['target_id' => 'Səhifə seçilməlidir.'];
+                return [false, null];
+            }
+            return [(int) $data['target_id'], null];
+        }
+
+        if ($data['target_type'] === 'sculptures_pair') {
+            $ids = array_map('intval', $data['sculpture_ids'] ?? []);
+            if (count($ids) < 2) {
+                $this->errorBag = ['sculpture_ids' => 'Ən azı 2 heykəl seçilməlidir.'];
+                return [false, null];
+            }
+            return [null, ['ids' => $ids]];
+        }
+
+        $this->errorBag = ['target_type' => 'Yanlış növ.'];
+        return [false, null];
+    }
+
+    private array $errorBag = [];
+
+    private function errorBag(): array
+    {
+        return $this->errorBag ?: ['form' => 'Xəta baş verdi.'];
     }
 }
