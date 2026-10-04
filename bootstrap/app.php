@@ -13,11 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         then: function () {
             Route::middleware('web')
                 ->group(base_path('routes/theme.php'));
+            Route::middleware('web')
+                ->group(base_path('routes/admin.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'setlocale' => \App\Http\Middleware\SetLocale::class,
+            'ip.blocked' => \App\Http\Middleware\CheckIpBlocked::class,
         ]);
 
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
