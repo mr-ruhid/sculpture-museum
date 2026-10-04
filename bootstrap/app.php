@@ -23,6 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'ip.blocked' => \App\Http\Middleware\CheckIpBlocked::class,
         ]);
 
+        $middleware->appendToGroup('web', \App\Http\Middleware\SecurityHeaders::class);
+
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
         $middleware->redirectUsersTo('/admin');
     })
