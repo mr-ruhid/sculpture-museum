@@ -18,11 +18,13 @@ class Sculpture extends Model
         'main_image',
         'panorama_embed',
         'is_published',
+        'sort_order',
     ];
 
     protected $casts = [
         'is_published' => 'boolean',
         'opening_date' => 'date',
+        'sort_order' => 'integer',
     ];
 
     public function translations()
