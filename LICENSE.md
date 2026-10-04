@@ -40,7 +40,7 @@ Any individual, organization, or governmental body that wishes to use the Softwa
 
 Official written permission to use the Software will be granted by the Author only after these steps are completed.
 
-**Contact:** [your-email@example.com]
+**Contact:** [ruhidjavadoff@gmail.com]
 
 ## 5. Third-Party Components
 
