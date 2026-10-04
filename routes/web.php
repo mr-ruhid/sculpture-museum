@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CacheController;
 use App\Http\Controllers\Admin\LanguageController;
+use App\Http\Controllers\Admin\MaintenanceController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SculptureController;
@@ -48,6 +49,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/settings/smtp', [SettingsController::class, 'smtp'])->name('settings.smtp');
         Route::post('/settings/smtp', [SettingsController::class, 'smtpUpdate'])->name('settings.smtp.update');
+
+        Route::get('/settings/maintenance', [MaintenanceController::class, 'index'])->name('settings.maintenance');
+        Route::post('/settings/maintenance/enable', [MaintenanceController::class, 'enable'])->name('settings.maintenance.enable');
+        Route::post('/settings/maintenance/disable', [MaintenanceController::class, 'disable'])->name('settings.maintenance.disable');
 
         Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
         Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
