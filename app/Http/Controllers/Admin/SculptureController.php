@@ -8,13 +8,18 @@ use App\Models\Sculpture;
 use App\Models\SculptureImage;
 use App\Models\SculptureTranslation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class SculptureController extends Controller
 {
     public function index()
     {
-        $sculptures = Sculpture::with('translations')->latest()->paginate(15);
+        $sculptures = Sculpture::with('translations')
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->paginate(50);
+
         return view('admin.sculptures.index', compact('sculptures'));
     }
 
@@ -28,6 +33,7 @@ class SculptureController extends Controller
     {
         $data = $this->validateData($request);
         $data['slug'] = $this->makeSlug($request);
+        $data['sort_order'] = (Sculpture::max('sort_order') ?? 0) + 1;
 
         if ($request->hasFile('main_image')) {
             $data['main_image'] = $request->file('main_image')->store('sculptures', 'public');
@@ -81,6 +87,25 @@ class SculptureController extends Controller
     {
         $image->delete();
         return back()->with('success', 'Şəkil silindi.');
+    }
+
+    public function updateSort(Request $request)
+    {
+        $data = $request->validate([
+            'order' => ['required', 'array'],
+            'order.*' => ['integer', 'exists:sculptures,id'],
+        ]);
+
+        DB::transaction(function () use ($data) {
+            foreach ($data['order'] as $index => $id) {
+                Sculpture::where('id', $id)->update(['sort_order' => $index + 1]);
+            }
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sıra yeniləndi.',
+        ]);
     }
 
     private function validateData(Request $request): array
