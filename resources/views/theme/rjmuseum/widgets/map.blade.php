@@ -42,7 +42,6 @@
         border-radius: 50%;
         box-shadow: 0 6px 18px rgba(99, 102, 241, 0.5);
         transition: transform .3s ease, box-shadow .3s ease;
-        position: relative;
     }
     .custom-marker:hover {
         transform: scale(1.15);
@@ -52,36 +51,6 @@
         width: 26px;
         height: 26px;
         color: #ffffff;
-    }
-    .custom-marker--cluster {
-        background: linear-gradient(135deg, #0f172a, #1e293b);
-        font-weight: 900;
-        font-size: 15px;
-        color: #fff;
-        border-color: #fff;
-    }
-    .custom-marker--cluster .cluster-count {
-        line-height: 1;
-        font-variant-numeric: tabular-nums;
-    }
-    .custom-marker--cluster .cluster-badge {
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        min-width: 20px;
-        height: 20px;
-        padding: 0 5px;
-        background: #f59e0b;
-        color: #fff;
-        border: 2px solid #fff;
-        border-radius: 999px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        font-weight: 900;
-        line-height: 1;
-        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.5);
     }
 
     .leaflet-popup-content-wrapper {
@@ -310,7 +279,6 @@
         object-fit: cover;
         flex-shrink: 0;
         background: #f1f5f9;
-        position: relative;
     }
     .map-list-thumb-empty {
         width: 48px;
@@ -326,29 +294,6 @@
         width: 20px;
         height: 20px;
         color: #94a3b8;
-    }
-    .map-list-thumb-wrap {
-        position: relative;
-        flex-shrink: 0;
-    }
-    .map-list-thumb-badge {
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        min-width: 22px;
-        height: 22px;
-        padding: 0 5px;
-        background: #f59e0b;
-        color: #fff;
-        border: 2px solid #fff;
-        border-radius: 999px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        font-weight: 900;
-        line-height: 1;
-        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
     }
     .map-list-info {
         flex: 1;
@@ -425,11 +370,18 @@ document.addEventListener('DOMContentLoaded', function () {
             '<rect x="226" y="816" width="348" height="40"/>' +
         '</svg>';
 
+    const markerIcon = L.divIcon({
+        className: '',
+        html: '<div class="custom-marker">' + statueSvg + '</div>',
+        iconSize: [44, 44],
+        iconAnchor: [22, 22],
+        popupAnchor: [0, -22],
+    });
+
     function coordKey(lat, lng) {
         return lat.toFixed(5) + ',' + lng.toFixed(5);
     }
 
-    // Group by coordinates
     const groups = {};
     data.forEach(function (item) {
         if (!item.lat || !item.lng) return;
@@ -446,30 +398,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     const groupList = Object.values(groups);
+    const markersByGroup = {};
 
     groupList.forEach(function (group) {
         const isCluster = group.items.length > 1;
 
-        let iconHtml;
-        if (isCluster) {
-            iconHtml =
-                '<div class="custom-marker custom-marker--cluster">' +
-                    '<span class="cluster-count">' + group.items.length + '</span>' +
-                    '<span class="cluster-badge">' + group.items.length + '</span>' +
-                '</div>';
-        } else {
-            iconHtml = '<div class="custom-marker">' + statueSvg + '</div>';
-        }
-
-        const icon = L.divIcon({
-            className: '',
-            html: iconHtml,
-            iconSize: [44, 44],
-            iconAnchor: [22, 22],
-            popupAnchor: [0, -22],
-        });
-
-        const marker = L.marker([group.lat, group.lng], { icon: icon }).addTo(map);
+        const marker = L.marker([group.lat, group.lng], { icon: markerIcon }).addTo(map);
         bounds.push([group.lat, group.lng]);
 
         const popupHtml = isCluster
@@ -479,9 +413,10 @@ document.addEventListener('DOMContentLoaded', function () {
         marker.bindPopup(popupHtml, { maxWidth: 320, minWidth: 320 });
 
         marker.on('click', function () {
-            setActiveGroup(group.key);
+            markActiveGroup(group.key);
         });
 
+        markersByGroup[group.key] = marker;
         group.marker = marker;
     });
 
@@ -564,69 +499,58 @@ document.addEventListener('DOMContentLoaded', function () {
         return html;
     }
 
-    // Sidebar list
-    groupList.forEach(function (group) {
-        if (!listEl) return;
+    // Sidebar — hər heykəl ayrı-ayrı
+    data.forEach(function (item) {
+        if (!item.lat || !item.lng || !listEl) return;
 
-        const isCluster = group.items.length > 1;
-        const first = group.items[0];
+        const key = coordKey(item.lat, item.lng);
 
         const el = document.createElement('div');
         el.className = 'map-list-item';
-        el.dataset.groupKey = group.key;
+        el.dataset.groupKey = key;
+        el.dataset.itemId = item.id;
 
-        const baseThumb = first.image
-            ? '<img src="' + first.image + '" class="map-list-thumb" alt="">'
+        const thumb = item.image
+            ? '<img src="' + item.image + '" class="map-list-thumb" alt="">'
             : '<div class="map-list-thumb-empty">' + statueSvg + '</div>';
 
-        const thumbWrap =
-            '<div class="map-list-thumb-wrap">' +
-                baseThumb +
-                (isCluster ? '<span class="map-list-thumb-badge">' + group.items.length + '</span>' : '') +
-            '</div>';
-
-        const title = isCluster
-            ? group.items.length + ' {{ __("frontend.sculptures") }}'
-            : escapeHtml(first.title);
-
-        const city = isCluster
-            ? (first.city ? escapeHtml(first.city) : '')
-            : (first.city ? escapeHtml(first.city) : '');
-
         el.innerHTML =
-            thumbWrap +
+            thumb +
             '<div class="map-list-info">' +
-                '<div class="map-list-title">' + title + '</div>' +
-                (city
+                '<div class="map-list-title">' + escapeHtml(item.title) + '</div>' +
+                (item.city
                     ? '<div class="map-list-city">' +
                         '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>' +
-                        city +
+                        escapeHtml(item.city) +
                       '</div>'
                     : '') +
             '</div>';
 
         el.addEventListener('click', function () {
-            focusOnGroup(group);
+            focusOnItem(item, key);
         });
 
         listEl.appendChild(el);
     });
 
-    function focusOnGroup(group) {
-        if (!group.marker) return;
+    function focusOnItem(item, key) {
+        const marker = markersByGroup[key];
+        if (!marker) return;
 
-        map.flyTo([group.lat, group.lng], 15, { duration: 1.2 });
+        map.flyTo([item.lat, item.lng], 15, { duration: 1.2 });
         setTimeout(function () {
-            group.marker.openPopup();
-            setActiveGroup(group.key);
+            marker.openPopup();
+            markActiveGroup(key, item.id);
         }, 600);
     }
 
-    function setActiveGroup(key) {
+    function markActiveGroup(key, itemId) {
         if (!listEl) return;
 
         document.querySelectorAll('.map-list-item').forEach(function (el) {
-            el.classList.toggle('is-active', el.dataset.groupKey === key);
+            const sameGroup = el.dataset.groupKey === key;
+            const sameItem = el.dataset.itemId == itemId;
+            el.classList.toggle('is-active', sameGroup && (!itemId || sameItem));
         });
 
         const active = listEl.querySelector('.map-list-item.is-active');
