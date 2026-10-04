@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SculptureController;
+use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\ShortUrlController;
 use App\Http\Controllers\Admin\TranslationController;
@@ -69,6 +70,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/short-urls', [ShortUrlController::class, 'store'])->name('short-urls.store');
         Route::put('/short-urls/{short_url}', [ShortUrlController::class, 'update'])->name('short-urls.update');
         Route::delete('/short-urls/{short_url}', [ShortUrlController::class, 'destroy'])->name('short-urls.destroy');
+
+        Route::get('/security/blocked-ips', [SecurityController::class, 'blockedIps'])->name('security.blockedIps');
+        Route::delete('/security/blocked-ips/{attempt}', [SecurityController::class, 'unblock'])->name('security.unblock');
+        Route::delete('/security/clear-all', [SecurityController::class, 'clearAll'])->name('security.clearAll');
 
         Route::get('/cache', [CacheController::class, 'index'])->name('cache.index');
         Route::post('/cache/clear', [CacheController::class, 'clear'])->name('cache.clear');
