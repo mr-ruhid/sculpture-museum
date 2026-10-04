@@ -175,9 +175,58 @@ class FrontendController extends Controller
         ]);
     }
 
+    public function shortUrl(Request $request, $code)
+    {
+        $shortUrl = \App\Models\ShortUrl::where('code', $code)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        $locale = $this->detectLocale($request);
+
+        $target = $shortUrl->resolveUrl($locale);
+
+        if (!$target) {
+            abort(404);
+        }
+
+        $shortUrl->incrementHits();
+
+        return redirect()->to($target, 302);
+    }
+
+    protected function detectLocale(Request $request): string
+    {
+        $active = Language::where('is_active', true)->pluck('code')->toArray();
+        $fallback = 'en';
+
+        $header = $request->header('Accept-Language', '');
+        if (!$header) {
+            return in_array($fallback, $active, true) ? $fallback : ($active[0] ?? 'en');
+        }
+
+        preg_match_all('/([a-z]{2})(?:-[A-Z]{2})?(?:;q=([0-9.]+))?/i', $header, $matches, PREG_SET_ORDER);
+
+        $candidates = [];
+        foreach ($matches as $m) {
+            $lang = strtolower($m[1]);
+            $q = isset($m[2]) && $m[2] !== '' ? (float) $m[2] : 1.0;
+            $candidates[$lang] = max($candidates[$lang] ?? 0, $q);
+        }
+
+        arsort($candidates);
+
+        foreach (array_keys($candidates) as $lang) {
+            if (in_array($lang, $active, true)) {
+                return $lang;
+            }
+        }
+
+        return in_array($fallback, $active, true) ? $fallback : ($active[0] ?? 'en');
+    }
+
     public function switchLang($code)
     {
-        if (Language::where('lang', $code)->where('is_active', true)->exists()) {
+        if (Language::where('code', $code)->where('is_active', true)->exists()) {
             session(['locale' => $code]);
             return redirect()->to('/' . $code);
         }
