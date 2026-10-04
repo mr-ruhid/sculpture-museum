@@ -101,7 +101,7 @@
 
             @if ($isDown && $retryUntil)
                 <div class="mt-5 pt-5 border-t border-slate-100">
-                    <div class="flex items-center gap-2 text-sm text-slate-600">
+                    <div class="flex items-center gap-2 text-sm text-slate-600 flex-wrap">
                         <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -173,11 +173,25 @@
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">
                             Avtomatik açılış (dəqiqə)
                         </label>
-                        <input type="number" name="retry" min="1" max="1440" value="60"
+                        <input type="number" name="retry" min="1" max="43200" value="60"
                                class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition">
                         <p class="text-[11px] text-slate-400 mt-1">
-                            Neçə dəqiqə sonra sayt avtomatik açılsın (1-1440)
+                            Neçə dəqiqə sonra sayt avtomatik açılsın (1-43200, təxmini 30 gün)
                         </p>
+                        <div class="flex flex-wrap gap-1.5 mt-2">
+                            <button type="button" onclick="document.querySelector('input[name=retry]').value = 60"
+                                    class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-600 transition">1 saat</button>
+                            <button type="button" onclick="document.querySelector('input[name=retry]').value = 360"
+                                    class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-600 transition">6 saat</button>
+                            <button type="button" onclick="document.querySelector('input[name=retry]').value = 1440"
+                                    class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-600 transition">1 gün</button>
+                            <button type="button" onclick="document.querySelector('input[name=retry]').value = 10080"
+                                    class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-600 transition">7 gün</button>
+                            <button type="button" onclick="document.querySelector('input[name=retry]').value = 43200"
+                                    class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-600 transition">30 gün</button>
+                            <button type="button" onclick="document.querySelector('input[name=retry]').value = ''"
+                                    class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-600 transition">Limitsiz</button>
+                        </div>
                     </div>
 
                     <div>
