@@ -55,18 +55,38 @@
         </div>
     </div>
 
-    <div class="p-5 md:p-6 flex items-center justify-between gap-4">
-        <div class="flex items-center gap-2 text-sm text-slate-500 min-w-0">
+    <div class="p-5 md:p-6 flex items-start justify-between gap-4">
+        <div class="flex-1 min-w-0 space-y-1.5">
             @if ($tr?->city)
-                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                <span class="truncate">{{ $tr->city }}</span>
+                <div class="flex items-center gap-2 text-sm text-slate-700 min-w-0">
+                    <svg class="w-4 h-4 flex-shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="font-medium truncate">{{ $tr->city }}</span>
+                </div>
+            @endif
+
+            @if ($tr?->address)
+                <div class="flex items-start gap-2 text-xs text-slate-500 min-w-0">
+                    <svg class="w-3.5 h-3.5 flex-shrink-0 text-slate-400 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                    </svg>
+                    <span class="line-clamp-2">{{ $tr->address }}</span>
+                </div>
+            @endif
+
+            @if (!$tr?->city && !$tr?->address && $tr?->material)
+                <div class="flex items-center gap-2 text-xs text-slate-500 min-w-0">
+                    <svg class="w-3.5 h-3.5 flex-shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    <span class="truncate">{{ $tr->material }}</span>
+                </div>
             @endif
         </div>
 
-        <div class="w-11 h-11 rounded-full bg-slate-900 group-hover:bg-indigo-600 flex items-center justify-center transition-all duration-500 flex-shrink-0 group-hover:rotate-[-45deg] group-hover:scale-110">
+        <div class="w-11 h-11 rounded-full bg-slate-900 group-hover:bg-indigo-600 flex items-center justify-center transition-all duration-500 flex-shrink-0 group-hover:rotate-[-45deg] group-hover:scale-110 mt-0.5">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 5l7 7-7 7"/>
             </svg>
