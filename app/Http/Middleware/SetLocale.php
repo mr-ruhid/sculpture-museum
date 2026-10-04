@@ -11,6 +11,10 @@ class SetLocale
 {
     public function handle(Request $request, Closure $next)
     {
+        if ($request->is('admin') || $request->is('admin/*')) {
+            return $next($request);
+        }
+
         $locale = $request->route('locale');
 
         if (!$locale || !Language::where('code', $locale)->where('is_active', true)->exists()) {
