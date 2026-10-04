@@ -42,6 +42,7 @@
         border-radius: 50%;
         box-shadow: 0 6px 18px rgba(99, 102, 241, 0.5);
         transition: transform .3s ease, box-shadow .3s ease;
+        position: relative;
     }
     .custom-marker:hover {
         transform: scale(1.15);
@@ -52,6 +53,37 @@
         height: 26px;
         color: #ffffff;
     }
+    .custom-marker--cluster {
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        font-weight: 900;
+        font-size: 15px;
+        color: #fff;
+        border-color: #fff;
+    }
+    .custom-marker--cluster .cluster-count {
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+    }
+    .custom-marker--cluster .cluster-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 5px;
+        background: #f59e0b;
+        color: #fff;
+        border: 2px solid #fff;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 900;
+        line-height: 1;
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.5);
+    }
+
     .leaflet-popup-content-wrapper {
         border-radius: 16px;
         padding: 0;
@@ -60,7 +92,9 @@
     }
     .leaflet-popup-content {
         margin: 0;
-        width: 300px !important;
+        width: 320px !important;
+        max-height: 480px;
+        overflow-y: auto;
     }
     .leaflet-popup-close-button {
         color: #fff !important;
@@ -164,6 +198,94 @@
         font-size: 10px !important;
     }
 
+    .map-cluster-header {
+        padding: 14px 16px;
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: #fff;
+        border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    .map-cluster-header-title {
+        font-weight: 800;
+        font-size: 14px;
+    }
+    .map-cluster-header-sub {
+        font-size: 11px;
+        color: rgba(255,255,255,.6);
+        margin-top: 2px;
+    }
+    .map-cluster-list {
+        max-height: 380px;
+        overflow-y: auto;
+    }
+    .map-cluster-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f5f9;
+        text-decoration: none;
+        color: inherit;
+        transition: background .2s;
+    }
+    .map-cluster-item:last-child {
+        border-bottom: 0;
+    }
+    .map-cluster-item:hover {
+        background: #f8fafc;
+    }
+    .map-cluster-item-thumb {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        object-fit: cover;
+        flex-shrink: 0;
+        background: #f1f5f9;
+    }
+    .map-cluster-item-info {
+        flex: 1;
+        min-width: 0;
+    }
+    .map-cluster-item-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.3;
+        margin-bottom: 2px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .map-cluster-item-meta {
+        font-size: 11px;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    .map-cluster-item-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 6px;
+        background: #eef2ff;
+        color: #4338ca;
+        font-size: 9px;
+        font-weight: 700;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+    }
+    .map-cluster-item-arrow {
+        flex-shrink: 0;
+        color: #94a3b8;
+        transition: transform .2s, color .2s;
+    }
+    .map-cluster-item:hover .map-cluster-item-arrow {
+        color: #6366f1;
+        transform: translateX(2px);
+    }
+
     .map-list-item {
         display: flex;
         align-items: center;
@@ -188,6 +310,7 @@
         object-fit: cover;
         flex-shrink: 0;
         background: #f1f5f9;
+        position: relative;
     }
     .map-list-thumb-empty {
         width: 48px;
@@ -203,6 +326,29 @@
         width: 20px;
         height: 20px;
         color: #94a3b8;
+    }
+    .map-list-thumb-wrap {
+        position: relative;
+        flex-shrink: 0;
+    }
+    .map-list-thumb-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 5px;
+        background: #f59e0b;
+        color: #fff;
+        border: 2px solid #fff;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 900;
+        line-height: 1;
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
     }
     .map-list-info {
         flex: 1;
@@ -263,7 +409,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }).addTo(map);
 
     const bounds = [];
-    const markers = {};
 
     const statueSvg =
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" fill="currentColor">' +
@@ -280,21 +425,67 @@ document.addEventListener('DOMContentLoaded', function () {
             '<rect x="226" y="816" width="348" height="40"/>' +
         '</svg>';
 
-    const markerIcon = L.divIcon({
-        className: '',
-        html: '<div class="custom-marker">' + statueSvg + '</div>',
-        iconSize: [44, 44],
-        iconAnchor: [22, 22],
-        popupAnchor: [0, -22],
-    });
+    function coordKey(lat, lng) {
+        return lat.toFixed(5) + ',' + lng.toFixed(5);
+    }
 
+    // Group by coordinates
+    const groups = {};
     data.forEach(function (item) {
         if (!item.lat || !item.lng) return;
+        const key = coordKey(item.lat, item.lng);
+        if (!groups[key]) {
+            groups[key] = {
+                key: key,
+                lat: item.lat,
+                lng: item.lng,
+                items: [],
+            };
+        }
+        groups[key].items.push(item);
+    });
 
-        const marker = L.marker([item.lat, item.lng], { icon: markerIcon }).addTo(map);
-        markers[item.id] = marker;
-        bounds.push([item.lat, item.lng]);
+    const groupList = Object.values(groups);
 
+    groupList.forEach(function (group) {
+        const isCluster = group.items.length > 1;
+
+        let iconHtml;
+        if (isCluster) {
+            iconHtml =
+                '<div class="custom-marker custom-marker--cluster">' +
+                    '<span class="cluster-count">' + group.items.length + '</span>' +
+                    '<span class="cluster-badge">' + group.items.length + '</span>' +
+                '</div>';
+        } else {
+            iconHtml = '<div class="custom-marker">' + statueSvg + '</div>';
+        }
+
+        const icon = L.divIcon({
+            className: '',
+            html: iconHtml,
+            iconSize: [44, 44],
+            iconAnchor: [22, 22],
+            popupAnchor: [0, -22],
+        });
+
+        const marker = L.marker([group.lat, group.lng], { icon: icon }).addTo(map);
+        bounds.push([group.lat, group.lng]);
+
+        const popupHtml = isCluster
+            ? buildClusterPopup(group)
+            : buildSinglePopup(group.items[0]);
+
+        marker.bindPopup(popupHtml, { maxWidth: 320, minWidth: 320 });
+
+        marker.on('click', function () {
+            setActiveGroup(group.key);
+        });
+
+        group.marker = marker;
+    });
+
+    function buildSinglePopup(item) {
         let media = '';
         let panoBtn = '';
 
@@ -321,8 +512,7 @@ document.addEventListener('DOMContentLoaded', function () {
             media = '<div class="map-popup-noimage">' + statueSvg + '</div>';
         }
 
-        const html =
-            '<div class="map-popup-media">' + media + '</div>' +
+        return '<div class="map-popup-media">' + media + '</div>' +
             '<div class="map-popup-body">' +
                 '<div class="map-popup-title">' + escapeHtml(item.title) + '</div>' +
                 (item.city ? '<div class="map-popup-city">' + escapeHtml(item.city) + '</div>' : '') +
@@ -334,59 +524,109 @@ document.addEventListener('DOMContentLoaded', function () {
                     panoBtn +
                 '</div>' +
             '</div>';
+    }
 
-        marker.bindPopup(html, { maxWidth: 300, minWidth: 300 });
+    function buildClusterPopup(group) {
+        let html =
+            '<div class="map-cluster-header">' +
+                '<div class="map-cluster-header-title">{{ __("frontend.map_cluster_title") }}</div>' +
+                '<div class="map-cluster-header-sub">' + group.items.length + ' {{ __("frontend.sculptures") }}</div>' +
+            '</div>' +
+            '<div class="map-cluster-list">';
 
-        marker.on('click', function () {
-            setActiveItem(item.id);
+        group.items.forEach(function (item) {
+            const thumb = item.image
+                ? '<img src="' + item.image + '" class="map-cluster-item-thumb" alt="">'
+                : '<div class="map-cluster-item-thumb" style="display:flex;align-items:center;justify-content:center;">' + statueSvg.replace('viewBox', 'style="width:22px;height:22px;color:#94a3b8" viewBox') + '</div>';
+
+            const badges =
+                (item.panorama ? '<span class="map-cluster-item-badge">360°</span>' : '') +
+                (item.year ? '<span class="map-cluster-item-badge">' + item.year + '</span>' : '');
+
+            html +=
+                '<a href="' + item.url + '" class="map-cluster-item">' +
+                    thumb +
+                    '<div class="map-cluster-item-info">' +
+                        '<div class="map-cluster-item-title">' + escapeHtml(item.title) + '</div>' +
+                        '<div class="map-cluster-item-meta">' +
+                            (item.city ? '<span>' + escapeHtml(item.city) + '</span>' : '') +
+                            badges +
+                        '</div>' +
+                    '</div>' +
+                    '<svg class="map-cluster-item-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">' +
+                        '<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>' +
+                    '</svg>' +
+                '</a>';
         });
-    });
 
-    data.forEach(function (item) {
-        if (!item.lat || !item.lng || !listEl) return;
+        html += '</div>';
+
+        return html;
+    }
+
+    // Sidebar list
+    groupList.forEach(function (group) {
+        if (!listEl) return;
+
+        const isCluster = group.items.length > 1;
+        const first = group.items[0];
 
         const el = document.createElement('div');
         el.className = 'map-list-item';
-        el.dataset.id = item.id;
+        el.dataset.groupKey = group.key;
 
-        const thumb = item.image
-            ? '<img src="' + item.image + '" class="map-list-thumb" alt="">'
+        const baseThumb = first.image
+            ? '<img src="' + first.image + '" class="map-list-thumb" alt="">'
             : '<div class="map-list-thumb-empty">' + statueSvg + '</div>';
 
+        const thumbWrap =
+            '<div class="map-list-thumb-wrap">' +
+                baseThumb +
+                (isCluster ? '<span class="map-list-thumb-badge">' + group.items.length + '</span>' : '') +
+            '</div>';
+
+        const title = isCluster
+            ? group.items.length + ' {{ __("frontend.sculptures") }}'
+            : escapeHtml(first.title);
+
+        const city = isCluster
+            ? (first.city ? escapeHtml(first.city) : '')
+            : (first.city ? escapeHtml(first.city) : '');
+
         el.innerHTML =
-            thumb +
+            thumbWrap +
             '<div class="map-list-info">' +
-                '<div class="map-list-title">' + escapeHtml(item.title) + '</div>' +
-                (item.city
+                '<div class="map-list-title">' + title + '</div>' +
+                (city
                     ? '<div class="map-list-city">' +
                         '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>' +
-                        escapeHtml(item.city) +
+                        city +
                       '</div>'
                     : '') +
             '</div>';
 
         el.addEventListener('click', function () {
-            focusOn(item);
+            focusOnGroup(group);
         });
 
         listEl.appendChild(el);
     });
 
-    function focusOn(item) {
-        if (!markers[item.id]) return;
+    function focusOnGroup(group) {
+        if (!group.marker) return;
 
-        map.flyTo([item.lat, item.lng], 15, { duration: 1.2 });
+        map.flyTo([group.lat, group.lng], 15, { duration: 1.2 });
         setTimeout(function () {
-            markers[item.id].openPopup();
-            setActiveItem(item.id);
+            group.marker.openPopup();
+            setActiveGroup(group.key);
         }, 600);
     }
 
-    function setActiveItem(id) {
+    function setActiveGroup(key) {
         if (!listEl) return;
 
         document.querySelectorAll('.map-list-item').forEach(function (el) {
-            el.classList.toggle('is-active', el.dataset.id == id);
+            el.classList.toggle('is-active', el.dataset.groupKey === key);
         });
 
         const active = listEl.querySelector('.map-list-item.is-active');
