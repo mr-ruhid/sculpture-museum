@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class MaintenanceController extends Controller
 {
@@ -23,7 +24,7 @@ class MaintenanceController extends Controller
     {
         $data = $request->validate([
             'message' => ['nullable', 'string', 'max:500'],
-            'retry' => ['nullable', 'integer', 'min:1', 'max:1440'],
+            'retry' => ['nullable', 'integer', 'min:1', 'max:43200'],
             'allowed_ips' => ['nullable', 'string', 'max:500'],
         ]);
 
@@ -48,7 +49,7 @@ class MaintenanceController extends Controller
             'retry' => isset($data['retry']) && $data['retry'] > 0
                 ? time() + ((int) $data['retry'] * 60)
                 : null,
-            'secret' => \Illuminate\Support\Str::random(40),
+            'secret' => Str::random(40),
             'allowed' => $allowedIps,
         ];
 
