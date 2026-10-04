@@ -76,5 +76,6 @@
 
     "frontend.404_title": "გვერდი ვერ მოიძებნა",
     "frontend.404_text": "გვერდი, რომელსაც ეძებთ, არ არსებობს ან გადატანილია.",
-    "frontend.back_home": "მთავარ გვერდზე"
+    "frontend.back_home": "მთავარ გვერდზე",
+    "frontend.map_cluster_title": "რამდენიმე სკულპტურა"
 }

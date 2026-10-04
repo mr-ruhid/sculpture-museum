@@ -73,5 +73,6 @@
 
     "frontend.404_title": "Sculpture not found",
     "frontend.404_text": "The page you're looking for doesn't exist or may have been moved to another location.",
-    "frontend.back_home": "Back to home"
+    "frontend.back_home": "Back to home",
+    "frontend.map_cluster_title": "Multiple sculptures"
 }
