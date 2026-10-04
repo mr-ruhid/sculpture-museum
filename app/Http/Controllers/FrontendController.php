@@ -18,6 +18,8 @@ class FrontendController extends Controller
             ->where('is_published', true)
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
+            ->orderBy('sort_order')
+            ->orderBy('id')
             ->get()
             ->map(function ($s) use ($locale) {
                 $tr = $s->translation($locale);
@@ -35,7 +37,14 @@ class FrontendController extends Controller
             })
             ->values();
 
-        return view('theme.rjmuseum.pages.home', compact('sculptures'));
+        $featured = Sculpture::with('translations')
+            ->where('is_published', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->take(3)
+            ->get();
+
+        return view('theme.rjmuseum.pages.home', compact('sculptures', 'featured'));
     }
 
     public function sculptures(Request $request, $locale)
@@ -71,7 +80,7 @@ class FrontendController extends Controller
             });
         }
 
-        $sculptures = $query->latest()->paginate(12)->withQueryString();
+        $sculptures = $query->orderBy('sort_order')->orderBy('id')->paginate(12)->withQueryString();
 
         $cities = Sculpture::where('is_published', true)
             ->whereHas('translations', function ($q) {
@@ -136,6 +145,7 @@ class FrontendController extends Controller
                 ->whereHas('translations', function ($q) use ($city) {
                     $q->where('city', $city);
                 })
+                ->orderBy('sort_order')
                 ->take($limit)
                 ->get();
 
@@ -152,6 +162,7 @@ class FrontendController extends Controller
                 ->whereHas('translations', function ($q) use ($sculptor) {
                     $q->where('sculptor', $sculptor);
                 })
+                ->orderBy('sort_order')
                 ->take($need)
                 ->get();
 
@@ -165,7 +176,7 @@ class FrontendController extends Controller
             $random = Sculpture::with('translations')
                 ->where('is_published', true)
                 ->whereNotIn('id', $usedIds)
-                ->inRandomOrder()
+                ->orderBy('sort_order')
                 ->take($need)
                 ->get();
 
