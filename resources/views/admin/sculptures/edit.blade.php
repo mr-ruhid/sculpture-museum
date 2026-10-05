@@ -263,6 +263,56 @@
 
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800">Təsvir üçün şəkil</h3>
+                    <span class="text-xs text-slate-400">PNG, JPG</span>
+                </div>
+                <div class="p-6">
+                    <label for="description_image" class="block cursor-pointer">
+                        <div class="w-full aspect-video rounded-xl border-2 border-dashed border-slate-200 hover:border-indigo-400 transition flex flex-col items-center justify-center bg-slate-50 overflow-hidden">
+                            @if ($sculpture->description_image)
+                                <img id="description_preview" src="{{ asset('storage/' . $sculpture->description_image) }}" class="w-full h-full object-cover">
+                                <div id="description_placeholder" class="hidden"></div>
+                            @else
+                                <img id="description_preview" class="hidden w-full h-full object-cover">
+                                <div id="description_placeholder" class="flex flex-col items-center text-slate-400 py-8">
+                                    <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <span class="text-sm">Şəkil seç</span>
+                                </div>
+                            @endif
+                        </div>
+                        <input id="description_image" type="file" name="description_image" accept="image/*" class="hidden">
+                    </label>
+                    <p class="text-xs text-slate-400 mt-2">Bu şəkil "Təsvir" bölməsinin yuxarısında göstəriləcək</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-slate-800">Tarixi üçün şəkil</h3>
+                    <span class="text-xs text-slate-400">PNG, JPG</span>
+                </div>
+                <div class="p-6">
+                    <label for="history_image" class="block cursor-pointer">
+                        <div class="w-full aspect-video rounded-xl border-2 border-dashed border-slate-200 hover:border-indigo-400 transition flex flex-col items-center justify-center bg-slate-50 overflow-hidden">
+                            @if ($sculpture->history_image)
+                                <img id="history_preview" src="{{ asset('storage/' . $sculpture->history_image) }}" class="w-full h-full object-cover">
+                                <div id="history_placeholder" class="hidden"></div>
+                            @else
+                                <img id="history_preview" class="hidden w-full h-full object-cover">
+                                <div id="history_placeholder" class="flex flex-col items-center text-slate-400 py-8">
+                                    <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <span class="text-sm">Şəkil seç</span>
+                                </div>
+                            @endif
+                        </div>
+                        <input id="history_image" type="file" name="history_image" accept="image/*" class="hidden">
+                    </label>
+                    <p class="text-xs text-slate-400 mt-2">Bu şəkil "Tarixi məlumat" bölməsinin yuxarısında göstəriləcək</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
                     <h3 class="font-semibold text-slate-800">Qalereya</h3>
                     <span class="text-xs text-slate-400">Çoxlu seçim</span>
                 </div>
@@ -326,19 +376,28 @@ function switchTab(group, code) {
     });
 }
 
-document.getElementById('main_image').addEventListener('change', function(e) {
-    const f = e.target.files[0];
-    if (!f) return;
-    const r = new FileReader();
-    r.onload = ev => {
-        const img = document.getElementById('main_preview');
-        img.src = ev.target.result;
-        img.classList.remove('hidden');
-        const ph = document.getElementById('main_placeholder');
-        if (ph) ph.classList.add('hidden');
-    };
-    r.readAsDataURL(f);
-});
+function bindImagePreview(inputId, previewId, placeholderId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    input.addEventListener('change', function (e) {
+        const f = e.target.files[0];
+        if (!f) return;
+        const r = new FileReader();
+        r.onload = ev => {
+            const img = document.getElementById(previewId);
+            img.src = ev.target.result;
+            img.classList.remove('hidden');
+            const ph = document.getElementById(placeholderId);
+            if (ph) ph.classList.add('hidden');
+        };
+        r.readAsDataURL(f);
+    });
+}
+
+bindImagePreview('main_image', 'main_preview', 'main_placeholder');
+bindImagePreview('description_image', 'description_preview', 'description_placeholder');
+bindImagePreview('history_image', 'history_preview', 'history_placeholder');
 
 document.getElementById('gallery').addEventListener('change', function(e) {
     const box = document.getElementById('gallery_preview');
