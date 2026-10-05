@@ -16,6 +16,8 @@ class Sculpture extends Model
         'condition',
         'registration_info',
         'main_image',
+        'description_image',
+        'history_image',
         'panorama_embed',
         'is_published',
         'sort_order',
