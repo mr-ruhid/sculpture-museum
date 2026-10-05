@@ -39,6 +39,14 @@ class SculptureController extends Controller
             $data['main_image'] = $request->file('main_image')->store('sculptures', 'public');
         }
 
+        if ($request->hasFile('description_image')) {
+            $data['description_image'] = $request->file('description_image')->store('sculptures/description', 'public');
+        }
+
+        if ($request->hasFile('history_image')) {
+            $data['history_image'] = $request->file('history_image')->store('sculptures/history', 'public');
+        }
+
         $sculpture = Sculpture::create($data);
 
         $this->saveTranslations($sculpture, $request);
@@ -67,6 +75,14 @@ class SculptureController extends Controller
 
         if ($request->hasFile('main_image')) {
             $data['main_image'] = $request->file('main_image')->store('sculptures', 'public');
+        }
+
+        if ($request->hasFile('description_image')) {
+            $data['description_image'] = $request->file('description_image')->store('sculptures/description', 'public');
+        }
+
+        if ($request->hasFile('history_image')) {
+            $data['history_image'] = $request->file('history_image')->store('sculptures/history', 'public');
         }
 
         $sculpture->update($data);
@@ -120,6 +136,8 @@ class SculptureController extends Controller
             'registration_info' => ['nullable', 'string'],
             'panorama_embed' => ['nullable', 'string'],
             'main_image' => ['nullable', 'image', 'max:8192'],
+            'description_image' => ['nullable', 'image', 'max:8192'],
+            'history_image' => ['nullable', 'image', 'max:8192'],
             'is_published' => ['nullable', 'boolean'],
             'translations' => ['required', 'array'],
             'translations.en.title' => ['required', 'string', 'max:255'],
