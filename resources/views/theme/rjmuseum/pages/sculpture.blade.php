@@ -13,6 +13,12 @@
     $shareUrl = urlencode(url()->current());
     $shareTitle = urlencode($tr?->title ?? '');
 
+    $hasDescription = !empty($tr?->description);
+    $hasHistory = !empty($tr?->history);
+    $hasDescImage = !empty($sculpture->description_image);
+    $hasHistImage = !empty($sculpture->history_image);
+    $bothSections = $hasDescription && $hasHistory;
+
     $schemaData = [
         '@context' => 'https://schema.org',
         '@type' => 'Sculpture',
@@ -28,17 +34,11 @@
     }
 
     if ($tr?->sculptor) {
-        $schemaData['creator'] = [
-            '@type' => 'Person',
-            'name' => $tr->sculptor,
-        ];
+        $schemaData['creator'] = ['@type' => 'Person', 'name' => $tr->sculptor];
     }
 
     if ($tr?->architect) {
-        $schemaData['contributor'] = [
-            '@type' => 'Person',
-            'name' => $tr->architect,
-        ];
+        $schemaData['contributor'] = ['@type' => 'Person', 'name' => $tr->architect];
     }
 
     if ($sculpture->year) {
@@ -61,11 +61,7 @@
         foreach ($sculpture->images as $img) {
             $images[] = asset('storage/' . $img->path);
         }
-        if (count($images) === 1) {
-            $schemaData['image'] = $images[0];
-        } elseif (count($images) > 1) {
-            $schemaData['image'] = $images;
-        }
+        $schemaData['image'] = count($images) === 1 ? $images[0] : $images;
     }
 
     if ($sculpture->latitude && $sculpture->longitude) {
@@ -80,10 +76,7 @@
 
         if ($tr?->city) {
             $place['name'] = $tr->city;
-            $place['address'] = [
-                '@type' => 'PostalAddress',
-                'addressLocality' => $tr->city,
-            ];
+            $place['address'] = ['@type' => 'PostalAddress', 'addressLocality' => $tr->city];
         }
 
         if ($tr?->address) {
@@ -121,9 +114,7 @@
         justify-content: center;
         padding: 2rem;
     }
-    .lightbox.is-open {
-        display: flex;
-    }
+    .lightbox.is-open { display: flex; }
     .lightbox img {
         max-width: 90vw;
         max-height: 85vh;
@@ -171,9 +162,7 @@
     .lightbox-prev { left: 1.5rem; }
     .lightbox-next { right: 1.5rem; }
     .lightbox-prev:hover,
-    .lightbox-next:hover {
-        background: rgba(255, 255, 255, 0.25);
-    }
+    .lightbox-next:hover { background: rgba(255, 255, 255, 0.25); }
     .lightbox-prev:hover { transform: translateY(-50%) translateX(-3px); }
     .lightbox-next:hover { transform: translateY(-50%) translateX(3px); }
     .lightbox-counter {
@@ -191,6 +180,69 @@
     @media (max-width: 640px) {
         .lightbox-prev, .lightbox-next { display: none; }
         .lightbox-close { top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; }
+    }
+
+    .story-block {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 1s cubic-bezier(.4,0,.2,1), transform 1s cubic-bezier(.4,0,.2,1);
+        will-change: opacity, transform;
+    }
+    .story-block.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .story-block.delay-1 { transition-delay: 0.15s; }
+    .story-block.delay-2 { transition-delay: 0.3s; }
+
+    .story-media {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.75rem;
+        box-shadow: 0 25px 60px -20px rgba(15, 23, 42, 0.25);
+        cursor: pointer;
+    }
+    .story-media img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        transition: transform 1.2s cubic-bezier(.4,0,.2,1);
+        will-change: transform;
+    }
+    .story-media:hover img {
+        transform: scale(1.08);
+    }
+    .story-media .story-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(2, 6, 23, 0.55) 0%, rgba(2, 6, 23, 0.15) 40%, transparent 70%);
+        pointer-events: none;
+        z-index: 2;
+    }
+    .story-media .story-zoom-btn {
+        position: absolute;
+        bottom: 1.25rem;
+        right: 1.25rem;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity .4s ease, transform .4s ease, background .3s;
+    }
+    .story-media:hover .story-zoom-btn {
+        opacity: 1;
+        transform: translateY(0);
+        background: rgba(255, 255, 255, 0.25);
     }
 </style>
 @endpush
@@ -362,26 +414,64 @@
     </div>
 </section>
 
-@if ($tr?->description || $tr?->history)
-<section class="py-16 bg-slate-50">
-    <div class="max-w-4xl mx-auto px-6">
-        @if ($tr?->description)
-            <div class="mb-12">
-                <h2 class="text-2xl font-bold text-slate-900 mb-4">{{ __('frontend.description') }}</h2>
-                <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-line">
-                    {{ $tr->description }}
-                </div>
-            </div>
-        @endif
+@if ($hasDescription || $hasHistory)
+<section class="py-16 bg-slate-50 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 {{ $bothSections ? 'lg:grid-cols-2' : '' }} gap-10 lg:gap-14 items-start">
 
-        @if ($tr?->history)
-            <div>
-                <h2 class="text-2xl font-bold text-slate-900 mb-4">{{ __('frontend.history') }}</h2>
-                <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-line">
-                    {{ $tr->history }}
+            {{-- Tarixi — SOLDA --}}
+            @if ($hasHistory)
+                <div class="story-block {{ !$bothSections ? 'lg:mx-auto lg:max-w-4xl' : '' }}" data-story>
+                    @if ($hasHistImage)
+                        <div class="story-media mb-8"
+                             onclick='openLightbox(@json(asset("storage/" . $sculpture->history_image)), 0, [])'>
+                            <img src="{{ asset('storage/' . $sculpture->history_image) }}" alt="{{ $tr?->title }} — {{ __('frontend.history') }}">
+                            <div class="story-overlay"></div>
+                            <div class="story-zoom-btn">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="w-10 h-[2px] bg-indigo-500"></span>
+                        <h2 class="text-2xl font-bold text-slate-900">{{ __('frontend.history') }}</h2>
+                    </div>
+                    <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-line">
+                        {{ $tr->history }}
+                    </div>
                 </div>
-            </div>
-        @endif
+            @endif
+
+            {{-- Təsvir — SAĞDA --}}
+            @if ($hasDescription)
+                <div class="story-block {{ $bothSections ? 'delay-1' : 'lg:mx-auto lg:max-w-4xl' }}" data-story>
+                    @if ($hasDescImage)
+                        <div class="story-media mb-8"
+                             onclick='openLightbox(@json(asset("storage/" . $sculpture->description_image)), 0, [])'>
+                            <img src="{{ asset('storage/' . $sculpture->description_image) }}" alt="{{ $tr?->title }} — {{ __('frontend.description') }}">
+                            <div class="story-overlay"></div>
+                            <div class="story-zoom-btn">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="w-10 h-[2px] bg-indigo-500"></span>
+                        <h2 class="text-2xl font-bold text-slate-900">{{ __('frontend.description') }}</h2>
+                    </div>
+                    <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-line">
+                        {{ $tr->description }}
+                    </div>
+                </div>
+            @endif
+
+        </div>
     </div>
 </section>
 @endif
@@ -409,10 +499,11 @@
 @if ($sculpture->panorama_embed)
 <section class="py-16 bg-slate-50">
     <div class="max-w-7xl mx-auto px-6">
-        <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
             <h2 class="text-2xl font-bold text-slate-900">{{ __('frontend.panorama_360') }}</h2>
             <a href="{{ url('/' . app()->getLocale() . '/sculptures/' . $sculpture->slug . '/360') }}"
-               class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition">
+               target="_blank" rel="noopener"
+               class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 text-white text-sm font-semibold hover:bg-indigo-600 transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                 </svg>
@@ -530,6 +621,28 @@ function copyShareUrl(btn) {
         }, 1400);
     });
 }
+
+// Story blocks fade-in animasiya
+(function () {
+    const blocks = document.querySelectorAll('[data-story]');
+    if (!blocks.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+        blocks.forEach(b => b.classList.add('is-visible'));
+        return;
+    }
+
+    const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+    blocks.forEach(b => observer.observe(b));
+})();
 </script>
 
 @endsection
