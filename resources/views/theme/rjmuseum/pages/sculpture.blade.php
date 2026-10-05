@@ -228,16 +228,27 @@
         object-fit: cover;
     }
 
+    #panorama-container {
+        position: relative;
+    }
+    #panorama-container iframe {
+        width: 100% !important;
+        height: 100% !important;
+        border: 0;
+        display: block;
+    }
     #panorama-container:fullscreen,
     #panorama-container:-webkit-full-screen,
     #panorama-container:-moz-full-screen {
         border-radius: 0;
+        width: 100vw;
+        height: 100vh;
     }
     #panorama-container:fullscreen iframe,
     #panorama-container:-webkit-full-screen iframe,
     #panorama-container:-moz-full-screen iframe {
-        width: 100% !important;
-        height: 100% !important;
+        width: 100vw !important;
+        height: 100vh !important;
     }
 </style>
 @endpush
@@ -315,11 +326,14 @@
                 </div>
 
                 @if ($tr?->sculptor)
-                    <div class="flex items-center gap-2 text-lg text-slate-600 mb-6">
-                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <div class="flex items-center gap-2 text-lg mb-6">
+                        <svg class="w-5 h-5 text-indigo-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
-                        <span>{{ $tr->sculptor }}</span>
+                        <span class="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+                            {{ __('frontend.sculptor') }}:
+                        </span>
+                        <span class="text-slate-800 font-semibold">{{ $tr->sculptor }}</span>
                     </div>
                 @endif
 
@@ -388,17 +402,12 @@
     </div>
 </section>
 
-{{-- ============================================================ --}}
-{{-- TƏSVİR + TARİXİ BÖLMƏLƏRİ --}}
-{{-- ============================================================ --}}
-
 @if ($descHasText || $descHasImage || $histHasText || $histHasImage)
 <section class="py-16 bg-slate-50 overflow-hidden">
     <div class="max-w-7xl mx-auto px-6">
 
         {{-- TƏSVİR --}}
         @if ($descHasImage && !$descHasText)
-            {{-- Təsvir şəkli var, mətn yox → tam enli şəkil --}}
             <div class="story-block" data-story>
                 <div class="story-media is-fullwidth"
                      onclick='openLightbox(@json(asset("storage/" . $sculpture->description_image)), 0, [])'>
@@ -414,7 +423,6 @@
         @elseif ($descHasText)
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
                 @if ($descHasImage)
-                    {{-- SOLDA şəkil --}}
                     <div class="story-block" data-story>
                         <div class="story-media"
                              onclick='openLightbox(@json(asset("storage/" . $sculpture->description_image)), 0, [])'>
@@ -429,7 +437,6 @@
                     </div>
                 @endif
 
-                {{-- SAĞDA mətn --}}
                 <div class="story-block {{ $descHasImage ? 'delay-1' : 'lg:col-span-2 lg:max-w-4xl lg:mx-auto' }}" data-story>
                     <div class="flex items-center gap-3 mb-4">
                         <span class="w-10 h-[2px] bg-indigo-500"></span>
@@ -444,7 +451,6 @@
 
         {{-- TARİXİ --}}
         @if ($histHasImage && !$histHasText)
-            {{-- Tarixi şəkli var, mətn yox → tam enli şəkil --}}
             <div class="story-block mt-16" data-story>
                 <div class="story-media is-fullwidth"
                      onclick='openLightbox(@json(asset("storage/" . $sculpture->history_image)), 0, [])'>
@@ -459,7 +465,6 @@
             </div>
         @elseif ($histHasText)
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center mt-16">
-                {{-- SOLDA mətn --}}
                 <div class="story-block {{ $histHasImage ? '' : 'lg:col-span-2 lg:max-w-4xl lg:mx-auto' }}" data-story>
                     <div class="flex items-center gap-3 mb-4">
                         <span class="w-10 h-[2px] bg-indigo-500"></span>
@@ -471,7 +476,6 @@
                 </div>
 
                 @if ($histHasImage)
-                    {{-- SAĞDA şəkil --}}
                     <div class="story-block delay-1" data-story>
                         <div class="story-media"
                              onclick='openLightbox(@json(asset("storage/" . $sculpture->history_image)), 0, [])'>

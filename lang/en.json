@@ -81,5 +81,6 @@
     "frontend.copy_link": "Copy link",
     "frontend.500_title": "Something went wrong",
     "frontend.500_text": "We're experiencing a technical issue. Please try again in a moment or return to the homepage.",
-    "frontend.retry": "Try again"
+    "frontend.retry": "Try again",
+    "frontend.sculptor": "Sculptor"
 }
