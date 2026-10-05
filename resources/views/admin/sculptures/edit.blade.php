@@ -322,15 +322,13 @@
                             @foreach ($sculpture->images as $img)
                                 <div class="relative group aspect-square rounded-lg overflow-hidden border border-slate-200">
                                     <img src="{{ asset('storage/' . $img->path) }}" class="w-full h-full object-cover">
-                                    <form action="{{ route('admin.sculptures.images.destroy', $img) }}"
-                                          method="POST"
-                                          class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-white text-xs bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg font-medium">
+                                    <button type="button"
+                                            onclick="deleteImage({{ $img->id }})"
+                                            class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                        <span class="text-white text-xs bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg font-medium">
                                             Sil
-                                        </button>
-                                    </form>
+                                        </span>
+                                    </button>
                                 </div>
                             @endforeach
                         </div>
@@ -362,6 +360,18 @@
 
     </div>
 </form>
+
+{{-- Gizli silmə formaları — ƏSAS FORMDAN KƏNARDA --}}
+@foreach ($sculpture->images as $img)
+    <form id="delete-image-{{ $img->id }}"
+          action="{{ route('admin.sculptures.images.destroy', $img) }}"
+          method="POST"
+          class="hidden"
+          onsubmit="return confirm('Bu şəkil silinsin?');">
+        @csrf
+        @method('DELETE')
+    </form>
+@endforeach
 
 <script>
 function switchTab(group, code) {
@@ -413,5 +423,10 @@ document.getElementById('gallery').addEventListener('change', function(e) {
         r.readAsDataURL(f);
     });
 });
+
+function deleteImage(id) {
+    const form = document.getElementById('delete-image-' + id);
+    if (form) form.submit();
+}
 </script>
 @endsection
