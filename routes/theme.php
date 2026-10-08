@@ -42,6 +42,8 @@ Route::get('/q/{code}', [FrontendController::class, 'shortUrl'])
     ->where('code', '[a-zA-Z0-9\-]+')
     ->name('short-url.redirect');
 
+Route::get('/lang/{code}', [FrontendController::class, 'switchLang'])->name('lang.switch');
+
 Route::group(['prefix' => '{locale}', 'middleware' => 'setlocale'], function () {
 
     Route::get('/', [FrontendController::class, 'home'])->name('home');
@@ -53,19 +55,25 @@ Route::group(['prefix' => '{locale}', 'middleware' => 'setlocale'], function () 
 
 });
 
-Route::get('/lang/{code}', [FrontendController::class, 'switchLang'])->name('lang.switch');
-
-Route::get('/{locale}/{slug}', [App\Http\Controllers\FrontendController::class, 'page'])
+Route::get('/{locale}/{slug}', [FrontendController::class, 'page'])
     ->where('locale', '[a-z]{2}')
     ->where('slug', '[a-z0-9\-]+')
     ->name('page.show');
 
-Route::get('/{code}', function ($code) {
-    $shortUrl = \App\Models\ShortUrl::where('code', $code)->first();
+Route::fallback(function (\Illuminate\Http\Request $request) {
+    $segments = $request->segments();
 
-    if ($shortUrl) {
-        return redirect('/q/' . $code, 301);
+    if (count($segments) === 1) {
+        $code = $segments[0];
+
+        if (preg_match('/^[a-z0-9\-]+$/i', $code)) {
+            $shortUrl = \App\Models\ShortUrl::where('code', $code)->first();
+
+            if ($shortUrl) {
+                return redirect('/q/' . $code, 301);
+            }
+        }
     }
 
     abort(404);
-})->where('code', '[a-z0-9\-]+')->name('short-url.fallback');
+});
