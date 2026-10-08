@@ -173,12 +173,15 @@
         border-radius: 1.75rem;
         box-shadow: 0 25px 60px -20px rgba(15, 23, 42, 0.25);
         cursor: zoom-in;
+        aspect-ratio: 4 / 3;
+        width: 100%;
     }
     .story-media img {
         display: block;
         width: 100%;
-        height: auto;
+        height: 100%;
         object-fit: cover;
+        object-position: center;
         transition: transform 1.2s cubic-bezier(.4,0,.2,1);
         will-change: transform;
     }
@@ -222,9 +225,11 @@
         margin-left: calc(50% - 50vw);
         margin-right: calc(50% - 50vw);
         max-width: 100vw;
+        aspect-ratio: 21 / 9;
     }
     .story-media.is-fullwidth img {
-        max-height: 80vh;
+        max-height: none;
+        height: 100%;
         object-fit: cover;
     }
 
