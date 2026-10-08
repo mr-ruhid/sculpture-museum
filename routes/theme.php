@@ -59,3 +59,13 @@ Route::get('/{locale}/{slug}', [App\Http\Controllers\FrontendController::class, 
     ->where('locale', '[a-z]{2}')
     ->where('slug', '[a-z0-9\-]+')
     ->name('page.show');
+
+Route::get('/{code}', function ($code) {
+    $shortUrl = \App\Models\ShortUrl::where('code', $code)->first();
+
+    if ($shortUrl) {
+        return redirect('/q/' . $code, 301);
+    }
+
+    abort(404);
+})->where('code', '[a-z0-9\-]+')->name('short-url.fallback');
