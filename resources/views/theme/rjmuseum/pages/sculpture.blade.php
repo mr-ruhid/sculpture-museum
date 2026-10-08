@@ -173,7 +173,7 @@
         border-radius: 1.75rem;
         box-shadow: 0 25px 60px -20px rgba(15, 23, 42, 0.25);
         cursor: zoom-in;
-        aspect-ratio: 4 / 3;
+        aspect-ratio: 3 / 4;
         width: 100%;
     }
     .story-media img {
@@ -225,7 +225,7 @@
         margin-left: calc(50% - 50vw);
         margin-right: calc(50% - 50vw);
         max-width: 100vw;
-        aspect-ratio: 21 / 9;
+        aspect-ratio: 9 / 16;
     }
     .story-media.is-fullwidth img {
         max-height: none;
