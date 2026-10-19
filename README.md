@@ -261,7 +261,7 @@ If this project has been useful to you, consider supporting its continued develo
 
 ## Author
 
-**Ruhid Javadov**
+**Ruhid Javadov - MR Ruhid (veb.developher.az)**
 
 - GitHub: [@mr-ruhid](https://github.com/mr-ruhid)
 - Project: [sculpture-museum](https://github.com/mr-ruhid/sculpture-museum)
